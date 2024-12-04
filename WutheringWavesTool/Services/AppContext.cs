@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
@@ -41,6 +42,14 @@ namespace WutheringWavesTool.Services
             //}
             win.Activate();
             return Task.CompletedTask;
+        }
+
+        public async Task TryInvokeAsync(Action action)
+        {
+            await DispatcherQueueExtensions.EnqueueAsync(
+                this.App.MainWindow.DispatcherQueue,
+                action
+            );
         }
     }
 }

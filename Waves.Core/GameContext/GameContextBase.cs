@@ -25,7 +25,7 @@ public abstract partial class GameContextBase : IGameContext
         this.HttpClientService.BuildClient(ContextName);
         Directory.CreateDirectory(GamerConfigPath);
         this.GameLocalConfig = new GameLocalConfig();
-        GameLocalConfig.SettingPath = GamerConfigPath + "\\Settings.json";
+        GameLocalConfig.SettingPath = GamerConfigPath + "\\Settings.db";
     }
 
     public IHttpClientService HttpClientService { get; set; }
@@ -51,95 +51,16 @@ public abstract partial class GameContextBase : IGameContext
 
     public GameLocalConfig GameLocalConfig { get; private set; }
 
-    public abstract bool IsLaunch { get; }
+    public bool IsLaunch { get; private set; }
     public WavesIndex WavesIndex { get; private set; }
     public CdnList? Cdn { get; private set; }
     public GameResource Resources { get; private set; }
 
-    public async Task InitGameSettingsAsync(CancellationToken token = default)
-    {
-        var path = GamerConfigPath + "\\Settings.json";
-        if (File.Exists(path))
-        {
-            if (!(await RefreshConfigAsync()))
-            {
-                var nullStr = JsonSerializer.Serialize<Dictionary<string, object>>(
-                    new Dictionary<string, object>(),
-                    JsonContext.Default.DictionaryStringObject
-                );
-                using (var fs = File.OpenWrite(path))
-                {
-                    await fs.WriteAsync(Encoding.UTF8.GetBytes(nullStr), token);
-                }
-            }
-            return;
-        }
-        var writer = File.CreateText(path);
-        var jsonStr = JsonSerializer.Serialize<Dictionary<string, object>>(
-            new Dictionary<string, object>(),
-            JsonContext.Default.DictionaryStringObject
-        );
-        await writer.WriteAsync(jsonStr);
-        await writer.DisposeAsync();
-    }
-
-    public async Task<bool> SaveConfigAsync(
-        string key,
-        object value,
-        CancellationToken token = default
-    )
-    {
-        await RefreshConfigAsync(token);
-        if (this.GameLocalConfig.Properties.TryGetValue(key, out var config))
-        {
-            if (config == value)
-            {
-                return true;
-            }
-            else
-            {
-                return await GameLocalConfig.SaveAsync(token);
-            }
-        }
-        else
-        {
-            GameLocalConfig.Properties.Add(key, value);
-            return await GameLocalConfig.SaveAsync(token);
-        }
-    }
-
-    public async Task<string?> ReadConfigAsync(string key, CancellationToken token = default)
-    {
-        await RefreshConfigAsync(token);
-        if (this.GameLocalConfig.Properties.TryGetValue(key, out var config))
-        {
-            return config.ToString();
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    public async Task<bool> RefreshConfigAsync(CancellationToken token = default)
-    {
-        try
-        {
-            return await GameLocalConfig.RefreshAsync(token);
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-    }
-
     public async Task<GameContextStatus> GetGameStausAsync(CancellationToken token = default)
     {
         GameContextStatus status = new();
-        await this.InitGameSettingsAsync(token);
-        var gamePath = await this.ReadConfigAsync(
-            GameLocalSettingName.GameLauncherBassFolder,
-            token
+        var gamePath = await this.GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.GameLauncherBassFolder
         );
         if (!string.IsNullOrWhiteSpace(gamePath) || Directory.Exists(gamePath))
         {
@@ -148,12 +69,15 @@ public abstract partial class GameContextBase : IGameContext
         return status;
     }
 
-    public void StartVerifyGame(string folder)
+    public void StartVerifyGame(string exefile)
     {
         Task.Run(async () =>
         {
             try
             {
+                var folder = System.IO.Path.GetDirectoryName(exefile);
+                if (folder == null)
+                    return;
                 var launcherIndex = await GetGameIndexAsync();
                 if (launcherIndex == null)
                     return;
@@ -180,7 +104,7 @@ public abstract partial class GameContextBase : IGameContext
                     if (!File.Exists(file))
                     {
                         resources.Add(this.Resources.Resource[i]);
-                        double exis = i / this.Resources.Resource.Count * 100;
+                        double exis = (((double)i + 1) / this.Resources.Resource.Count) * 100;
                         this.gameContextOutputDelegate?.Invoke(
                             this,
                             new GameContextOutputArgs()
@@ -199,7 +123,8 @@ public abstract partial class GameContextBase : IGameContext
                         resources.Add(this.Resources.Resource[i]);
                         continue;
                     }
-                    double value = i / this.Resources.Resource.Count * 100;
+
+                    double value = (((double)i + 1) / this.Resources.Resource.Count) * 100;
                     this.gameContextOutputDelegate?.Invoke(
                         this,
                         new GameContextOutputArgs()
@@ -214,7 +139,18 @@ public abstract partial class GameContextBase : IGameContext
                 if (resources.Count > 0)
                 {
                     //进入下载
+                    return;
                 }
+                await this.GameLocalConfig.SaveConfigAsync(
+                    GameLocalSettingName.GameLauncherBassFolder,
+                    folder
+                );
+                await this.GameLocalConfig.SaveConfigAsync(
+                    GameLocalSettingName.GameLauncherBassProgram,
+                    exefile
+                );
+                this.IsLaunch = true;
+
                 this.gameContextOutputDelegate?.Invoke(
                     this,
                     new GameContextOutputArgs() { Type = Models.Enums.GameContextActionType.None }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using WutheringWavesTool.Common;
 
 namespace WutheringWavesTool.Services.Contracts;
@@ -9,4 +10,6 @@ public interface IAppContext<T>
     public T App { get; }
 
     public Task LauncherAsync(T app);
+
+    public Task TryInvokeAsync(Action action);
 }

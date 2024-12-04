@@ -12,6 +12,4 @@ public class GlobalGameContext : GameContextBase
 {
     public GlobalGameContext(GameApiContextConfig config)
         : base(config, nameof(GlobalGameContext)) { }
-
-    public override bool IsLaunch => true;
 }

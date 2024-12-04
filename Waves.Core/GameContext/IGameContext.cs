@@ -9,15 +9,10 @@ public interface IGameContext
     public IHttpClientService HttpClientService { get; set; }
     public void Init();
     public string ContextName { get; }
-
     public bool IsNext { get; }
     event GameContextOutputDelegate GameContextOutput;
     public string GamerConfigPath { get; internal set; }
-    Task InitGameSettingsAsync(CancellationToken token = default);
     GameLocalConfig GameLocalConfig { get; }
-    Task<bool> SaveConfigAsync(string key, object value, CancellationToken token = default);
-
-    Task<string?> ReadConfigAsync(string key, CancellationToken token = default);
 
     /// <summary>
     /// 是否可以启动

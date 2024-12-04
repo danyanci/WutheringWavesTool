@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using SqlSugar;
 using Waves.Core.Contracts;
 using Waves.Core.GameContext;
 using Waves.Core.GameContext.Contexts;
@@ -16,6 +17,7 @@ public static class Waves
     /// <returns></returns>
     public static IServiceCollection AddGameContext(this IServiceCollection services)
     {
+        StaticConfig.EnableAot = true;
         services
             .AddTransient<IHttpClientService, HttpClientService>()
             .AddKeyedSingleton<IGameContext, MainGameContext>(

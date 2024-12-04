@@ -33,7 +33,7 @@ namespace Project.Test
                 GameLocalSettingName.GameLauncherBassFolder,
                 "D:\\Wuthering Waves\\Wuthering Waves Game"
             );
-            var result = await main.ReadConfigAsync(GameLocalSettingName.GameLauncherBassFolder);
+            var result = await main.ReadConfig(GameLocalSettingName.GameLauncherBassFolder);
             Console.WriteLine("配置参数不完整！");
         }
     }

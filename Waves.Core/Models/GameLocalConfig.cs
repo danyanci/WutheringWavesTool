@@ -1,5 +1,6 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
+using SqlSugar;
 
 namespace Waves.Core.Models;
 
@@ -20,49 +21,73 @@ public class GameLocalConfig
 {
     public string SettingPath { get; set; }
 
-    public Dictionary<string, object> Properties { get; set; }
-
-    public async Task<bool> RefreshAsync(CancellationToken token = default)
+    public async Task SaveConfigAsync(string key, string value)
     {
-        try
+        string connectionString = $"Data Source={SettingPath};";
+        using (
+            ISqlSugarClient context = new SqlSugarClient(
+                new ConnectionConfig()
+                {
+                    ConnectionString = connectionString,
+                    DbType = DbType.Sqlite,
+                    IsAutoCloseConnection = true,
+                }
+            )
+        )
         {
-            using (var fs = new StreamReader(SettingPath))
+            context.CodeFirst.InitTables<LocalSettings>();
+            var settings = new LocalSettings() { Key = key, Value = value };
+            var existingSetting = (
+                await context.Queryable<LocalSettings>().Where(x => x.Key == key).AnyAsync()
+            );
+            if (existingSetting)
             {
-                var jsonStr = await fs.ReadToEndAsync();
-                var propertys = JsonSerializer.Deserialize(
-                    jsonStr,
-                    JsonContext.Default.DictionaryStringObject
-                );
-                if (propertys == null)
-                    return false;
-                this.Properties = propertys;
-                return true;
+                await context.Updateable(settings).ExecuteCommandAsync();
             }
-        }
-        catch (Exception)
-        {
-            this.Properties = new Dictionary<string, object>();
-            return false;
+            else
+            {
+                await context.Insertable(settings).ExecuteCommandAsync();
+            }
+            context.Ado.CommitTran();
         }
     }
 
-    public async Task<bool> SaveAsync(CancellationToken token = default)
+    public async Task<string> GetConfigAsync(string key)
     {
-        try
+        string connectionString = $"Data Source={SettingPath};";
+        using (
+            ISqlSugarClient context = new SqlSugarClient(
+                new ConnectionConfig()
+                {
+                    ConnectionString = connectionString,
+                    DbType = DbType.Sqlite,
+                    IsAutoCloseConnection = true,
+                }
+            )
+        )
         {
-            using (var fs = new StreamWriter(SettingPath))
+            context.CodeFirst.InitTables<LocalSettings>();
+            var existingSetting = (
+                await context.Queryable<LocalSettings>().Where(x => x.Key == key).FirstAsync()
+            );
+            if (existingSetting == null)
             {
-                var jsonStr = JsonSerializer.Serialize(
-                    this.Properties,
-                    JsonContext.Default.DictionaryStringObject
-                );
-                await fs.WriteLineAsync(jsonStr);
-                return true;
+                return null;
+            }
+            else
+            {
+                return existingSetting.Value;
             }
         }
-        catch (Exception)
-        {
-            return false;
-        }
     }
+}
+
+[SugarTable("settings")]
+public class LocalSettings
+{
+    [SugarColumn(ColumnName = "Key", IsPrimaryKey = true)]
+    public string Key { get; set; }
+
+    [SugarColumn(ColumnName = "Value")]
+    public string Value { get; set; }
 }
