@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Waves.Core;
 using Waves.Core.Contracts;
 using Waves.Core.GameContext;
 using Waves.Core.GameContext.Contexts;
@@ -12,19 +13,6 @@ public static class Register
 
     public static void Init()
     {
-        ServiceProvider = new ServiceCollection()
-            .AddTransient<IHttpClientService, HttpClientService>()
-            .AddKeyedSingleton<IGameContext, MainGameContext>(
-                nameof(MainGameContext),
-                (provider, c) =>
-                {
-                    var context = GameContextFactory.GetMainGameContext();
-                    context.HttpClientService = provider.GetRequiredService<IHttpClientService>();
-                    context.Init();
-                    return context;
-                }
-            )
-            .AddHttpClient()
-            .BuildServiceProvider();
+        ServiceProvider = new ServiceCollection().AddGameContext().BuildServiceProvider();
     }
 }

@@ -1,0 +1,62 @@
+﻿using Microsoft.Extensions.DependencyInjection;
+using Waves.Core.Contracts;
+using Waves.Core.GameContext;
+using Waves.Core.GameContext.Contexts;
+using Waves.Core.Models.Handlers;
+using Waves.Core.Services;
+
+namespace Waves.Core;
+
+public static class Waves
+{
+    /// <summary>
+    /// 注入游戏上下文，注意已包含HttpClientFactory
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
+    public static IServiceCollection AddGameContext(this IServiceCollection services)
+    {
+        services
+            .AddTransient<IHttpClientService, HttpClientService>()
+            .AddKeyedSingleton<IGameContext, MainGameContext>(
+                nameof(MainGameContext),
+                (provider, c) =>
+                {
+                    var context = GameContextFactory.GetMainGameContext();
+                    context.HttpClientService = provider.GetRequiredService<IHttpClientService>();
+                    context.Init();
+                    return context;
+                }
+            )
+            .AddKeyedSingleton<IGameContext, BilibiliGameContext>(
+                nameof(BilibiliGameContext),
+                (provider, c) =>
+                {
+                    var context = GameContextFactory.GetBilibiliGameContext();
+                    context.HttpClientService = provider.GetRequiredService<IHttpClientService>();
+                    context.Init();
+                    return context;
+                }
+            )
+            .AddKeyedSingleton<IGameContext, GlobalGameContext>(
+                nameof(BilibiliGameContext),
+                (provider, c) =>
+                {
+                    var context = GameContextFactory.GetGlobalGameContext();
+                    context.HttpClientService = provider.GetRequiredService<IHttpClientService>();
+                    context.Init();
+                    return context;
+                }
+            )
+            .AddTransient<IHttpClientService, HttpClientService>();
+        services
+            .AddHttpClient("GameServer")
+            .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+            .ConfigurePrimaryHttpMessageHandler(() => new WavesGameHandler());
+        services
+            .AddHttpClient("GameDownloadServer")
+            .SetHandlerLifetime(TimeSpan.FromMinutes(5))
+            .ConfigurePrimaryHttpMessageHandler(() => new WavesGameHandler());
+        return services;
+    }
+}

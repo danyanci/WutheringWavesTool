@@ -4,6 +4,8 @@ namespace Waves.Core.GameContext.Contexts;
 
 public class MainGameContext : GameContextBase
 {
-    public MainGameContext(GameContextConfig config)
+    public MainGameContext(GameApiContextConfig config)
         : base(config, nameof(MainGameContext)) { }
+
+    public override bool IsLaunch => true;
 }

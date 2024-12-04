@@ -16,7 +16,7 @@ public class HttpClientService : IHttpClientService
 
     public void BuildClient(string name)
     {
-        this.HttpClient = HttpClientFactory.CreateClient(name);
-        this.GameDownloadClient = HttpClientFactory.CreateClient(name + "_GameDownload");
+        this.HttpClient = HttpClientFactory.CreateClient("GameServer");
+        this.GameDownloadClient = HttpClientFactory.CreateClient("GameDownloadServer");
     }
 }

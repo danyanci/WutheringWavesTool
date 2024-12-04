@@ -10,6 +10,8 @@ namespace Waves.Core.GameContext.Contexts;
 
 public class GlobalGameContext : GameContextBase
 {
-    public GlobalGameContext(GameContextConfig config)
+    public GlobalGameContext(GameApiContextConfig config)
         : base(config, nameof(GlobalGameContext)) { }
+
+    public override bool IsLaunch => true;
 }

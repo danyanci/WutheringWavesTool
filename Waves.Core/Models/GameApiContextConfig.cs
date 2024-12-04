@@ -1,6 +1,6 @@
 ﻿namespace Waves.Core.Models
 {
-    public class GameContextConfig
+    public class GameApiContextConfig
     {
         public string Index_Source { get; set; }
 
@@ -8,7 +8,7 @@
 
         public string LauncherHeader_Source { get; set; }
 
-        public static GameContextConfig Main =>
+        public static GameApiContextConfig Main =>
             new()
             {
                 Index_Source =
@@ -19,7 +19,7 @@
                     "https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/social/zh-Hans.json",
             };
 
-        public static GameContextConfig BiliBili =>
+        public static GameApiContextConfig BiliBili =>
             new()
             {
                 Index_Source =
@@ -30,7 +30,7 @@
                     "https://prod-cn-alicdn-gamestarter.kurogame.com/pcstarter/prod/game/G152/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/social/zh-Hans.json",
             };
 
-        public static GameContextConfig Global =>
+        public static GameApiContextConfig Global =>
             new()
             {
                 Index_Source =

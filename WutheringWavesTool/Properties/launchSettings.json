@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WutheringWavesTool (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WutheringWavesTool (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
