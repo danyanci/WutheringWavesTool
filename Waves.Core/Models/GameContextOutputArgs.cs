@@ -12,11 +12,11 @@ public class GameContextOutputArgs
 
     public int CurrentFile { get; set; }
 
-    public int MaxSize { get; set; }
+    public double MaxSize { get; set; }
 
-    public int CurrentSize { get; set; }
+    public double CurrentSize { get; set; }
 
     public string SpeedString { get; set; }
 
-    public int Speed { get; set; }
+    public double Speed { get; set; }
 }

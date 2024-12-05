@@ -7,7 +7,9 @@ namespace Waves.Core.GameContext;
 public interface IGameContext
 {
     public IHttpClientService HttpClientService { get; set; }
-    public void Init();
+
+    public IGameContextDownloadCache GameContextDownloadCahce { get; }
+    public Task InitAsync();
     public string ContextName { get; }
     public bool IsNext { get; }
     event GameContextOutputDelegate GameContextOutput;
@@ -26,6 +28,8 @@ public interface IGameContext
     /// <returns></returns>
     Task<GameContextStatus> GetGameStausAsync(CancellationToken token = default);
     void StartVerifyGame(string folder);
+
+    void StartDownloadGame(string folder);
 
     Task<WavesIndex> GetGameIndexAsync(CancellationToken token = default);
 

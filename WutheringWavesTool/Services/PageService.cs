@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Controls;
 using WutheringWavesTool.Pages;
 using WutheringWavesTool.Pages.GamePages;
 using WutheringWavesTool.Services.Contracts;
+using WutheringWavesTool.ViewModel;
 using WutheringWavesTool.ViewModel.GameViewModels;
 
 namespace WutheringWavesTool.Services;
@@ -19,6 +20,7 @@ public sealed partial class PageService : IPageService
         this.RegisterView<MainGamePage, MainGameViewModel>();
         this.RegisterView<BilibiliGamePage, BilibiliGameViewModel>();
         this.RegisterView<GlobalGamePage, GlobalGameViewModel>();
+        this.RegisterView<SettingPage, SettingViewModel>();
     }
 
     public Type GetPage(string key)

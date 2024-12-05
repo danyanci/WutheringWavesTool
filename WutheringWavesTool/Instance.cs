@@ -23,6 +23,7 @@ public static class Instance
             .AddTransient<MainGameViewModel>()
             .AddTransient<BilibiliGameViewModel>()
             .AddTransient<GlobalGameViewModel>()
+            .AddTransient<SettingViewModel>()
             #endregion
             #region Navigation
             .AddTransient<IPageService, PageService>()

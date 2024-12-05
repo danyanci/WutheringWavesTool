@@ -35,6 +35,15 @@
                     FontSize="22"
                     Text="启动游戏" />
             </StackPanel>
+            <SplitButton.Flyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Command="{x:Bind ViewModel.RefreshGameCommand}" Text="修复游戏">
+                        <MenuFlyoutItem.Icon>
+                            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEC7A;" />
+                        </MenuFlyoutItem.Icon>
+                    </MenuFlyoutItem>
+                </MenuFlyout>
+            </SplitButton.Flyout>
         </SplitButton>
         <Grid
             Width="300"
@@ -52,7 +61,7 @@
                 Orientation="Vertical"
                 Visibility="{x:Bind ViewModel.SelectGameVisibility, Mode=OneWay}">
                 <Button Command="{x:Bind ViewModel.OpenSelectGameFolderCommand}" Content="选择一个游戏副本" />
-                <Button Margin="0,10,0,0" Content="下载全新游戏副本" />
+                <Button Margin="0,10,0,0" Command="{x:Bind ViewModel.OpenSelectGameDownloadFolderCommand}" Content="下载全新游戏副本" />
             </StackPanel>
             <StackPanel
                 HorizontalAlignment="Center"

@@ -4,5 +4,6 @@ public enum GameContextActionType
 {
     Verify,
     Download,
+    Clear,
     None,
 }

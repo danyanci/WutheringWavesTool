@@ -33,6 +33,7 @@
     <None Remove="Pages\GamePages\BilibiliGamePage.xaml" />
     <None Remove="Pages\GamePages\GlobalGamePage.xaml" />
     <None Remove="Pages\GamePages\MainGamePage.xaml" />
+    <None Remove="Pages\SettingPage.xaml" />
     <None Remove="Pages\ShellPage.xaml" />
   </ItemGroup>
 
@@ -129,6 +130,11 @@
     <Content Update="Assets\mcLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\SettingPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\Styles\SpiltButtonStyle.xaml">

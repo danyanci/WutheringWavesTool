@@ -44,5 +44,14 @@ public sealed partial class ShellViewModel : ViewModelBase
         );
     }
 
+    [RelayCommand]
+    void OpenSetting()
+    {
+        this.HomeNavigationService.NavigationTo<SettingViewModel>(
+            "Setting",
+            new DrillInNavigationTransitionInfo()
+        );
+    }
+
     public INavigationService HomeNavigationService { get; }
 }
