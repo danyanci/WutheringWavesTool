@@ -109,7 +109,8 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
             var result = await GameContext.GetGameStausAsync();
             await AppContext.TryInvokeAsync(() =>
             {
-                if (result.IsLauncheExists)
+                if (!result.IsDownloadComplete) { }
+                else
                 {
                     StartGameBthVisibility = Visibility.Visible;
                     UpdateVisibility = Visibility.Collapsed;

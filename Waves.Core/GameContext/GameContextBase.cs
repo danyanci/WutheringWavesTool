@@ -1,13 +1,7 @@
-﻿using System;
-using System.Diagnostics;
-using System.Net.Http;
-using System.Reflection;
-using System.Resources;
+﻿using System.Diagnostics;
 using System.Security.Cryptography;
-using System.Security.Policy;
 using System.Text;
 using System.Text.Json;
-using NetTaste;
 using Waves.Api.Models;
 using Waves.Core.Common;
 using Waves.Core.Contracts;
@@ -100,10 +94,17 @@ public abstract partial class GameContextBase : IGameContext
         );
         if (!string.IsNullOrWhiteSpace(gamePath) || Directory.Exists(gamePath))
         {
-            status.IsLauncheExists = true;
+            this.GameContextDownloadCahce = GameContextFactory.GetGameContextDownloadCache(
+                gamePath
+            );
+            var statusModel = (await GameContextDownloadCahce.ReadCacheAsync());
+            status.IsDownloadComplete = statusModel.IsComplete;
+            status.DownloadProcess = statusModel.Progress;
         }
+
         status.IsVerify = this.IsVerify;
         status.IsDownload = this.IsDownload;
+        status.IsClear = this.IsClear;
         return status;
     }
 
@@ -276,6 +277,7 @@ public abstract partial class GameContextBase : IGameContext
         Array.Reverse(list);
         double maxSize = list.Sum(x => x.Size);
         var totalBytesRead = 0L;
+        long nowFileSize = 0L;
         this.gameContextOutputDelegate?.Invoke(
             this,
             new GameContextOutputArgs()
@@ -294,9 +296,19 @@ public abstract partial class GameContextBase : IGameContext
         {
             this.IsDownload = true;
             var cachefile = folder + "\\DownloadCache" + list[i].Dest.Replace('/', '\\');
-            var file = folder + list[i].Dest.Replace('/', '\\');
             Directory.CreateDirectory(System.IO.Path.GetDirectoryName(cachefile)!);
             var url = DownloadBaseUrl + list[i].Dest;
+            nowFileSize = 0;
+            var request = new HttpRequestMessage()
+            {
+                RequestUri = new(url),
+                Method = HttpMethod.Get,
+            };
+            if (File.Exists(cachefile))
+            {
+                var size = ReadFileSize(cachefile);
+                request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(size, null);
+            }
             using (
                 var response = await HttpClientService.GameDownloadClient.GetAsync(
                     url,
@@ -333,6 +345,7 @@ public abstract partial class GameContextBase : IGameContext
                     )
                     {
                         totalBytesRead += bytesRead;
+                        nowFileSize += bytesRead;
                         bytesSinceLastReport += bytesRead;
                         var currentTime = DateTime.UtcNow;
                         var reportInterval = TimeSpan.FromSeconds(1);
@@ -350,6 +363,9 @@ public abstract partial class GameContextBase : IGameContext
                                     NowSize = totalBytesRead,
                                     Progress = progresssValue,
                                     TotalSize = maxSize,
+                                    CurrentDownloadFile = cachefile,
+                                    CurrentDownloadFileSize = nowFileSize,
+                                    IsComplete = false,
                                 }
                             );
                             lastReportTime = currentTime;
@@ -383,6 +399,9 @@ public abstract partial class GameContextBase : IGameContext
                             NowSize = totalBytesRead,
                             Progress = progresssValue2,
                             TotalSize = maxSize,
+                            CurrentDownloadFile = cachefile,
+                            CurrentDownloadFileSize = nowFileSize,
+                            IsComplete = true,
                         }
                     );
                     this.gameContextOutputDelegate?.Invoke(
@@ -409,6 +428,12 @@ public abstract partial class GameContextBase : IGameContext
         this.IsDownload = false;
         ClearGameCache(folder, this.Resources.Resource);
         this.IsClear = true;
+    }
+
+    private long ReadFileSize(string cachefile)
+    {
+        var file = new FileInfo(cachefile);
+        return file.Length;
     }
 
     private void ClearGameCache(string folder, List<Resource> resources)

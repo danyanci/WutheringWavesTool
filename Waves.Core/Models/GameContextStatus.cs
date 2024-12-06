@@ -21,4 +21,7 @@ public class GameContextStatus
     /// 是否在校验中
     /// </summary>
     public bool IsVerify { get; internal set; }
+    public bool IsClear { get; internal set; }
+    public bool IsDownloadComplete { get; internal set; }
+    public double DownloadProcess { get; internal set; }
 }

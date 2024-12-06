@@ -32,7 +32,7 @@ public class GameContextDownloadCache : IGameContextDownloadCache
         }
         catch (Exception)
         {
-            Cache = new DownloadCache();
+            Cache = new DownloadCache() { Progress = 100 };
         }
         return Cache;
     }
