@@ -142,18 +142,21 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
             IsLoading = false;
             return;
         }
-        if (!status.IsLauncheExists)
+        if (!status.IsDownloadComplete)
         {
-            StartGameBthVisibility = Microsoft.UI.Xaml.Visibility.Collapsed;
-            UpdateVisibility = Microsoft.UI.Xaml.Visibility.Visible;
-            SelectGameVisibility = Visibility.Visible;
-            ProgressVisibility = Visibility.Collapsed;
-        }
-        else
-        {
-            StartGameBthVisibility = Microsoft.UI.Xaml.Visibility.Visible;
-            UpdateVisibility = Microsoft.UI.Xaml.Visibility.Collapsed;
-            SelectGameVisibility = Visibility.Collapsed;
+            if (!status.IsLauncheExists)
+            {
+                StartGameBthVisibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                UpdateVisibility = Microsoft.UI.Xaml.Visibility.Visible;
+                SelectGameVisibility = Visibility.Visible;
+                ProgressVisibility = Visibility.Collapsed;
+            }
+            else
+            {
+                StartGameBthVisibility = Microsoft.UI.Xaml.Visibility.Visible;
+                UpdateVisibility = Microsoft.UI.Xaml.Visibility.Collapsed;
+                SelectGameVisibility = Visibility.Collapsed;
+            }
         }
         await LoadedAfter();
         IsLoading = false;

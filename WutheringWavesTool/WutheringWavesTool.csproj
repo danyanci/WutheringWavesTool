@@ -28,6 +28,7 @@
     <None Remove="Controls\ImageGroupAnimation.xaml" />
     <None Remove="Controls\Styles\Button.xaml" />
     <None Remove="Controls\Styles\ImageControl.xaml" />
+    <None Remove="Controls\Styles\ProgressBar.xaml" />
     <None Remove="Controls\Styles\SpiltButtonStyle.xaml" />
     <None Remove="Controls\Styles\TitleBar.xaml" />
     <None Remove="Pages\GamePages\BilibiliGamePage.xaml" />
@@ -130,6 +131,11 @@
     <Content Update="Assets\mcLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\Styles\ProgressBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\SettingPage.xaml">
