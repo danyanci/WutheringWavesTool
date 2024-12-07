@@ -10,7 +10,7 @@ public class GameContextStatus
     /// <summary>
     /// 游戏是否已经安装
     /// </summary>
-    public bool IsLauncheExists { get; internal set; }
+    public bool IsSelectDownloadFolder { get; internal set; }
 
     /// <summary>
     /// 是否在下载中

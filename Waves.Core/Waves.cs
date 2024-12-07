@@ -41,7 +41,7 @@ public static class Waves
                 }
             )
             .AddKeyedSingleton<IGameContext, GlobalGameContext>(
-                nameof(BilibiliGameContext),
+                nameof(GlobalGameContext),
                 (provider, c) =>
                 {
                     var context = GameContextFactory.GetGlobalGameContext();

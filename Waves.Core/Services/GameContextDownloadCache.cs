@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using Waves.Api.Models;
 using Waves.Core.Contracts;
 using Waves.Core.Models;
 
@@ -17,12 +18,12 @@ public class GameContextDownloadCache : IGameContextDownloadCache
 
     public async Task<DownloadCache> ReadCacheAsync()
     {
-        if (!File.Exists(BaseGameFolder + "\\downloadCahce.json"))
+        if (!File.Exists(BaseGameFolder + "\\downloadCache.json"))
         {
             this.Cache = new DownloadCache();
-            return Cache;
+            return null;
         }
-        var json = await File.ReadAllTextAsync(BaseGameFolder + "\\downloadCahce.json");
+        var json = await File.ReadAllTextAsync(BaseGameFolder + "\\downloadCache.json");
         try
         {
             this.Cache = JsonSerializer.Deserialize(
@@ -32,7 +33,7 @@ public class GameContextDownloadCache : IGameContextDownloadCache
         }
         catch (Exception)
         {
-            Cache = new DownloadCache() { Progress = 100 };
+            Cache = new();
         }
         return Cache;
     }
@@ -46,22 +47,15 @@ public class GameContextDownloadCache : IGameContextDownloadCache
                 cache,
                 DownloadCacheJsonContext.Default.DownloadCache
             );
-            if (!File.Exists(file))
+            if (File.Exists(file))
             {
-                using (var fs = File.CreateText(file))
-                {
-                    await fs.WriteAsync(json);
-                }
-                return true;
+                File.Delete(file);
             }
-            else
+            using (var fs = File.CreateText(file))
             {
-                using (var fs = new FileStream(file, FileMode.Open, FileAccess.Write))
-                {
-                    await fs.WriteAsync(Encoding.UTF8.GetBytes(json));
-                }
-                return true;
+                await fs.WriteAsync(json);
             }
+            return true;
         }
         catch (Exception)
         {

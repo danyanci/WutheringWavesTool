@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,8 @@ using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using Waves.Core.GameContext;
+using Waves.Core.GameContext.Contexts;
 using WinUIEx;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Pages;
@@ -19,11 +22,20 @@ namespace WutheringWavesTool.Services
     {
         public T App { get; private set; }
 
-        public Task LauncherAsync(T app)
+        public async Task LauncherAsync(T app)
         {
+            await Instance
+                .Service!.GetRequiredKeyedService<IGameContext>(nameof(MainGameContext))
+                .InitAsync();
+            await Instance
+                .Service!.GetRequiredKeyedService<IGameContext>(nameof(BilibiliGameContext))
+                .InitAsync();
+            await Instance
+                .Service!.GetRequiredKeyedService<IGameContext>(nameof(GlobalGameContext))
+                .InitAsync();
             this.App = app;
             var win = new WinUIEx.WindowEx();
-            var page = Instance.Service.GetRequiredService<ShellPage>();
+            var page = Instance.Service!.GetRequiredService<ShellPage>();
             page.titlebar.Window = win;
             win.Content = page;
             win.SystemBackdrop = new MicaBackdrop()
@@ -36,12 +48,30 @@ namespace WutheringWavesTool.Services
             winManager.IsResizable = false;
             winManager.IsMaximizable = false;
             this.App.MainWindow = win;
-            //if (App.MainWindow.Content is FrameworkElement content)
-            //{
-            //    content.RequestedTheme = ElementTheme.Dark;
-            //}
             win.Activate();
-            return Task.CompletedTask;
+            this.App.MainWindow.AppWindow.Closing += AppWindow_Closing;
+        }
+
+        private void AppWindow_Closing(
+            Microsoft.UI.Windowing.AppWindow sender,
+            Microsoft.UI.Windowing.AppWindowClosingEventArgs args
+        )
+        {
+            args.Cancel = true;
+            var mainContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
+                nameof(MainGameContext)
+            );
+            mainContext.CancelDownloadAsync().GetAwaiter().GetResult();
+
+            var biliContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
+                nameof(BilibiliGameContext)
+            );
+            biliContext.CancelDownloadAsync().GetAwaiter().GetResult();
+            var globalContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
+                nameof(GlobalGameContext)
+            );
+            globalContext.CancelDownloadAsync().GetAwaiter().GetResult();
+            Process.GetCurrentProcess().Kill();
         }
 
         public async Task TryInvokeAsync(Action action)

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -6,12 +7,15 @@ using Waves.Api.Models;
 using Waves.Core.Common;
 using Waves.Core.Contracts;
 using Waves.Core.Models;
+using Waves.Core.Models.Enums;
 
 namespace Waves.Core.GameContext;
 
 public abstract partial class GameContextBase : IGameContext
 {
     private bool isLimtSpeed;
+    private CancellationTokenSource _downloadCTS;
+    private CancellationTokenSource _clearCTS;
 
     public GameContextBase(GameApiContextConfig config, string contextName)
     {
@@ -28,16 +32,6 @@ public abstract partial class GameContextBase : IGameContext
         var selectFolder = await this.GameLocalConfig.GetConfigAsync(
             GameLocalSettingName.GameLauncherBassFolder
         );
-        if (!(selectFolder == null || string.IsNullOrWhiteSpace(selectFolder)))
-        {
-            this.GameContextDownloadCahce = GameContextFactory.GetGameContextDownloadCache(
-                selectFolder
-            );
-        }
-        else
-        {
-            GameContextDownloadCahce = null;
-        }
     }
 
     public IHttpClientService HttpClientService { get; set; }
@@ -67,7 +61,7 @@ public abstract partial class GameContextBase : IGameContext
     public WavesIndex WavesIndex { get; private set; }
     public CdnList? Cdn { get; private set; }
     public string DownloadBaseUrl { get; private set; }
-    public GameResource Resources { get; private set; }
+    public List<Resource> Resources { get; private set; }
     public bool IsLimitSpeed
     {
         get => isLimtSpeed;
@@ -84,6 +78,8 @@ public abstract partial class GameContextBase : IGameContext
     public bool IsDownload { get; private set; }
     public bool IsClear { get; private set; }
 
+    public bool IsPause { get; private set; }
+
     public IGameContextDownloadCache GameContextDownloadCahce { get; private set; }
 
     public async Task<GameContextStatus> GetGameStausAsync(CancellationToken token = default)
@@ -92,16 +88,25 @@ public abstract partial class GameContextBase : IGameContext
         var gamePath = await this.GameLocalConfig.GetConfigAsync(
             GameLocalSettingName.GameLauncherBassFolder
         );
-        if (!string.IsNullOrWhiteSpace(gamePath) || Directory.Exists(gamePath))
+        var programPath = await this.GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.GameLauncherBassProgram
+        );
+        if (
+            (!string.IsNullOrWhiteSpace(gamePath) || Directory.Exists(gamePath))
+            && (!string.IsNullOrWhiteSpace(gamePath) || Directory.Exists(gamePath))
+        )
         {
-            this.GameContextDownloadCahce = GameContextFactory.GetGameContextDownloadCache(
-                gamePath
-            );
-            var statusModel = (await GameContextDownloadCahce.ReadCacheAsync());
-            status.IsDownloadComplete = statusModel.IsComplete;
-            status.DownloadProcess = statusModel.Progress;
+            if (!string.IsNullOrWhiteSpace(programPath) || File.Exists(programPath))
+            {
+                status.IsDownloadComplete = true;
+                status.IsSelectDownloadFolder = true;
+            }
+            else
+            {
+                status.IsDownloadComplete = false;
+                status.IsSelectDownloadFolder = true;
+            }
         }
-
         status.IsVerify = this.IsVerify;
         status.IsDownload = this.IsDownload;
         status.IsClear = this.IsClear;
@@ -127,53 +132,53 @@ public abstract partial class GameContextBase : IGameContext
                     .LastOrDefault();
                 this.DownloadBaseUrl = Cdn.Url + WavesIndex.Default.ResourcesBasePath;
                 var resourceUrl = Cdn.Url + launcherIndex.Default.Resources;
-                this.Resources = await this.GetGameResourceAsync(resourceUrl);
+                this.Resources = (await this.GetGameResourceAsync(resourceUrl)).Resource;
                 this.gameContextOutputDelegate?.Invoke(
                     this,
                     new GameContextOutputArgs()
                     {
                         Type = Models.Enums.GameContextActionType.Verify,
                         CurrentFile = 0,
-                        MaxFile = Resources.Resource.Count,
+                        MaxFile = Resources.Count,
                         Progress = 0.0,
                     }
                 );
                 List<Resource> resources = new();
-                for (int i = 0; i < Resources.Resource.Count; i++)
+                for (int i = 0; i < Resources.Count; i++)
                 {
                     this.IsVerify = true;
-                    var file = folder + this.Resources.Resource[i].Dest.Replace('/', '\\');
+                    var file = folder + this.Resources[i].Dest.Replace('/', '\\');
                     if (!File.Exists(file))
                     {
-                        resources.Add(this.Resources.Resource[i]);
-                        double exis = (((double)i + 1) / this.Resources.Resource.Count) * 100;
+                        resources.Add(this.Resources[i]);
+                        double exis = (((double)i + 1) / this.Resources.Count) * 100;
                         this.gameContextOutputDelegate?.Invoke(
                             this,
                             new GameContextOutputArgs()
                             {
                                 Type = Models.Enums.GameContextActionType.Verify,
                                 CurrentFile = i + 1,
-                                MaxFile = Resources.Resource.Count,
+                                MaxFile = Resources.Count,
                                 Progress = Math.Round(exis, 2),
                             }
                         );
                         continue;
                     }
                     var md5String = GetFileMD5(file);
-                    if (md5String != this.Resources.Resource[i].Md5)
+                    if (md5String != this.Resources[i].Md5)
                     {
-                        resources.Add(this.Resources.Resource[i]);
+                        resources.Add(this.Resources[i]);
                         continue;
                     }
 
-                    double value = (((double)i + 1) / this.Resources.Resource.Count) * 100;
+                    double value = (((double)i + 1) / this.Resources.Count) * 100;
                     this.gameContextOutputDelegate?.Invoke(
                         this,
                         new GameContextOutputArgs()
                         {
                             Type = Models.Enums.GameContextActionType.Verify,
                             CurrentFile = i + 1,
-                            MaxFile = Resources.Resource.Count,
+                            MaxFile = Resources.Count,
                             Progress = Math.Round(value, 2),
                         }
                     );
@@ -207,12 +212,12 @@ public abstract partial class GameContextBase : IGameContext
         });
     }
 
-    public void StartDownloadGame(string folder)
+    public void StartDownloadGame(string folder, bool isNew)
     {
+        this.IsPause = false;
         Task.Run(async () =>
         {
             this.IsDownload = true;
-            this.GameContextDownloadCahce = GameContextFactory.GetGameContextDownloadCache(folder);
             if (!Directory.Exists(folder))
                 Directory.CreateDirectory(folder);
             await GameLocalConfig.SaveConfigAsync(
@@ -226,15 +231,15 @@ public abstract partial class GameContextBase : IGameContext
             this.Cdn = launcherIndex.Default.CdnList.OrderByDescending(p => p.P).LastOrDefault();
             this.DownloadBaseUrl = Cdn.Url + WavesIndex.Default.ResourcesBasePath;
             var resourceUrl = Cdn.Url + launcherIndex.Default.Resources;
-            this.Resources = await this.GetGameResourceAsync(resourceUrl);
-            var maxSize = Resources.Resource.Sum(x => x.Size);
+            this.Resources = (await this.GetGameResourceAsync(resourceUrl)).Resource;
+            var maxSize = Resources.Sum(x => x.Size);
             this.gameContextOutputDelegate?.Invoke(
                 this,
                 new GameContextOutputArgs()
                 {
                     Type = Models.Enums.GameContextActionType.Download,
                     CurrentFile = 0,
-                    MaxFile = Resources.Resource.Count,
+                    MaxFile = Resources.Count,
                     Progress = 0.0,
                     CurrentSize = 0,
                     Speed = 0,
@@ -242,192 +247,326 @@ public abstract partial class GameContextBase : IGameContext
                     MaxSize = maxSize,
                 }
             );
-            await this.GameContextDownloadCahce.WriteCacheAsync(
-                new()
-                {
-                    NowSize = 0.0,
-                    Progress = 0.0,
-                    TotalSize = maxSize,
-                }
-            );
-            await DownloadGameFiles(folder, Resources.Resource);
+            this._downloadCTS = new();
+            await DownloadGameFiles(folder, Resources.ToList(), _downloadCTS.Token);
         });
     }
 
-    /// <summary>
-    /// 下载游戏文件
-    /// </summary>
-    /// <param name="folder">基础目录</param>
-    /// <param name="resources">游戏资源</param>
-    /// <returns></returns>
-    private async Task DownloadGameFiles(string folder, List<Resource> resources)
+    private async Task DownloadGameFiles(
+        string folder,
+        List<Resource> resources,
+        CancellationToken token = default
+    )
     {
-        this.IsDownload = true;
-        this.gameContextOutputDelegate?.Invoke(
-            this,
-            new GameContextOutputArgs()
-            {
-                Type = Models.Enums.GameContextActionType.Download,
-                CurrentFile = 0,
-                MaxFile = resources.Count,
-                Progress = 0.0,
-            }
-        );
-        var list = resources.OrderByDescending(x => x.Size).ToArray();
-        Array.Reverse(list);
-        double maxSize = list.Sum(x => x.Size);
-        var totalBytesRead = 0L;
-        long nowFileSize = 0L;
-        this.gameContextOutputDelegate?.Invoke(
-            this,
-            new GameContextOutputArgs()
-            {
-                Type = Models.Enums.GameContextActionType.Verify,
-                CurrentFile = 0,
-                MaxFile = resources.Count,
-                Progress = 0.0,
-                Speed = 0,
-                SpeedString = "0MB/s",
-                CurrentSize = totalBytesRead,
-                MaxSize = (long)maxSize,
-            }
-        );
-        for (global::System.Int32 i = 0; i < list.Length; i++)
+        try
         {
+            if (token.IsCancellationRequested)
+                return;
             this.IsDownload = true;
-            var cachefile = folder + "\\DownloadCache" + list[i].Dest.Replace('/', '\\');
-            Directory.CreateDirectory(System.IO.Path.GetDirectoryName(cachefile)!);
-            var url = DownloadBaseUrl + list[i].Dest;
-            nowFileSize = 0;
-            var request = new HttpRequestMessage()
+            this.gameContextOutputDelegate?.Invoke(
+                this,
+                new GameContextOutputArgs()
+                {
+                    Type = Models.Enums.GameContextActionType.Download,
+                    CurrentFile = 0,
+                    MaxFile = resources.Count,
+                    Progress = 0.0,
+                }
+            );
+            var list = resources.OrderByDescending(x => x.Size).ToArray();
+            Array.Reverse(list);
+            long maxSize = list.Sum(x => x.Size);
+            var totalBytesRead = 0L;
+            long nowFileSize = 0L;
+            UpdateDownloadProgress(
+                GameContextActionType.Download,
+                0,
+                resources.Count,
+                0,
+                maxSize,
+                0
+            );
+            //this.gameContextOutputDelegate?.Invoke(
+            //    this,
+            //    new GameContextOutputArgs()
+            //    {
+            //        Type = Models.Enums.GameContextActionType.Verify,
+            //        CurrentFile = 0,
+            //        MaxFile = resources.Count,
+            //        Progress = 0.0,
+            //        Speed = 0,
+            //        SpeedString = "0MB/s",
+            //        CurrentSize = totalBytesRead,
+            //        MaxSize = (long)maxSize,
+            //    }
+            //);
+            for (global::System.Int32 i = 0; i < list.Length; i++)
             {
-                RequestUri = new(url),
-                Method = HttpMethod.Get,
-            };
-            if (File.Exists(cachefile))
-            {
-                var size = ReadFileSize(cachefile);
-                request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(size, null);
-            }
-            using (
-                var response = await HttpClientService.GameDownloadClient.GetAsync(
-                    url,
-                    HttpCompletionOption.ResponseHeadersRead
-                )
-            )
-            {
-                response.EnsureSuccessStatusCode();
-                using (var responseStream = await response.Content.ReadAsStreamAsync())
+                if (token.IsCancellationRequested)
+                    return;
+                this.IsDownload = true;
+                var cachefile = folder + "\\DownloadCache" + list[i].Dest.Replace('/', '\\');
+                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(cachefile)!);
+                var url = DownloadBaseUrl + list[i].Dest;
+                nowFileSize = 0;
+                var request = new HttpRequestMessage()
+                {
+                    RequestUri = new(url),
+                    Method = HttpMethod.Get,
+                };
+                FileStream fs = null;
+                if (File.Exists(cachefile))
+                {
+                    var size = ReadFileSize(cachefile);
+                    var md5 = GetFileMD5(cachefile);
+                    if (md5 == list[i].Md5)
+                    {
+                        var progresssValue = Math.Round(
+                            Convert.ToDouble((double)totalBytesRead / maxSize) * 100,
+                            2
+                        );
+                        UpdateDownloadProgress(
+                            GameContextActionType.Download,
+                            i,
+                            list.Length,
+                            totalBytesRead,
+                            maxSize,
+                            0
+                        );
+                        //this.gameContextOutputDelegate?.Invoke(
+                        //    this,
+                        //    new GameContextOutputArgs()
+                        //    {
+                        //        Type = Models.Enums.GameContextActionType.Download,
+                        //        CurrentSize = totalBytesRead,
+                        //        MaxSize = maxSize,
+                        //        Speed = 0,
+                        //        SpeedString = "",
+                        //        CurrentFile = i,
+                        //        MaxFile = list.Length,
+                        //        Progress = progresssValue,
+                        //    }
+                        //);
+                        Debug.WriteLine(progresssValue);
+                        totalBytesRead += size;
+                        continue;
+                    }
+                    if (size > list[i].Size)
+                    {
+                        File.Delete(cachefile);
+                        fs = new FileStream(cachefile, FileMode.Create, FileAccess.Write);
+                    }
+                    else
+                    {
+                        request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(
+                            size,
+                            list[i].Size - 1
+                        );
+                        totalBytesRead += size;
+                        fs = new FileStream(cachefile, FileMode.Append, FileAccess.Write);
+                    }
+                }
+                else
+                {
+                    fs = new FileStream(cachefile, FileMode.Create, FileAccess.Write);
+                }
                 using (
-                    var fileStream = new FileStream(
-                        cachefile,
-                        FileMode.Create,
-                        FileAccess.Write,
-                        FileShare.None
+                    var response = await HttpClientService.GameDownloadClient.SendAsync(
+                        request,
+                        HttpCompletionOption.ResponseHeadersRead
                     )
                 )
                 {
-                    var buffer = new byte[819200]; // 80KB 缓冲区
-                    int bytesRead;
-                    var startTime = DateTime.UtcNow;
-                    var lastReportTime = DateTime.UtcNow;
-                    var bytesSinceLastReport = 0L;
-                    while (
-                        (
-                            bytesRead = await MaybeLimitAndReadAsync(
-                                responseStream,
-                                fileStream,
-                                buffer,
-                                IsLimitSpeed,
-                                Lock
-                            )
-                        ) > 0
-                    )
+                    response.EnsureSuccessStatusCode();
+                    using (var responseStream = await response.Content.ReadAsStreamAsync())
+                    using (fs)
                     {
-                        totalBytesRead += bytesRead;
-                        nowFileSize += bytesRead;
-                        bytesSinceLastReport += bytesRead;
-                        var currentTime = DateTime.UtcNow;
-                        var reportInterval = TimeSpan.FromSeconds(1);
-                        if (currentTime - lastReportTime >= reportInterval)
+                        int bytesRead;
+                        var startTime = DateTime.UtcNow;
+                        var lastReportTime = DateTime.UtcNow;
+                        var bytesSinceLastReport = 0L;
+                        while (
+                            (
+                                bytesRead = await MaybeLimitAndReadAsync(
+                                    responseStream,
+                                    fs,
+                                    IsLimitSpeed,
+                                    Lock
+                                )
+                            ) > 0
+                        )
                         {
-                            var speed =
-                                bytesSinceLastReport / (currentTime - lastReportTime).TotalSeconds;
-                            var progresssValue = Math.Round(
-                                Convert.ToDouble((double)totalBytesRead / maxSize) * 100,
-                                2
-                            );
-                            await this.GameContextDownloadCahce.WriteCacheAsync(
-                                new()
-                                {
-                                    NowSize = totalBytesRead,
-                                    Progress = progresssValue,
-                                    TotalSize = maxSize,
-                                    CurrentDownloadFile = cachefile,
-                                    CurrentDownloadFileSize = nowFileSize,
-                                    IsComplete = false,
-                                }
-                            );
-                            lastReportTime = currentTime;
-                            bytesSinceLastReport = 0;
-                            this.gameContextOutputDelegate?.Invoke(
-                                this,
-                                new GameContextOutputArgs()
-                                {
-                                    Type = Models.Enums.GameContextActionType.Download,
-                                    CurrentSize = totalBytesRead,
-                                    MaxSize = maxSize,
-                                    Speed = speed / 1024 / 1024,
-                                    SpeedString = $"{speed / 1024 / 1024:F2} MB/s",
-                                    CurrentFile = i,
-                                    MaxFile = list.Length,
-                                    Progress = progresssValue,
-                                }
-                            );
+                            if (token.IsCancellationRequested)
+                            {
+                                await fs.FlushAsync();
+                                fs.Close();
+                                await fs.DisposeAsync();
+                                break;
+                            }
+                            totalBytesRead += bytesRead;
+                            nowFileSize += bytesRead;
+                            bytesSinceLastReport += bytesRead;
+                            var currentTime = DateTime.UtcNow;
+                            var reportInterval = TimeSpan.FromSeconds(1);
+                            if (currentTime - lastReportTime >= reportInterval)
+                            {
+                                var speed =
+                                    bytesSinceLastReport
+                                    / (currentTime - lastReportTime).TotalSeconds;
+                                var progresssValue = Math.Round(
+                                    Convert.ToDouble((double)totalBytesRead / maxSize) * 100,
+                                    2
+                                );
+                                lastReportTime = currentTime;
+                                bytesSinceLastReport = 0;
+                                UpdateDownloadProgress(
+                                    GameContextActionType.Download,
+                                    i,
+                                    list.Length,
+                                    totalBytesRead,
+                                    maxSize,
+                                    speed,
+                                    $"{speed / 1024 / 1024:F2} MB"
+                                );
+                                //this.gameContextOutputDelegate?.Invoke(
+                                //    this,
+                                //    new GameContextOutputArgs()
+                                //    {
+                                //        Type = Models.Enums.GameContextActionType.Download,
+                                //        CurrentSize = totalBytesRead,
+                                //        MaxSize = maxSize,
+                                //        Speed = speed / 1024 / 1024,
+                                //        SpeedString = $"{speed / 1024 / 1024:F2} MB",
+                                //        CurrentFile = i,
+                                //        MaxFile = list.Length,
+                                //        Progress = progresssValue,
+                                //    }
+                                //);
+                            }
                         }
+                        var currentTime2 = DateTime.UtcNow;
+                        var speed2 =
+                            bytesSinceLastReport / (currentTime2 - lastReportTime).TotalSeconds;
+                        var progresssValue2 = Math.Round(
+                            Convert.ToDouble((double)totalBytesRead / maxSize) * 100,
+                            2
+                        );
+                        UpdateDownloadProgress(
+                            GameContextActionType.Download,
+                            i,
+                            list.Length,
+                            totalBytesRead,
+                            maxSize,
+                            speed2,
+                            $"{speed2 / 1024 / 1024:F2} MB"
+                        );
+                        //this.gameContextOutputDelegate?.Invoke(
+                        //    this,
+                        //    new GameContextOutputArgs()
+                        //    {
+                        //        Type = Models.Enums.GameContextActionType.Download,
+                        //        CurrentSize = totalBytesRead,
+                        //        MaxSize = maxSize,
+                        //        Speed = speed2 / 1024 / 1024,
+                        //        SpeedString = $"{speed2 / 1024 / 1024:F2} MB",
+                        //        CurrentFile = i,
+                        //        MaxFile = list.Length,
+                        //        Progress = progresssValue2,
+                        //    }
+                        //);
+                        await fs.FlushAsync();
                     }
-                    var currentTime2 = DateTime.UtcNow;
-                    var speed2 =
-                        bytesSinceLastReport / (currentTime2 - lastReportTime).TotalSeconds;
-                    var progresssValue2 = Math.Round(
-                        Convert.ToDouble((double)totalBytesRead / maxSize) * 100,
-                        2
-                    );
-                    await this.GameContextDownloadCahce.WriteCacheAsync(
-                        new()
-                        {
-                            NowSize = totalBytesRead,
-                            Progress = progresssValue2,
-                            TotalSize = maxSize,
-                            CurrentDownloadFile = cachefile,
-                            CurrentDownloadFileSize = nowFileSize,
-                            IsComplete = true,
-                        }
-                    );
-                    this.gameContextOutputDelegate?.Invoke(
-                        this,
-                        new GameContextOutputArgs()
-                        {
-                            Type = Models.Enums.GameContextActionType.Download,
-                            CurrentSize = totalBytesRead,
-                            MaxSize = maxSize,
-                            Speed = speed2 / 1024 / 1024,
-                            SpeedString = $"{speed2 / 1024 / 1024:F2} MB/s",
-                            CurrentFile = i,
-                            MaxFile = list.Length,
-                            Progress = progresssValue2,
-                        }
-                    );
                 }
             }
+            this.gameContextOutputDelegate?.Invoke(
+                this,
+                new GameContextOutputArgs()
+                {
+                    Type = Models.Enums.GameContextActionType.Download,
+                    CurrentSize = totalBytesRead,
+                    MaxSize = maxSize,
+                    Speed = 0.0,
+                    SpeedString = "0MB",
+                    CurrentFile = list.Length,
+                    MaxFile = list.Length,
+                    Progress = Math.Round(
+                        Convert.ToDouble((double)totalBytesRead / maxSize) * 100,
+                        2
+                    ),
+                }
+            );
+            this.gameContextOutputDelegate?.Invoke(
+                this,
+                new GameContextOutputArgs() { Type = Models.Enums.GameContextActionType.None }
+            );
+            this.IsDownload = false;
+            await ClearGameCacheAsync(folder, this.Resources);
+            this.IsClear = true;
         }
+        catch (Exception)
+        {
+            return;
+        }
+    }
+
+    private readonly Queue<double> _speedHistory = new();
+    private const int SpeedHistoryWindowSize = 5; // 滑动窗口大小（最近 5 秒）
+
+    private double CalculateAverageSpeed(double currentSpeedInMBps)
+    {
+        // 转换为字节速度
+        var currentSpeedInBytesPerSecond = currentSpeedInMBps * 1024 * 1024;
+
+        // 添加最新速度到历史队列
+        _speedHistory.Enqueue(currentSpeedInBytesPerSecond);
+
+        // 如果队列超过设定的窗口大小，则移除最早的速度
+        if (_speedHistory.Count > SpeedHistoryWindowSize)
+        {
+            _speedHistory.Dequeue();
+        }
+
+        // 返回平均速度（仍以字节单位）
+        return _speedHistory.Average();
+    }
+
+    private void UpdateDownloadProgress(
+        GameContextActionType type,
+        int currentFile,
+        int maxFile,
+        long currentSize,
+        long maxSize,
+        double speed = 0.0,
+        string speedString = "0MB/s"
+    )
+    {
+        var progress = Math.Round((double)currentSize / maxSize * 100, 2);
+        var averageSpeed = CalculateAverageSpeed(speed);
+        // 计算剩余时间
+        string remainingTimeString = "N/A";
+        var speedValue = speed;
+        if (averageSpeed > 0)
+        {
+            var remainingBytes = maxSize - currentSize;
+            var remainingTime = TimeSpan.FromSeconds(remainingBytes / speedValue);
+            remainingTimeString = $"{remainingTime:hh\\:mm\\:ss}";
+        }
+
         this.gameContextOutputDelegate?.Invoke(
             this,
-            new GameContextOutputArgs() { Type = Models.Enums.GameContextActionType.None }
+            new GameContextOutputArgs()
+            {
+                Type = type,
+                CurrentFile = currentFile,
+                MaxFile = maxFile,
+                CurrentSize = currentSize,
+                MaxSize = maxSize,
+                Speed = speed,
+                SpeedString = speedString,
+                Progress = progress,
+                RemainingTime = remainingTimeString,
+            }
         );
-        this.IsDownload = false;
-        ClearGameCache(folder, this.Resources.Resource);
-        this.IsClear = true;
     }
 
     private long ReadFileSize(string cachefile)
@@ -436,77 +575,95 @@ public abstract partial class GameContextBase : IGameContext
         return file.Length;
     }
 
-    private void ClearGameCache(string folder, List<Resource> resources)
+    private async Task ClearGameCacheAsync(string folder, List<Resource> resources)
     {
-        List<Resource> clearResource = new();
-        this.gameContextOutputDelegate?.Invoke(
-            this,
-            new()
-            {
-                Type = Models.Enums.GameContextActionType.Clear,
-                CurrentFile = 0,
-                MaxFile = resources.Count,
-                Progress = 0,
-                Speed = 0.0,
-                CurrentSize = 0.0,
-                MaxSize = 0.0,
-                SpeedString = "",
-            }
-        );
-        for (int i = 0; i < resources.Count; i++)
+        try
         {
-            var cachefile = folder + "DownloadCache\\" + resources[i].Dest.Replace('/', '\\');
-            var file = folder + resources[i].Dest.Replace('/', '\\');
-            if (!File.Exists(cachefile))
+            this._clearCTS = new CancellationTokenSource();
+            List<Resource> clearResource = new();
+            this.gameContextOutputDelegate?.Invoke(
+                this,
+                new()
+                {
+                    Type = Models.Enums.GameContextActionType.Clear,
+                    CurrentFile = 0,
+                    MaxFile = resources.Count,
+                    Progress = 0,
+                    Speed = 0.0,
+                    CurrentSize = 0.0,
+                    MaxSize = 0.0,
+                    SpeedString = "",
+                }
+            );
+            for (int i = 0; i < resources.Count; i++)
             {
-                clearResource.Add(resources[i]);
-                continue;
+                if (_clearCTS.IsCancellationRequested)
+                    return;
+                var cachefile = folder + "\\DownloadCache" + resources[i].Dest.Replace('/', '\\');
+                var file = folder + resources[i].Dest.Replace('/', '\\');
+                if (!File.Exists(cachefile))
+                {
+                    clearResource.Add(resources[i]);
+                    continue;
+                }
+                var hash = this.GetFileMD5(cachefile);
+                if (hash != null && hash == resources[i].Md5)
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(file)!);
+                    File.Move(cachefile, file);
+                    var progress = Math.Round(
+                        Convert.ToDouble((double)i / resources.Count) * 100,
+                        2
+                    );
+                    this.gameContextOutputDelegate?.Invoke(
+                        this,
+                        new()
+                        {
+                            Type = Models.Enums.GameContextActionType.Clear,
+                            CurrentFile = i + 1,
+                            MaxFile = resources.Count,
+                            Progress = progress,
+                            Speed = 0.0,
+                            CurrentSize = 0.0,
+                            MaxSize = 0.0,
+                            SpeedString = "",
+                        }
+                    );
+                }
             }
-            var hash = this.GetFileMD5(cachefile);
-            if (hash != null && hash == resources[i].Md5)
-            {
-                File.Move(cachefile, file);
-                var progress = Math.Round(Convert.ToDouble((double)i / resources.Count) * 100, 2);
-                this.gameContextOutputDelegate?.Invoke(
-                    this,
-                    new()
-                    {
-                        Type = Models.Enums.GameContextActionType.Clear,
-                        CurrentFile = i + 1,
-                        MaxFile = resources.Count,
-                        Progress = progress,
-                        Speed = 0.0,
-                        CurrentSize = 0.0,
-                        MaxSize = 0.0,
-                        SpeedString = "",
-                    }
-                );
-            }
+            await GameLocalConfig.SaveConfigAsync(
+                GameLocalSettingName.GameLauncherBassProgram,
+                $"{folder}\\Wuthering Waves.exe"
+            );
+            this.gameContextOutputDelegate?.Invoke(
+                this,
+                new()
+                {
+                    Type = Models.Enums.GameContextActionType.None,
+                    CurrentFile = 0,
+                    MaxFile = resources.Count,
+                    Progress = 0.0,
+                    Speed = 0.0,
+                    CurrentSize = 0.0,
+                    MaxSize = 0.0,
+                    SpeedString = "",
+                }
+            );
         }
-        this.gameContextOutputDelegate?.Invoke(
-            this,
-            new()
-            {
-                Type = Models.Enums.GameContextActionType.None,
-                CurrentFile = 0,
-                MaxFile = resources.Count,
-                Progress = 0.0,
-                Speed = 0.0,
-                CurrentSize = 0.0,
-                MaxSize = 0.0,
-                SpeedString = "",
-            }
-        );
+        catch (Exception)
+        {
+            return;
+        }
     }
 
     async Task<int> MaybeLimitAndReadAsync(
         Stream responseStream,
         FileStream fileStream,
-        byte[] buffer,
         bool isLimitSpeed,
         RateLimiter rateLimiter
     )
     {
+        var buffer = new byte[819200]; // 80KB 缓冲区
         int bytesRead = await responseStream.ReadAsync(buffer, 0, buffer.Length);
         if (isLimitSpeed)
         {
@@ -556,5 +713,36 @@ public abstract partial class GameContextBase : IGameContext
             GameResourceContext.Default.GameResource
         );
         return launcherIndex;
+    }
+
+    public async Task CancelDownloadAsync()
+    {
+        if (this._downloadCTS == null)
+            return;
+        else
+            await _downloadCTS.CancelAsync();
+        this.IsDownload = false;
+    }
+
+    public async Task ClearGameResourceAsync()
+    {
+        if (this._downloadCTS != null)
+            await _downloadCTS.CancelAsync();
+        if (this._clearCTS != null)
+            await _clearCTS.CancelAsync();
+        var gameFolder = await GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.GameLauncherBassFolder
+        );
+        Directory.Delete(gameFolder, true);
+        await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.GameLauncherBassProgram, "");
+        await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.GameLauncherBassFolder, "");
+        this.IsDownload = false;
+        this.IsVerify = false;
+        this.IsPause = false;
+        this.IsLaunch = false;
+        this.gameContextOutputDelegate?.Invoke(
+            this,
+            new GameContextOutputArgs() { Type = GameContextActionType.None }
+        );
     }
 }

@@ -1,8 +1,12 @@
 ﻿using System.Text.Json.Serialization;
+using Waves.Api.Models;
 
 namespace Waves.Core.Models;
 
 [JsonSerializable(typeof(DownloadCache))]
+[JsonSerializable(typeof(Resource))]
+[JsonSerializable(typeof(DownloadLocalResource))]
+[JsonSerializable(typeof(List<Resource>))]
 public sealed partial class DownloadCacheJsonContext : JsonSerializerContext { }
 
 public class DownloadCache
@@ -24,4 +28,13 @@ public class DownloadCache
 
     [JsonPropertyName("currentDownloadProgress")]
     public long CurrentDownloadFileSize { get; set; }
+
+    [JsonPropertyName("downloadResources")]
+    public DownloadLocalResource DownloadResource { get; set; }
+}
+
+public class DownloadLocalResource
+{
+    [JsonPropertyName("resources")]
+    public List<Resource> Resources { get; set; }
 }

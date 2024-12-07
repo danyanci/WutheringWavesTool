@@ -29,9 +29,12 @@ public interface IGameContext
     Task<GameContextStatus> GetGameStausAsync(CancellationToken token = default);
     void StartVerifyGame(string folder);
 
-    void StartDownloadGame(string folder);
+    void StartDownloadGame(string folder, bool isNew);
+
+    Task CancelDownloadAsync();
 
     Task<WavesIndex> GetGameIndexAsync(CancellationToken token = default);
 
     Task<GameResource> GetGameResourceAsync(string resourceUrl, CancellationToken token = default);
+    Task ClearGameResourceAsync();
 }

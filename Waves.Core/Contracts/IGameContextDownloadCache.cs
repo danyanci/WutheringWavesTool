@@ -1,4 +1,5 @@
-﻿using Waves.Core.Models;
+﻿using Waves.Api.Models;
+using Waves.Core.Models;
 
 namespace Waves.Core.Contracts;
 

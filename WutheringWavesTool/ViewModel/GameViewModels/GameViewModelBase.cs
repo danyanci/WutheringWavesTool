@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -23,22 +24,16 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
 
     #region Visibility
     /// <summary>
-    /// 开始游戏按钮
-    /// </summary>
-    [ObservableProperty]
-    public partial Visibility StartGameBthVisibility { get; set; } = Visibility.Visible;
-
-    /// <summary>
     /// 进度条框
     /// </summary>
     [ObservableProperty]
-    public partial Visibility ProgressVisibility { get; set; } = Visibility.Visible;
+    public partial Visibility ProgressVisibility { get; set; } = Visibility.Collapsed;
 
     [ObservableProperty]
-    public partial Visibility UpdateVisibility { get; set; } = Visibility.Visible;
+    public partial Visibility SelectGameVisibility { get; set; } = Visibility.Collapsed;
 
     [ObservableProperty]
-    public partial Visibility SelectGameVisibility { get; set; } = Visibility.Visible;
+    public partial Visibility StartGameVisibility { get; set; } = Visibility.Collapsed;
     #endregion
 
     [ObservableProperty]
@@ -49,6 +44,12 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
 
     [ObservableProperty]
     public partial double Maxnum { get; set; }
+
+    [ObservableProperty]
+    public partial string DownloadIcon { get; set; }
+
+    [ObservableProperty]
+    public partial string DownloadText { get; set; }
 
     [ObservableProperty]
     public partial string VerifyOrDownloadString { get; set; }
@@ -77,7 +78,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         {
             await AppContext.TryInvokeAsync(() =>
             {
-                ShowVerify();
+                ShowDownload();
                 this.Progress = args.CurrentFile;
                 this.Maxnum = args.MaxFile;
                 this.IsProgressRingActive = false;
@@ -90,30 +91,37 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
             {
                 ShowDownload();
                 this.Progress = args.Progress;
-                this.Maxnum = 100;
                 this.IsProgressRingActive = false;
-                VerifyOrDownloadString = $"下载进度：{args.Progress}%，速度:{args.SpeedString}";
+                VerifyOrDownloadString =
+                    $"下载进度：{this.Progress}%，速度:{args.SpeedString}，剩余:{(args.MaxSize - args.CurrentSize) / 1024 / 1024 / 1024:F2}GB，预计:{args.RemainingTime}";
+                this.Maxnum = 100;
+                return;
+            });
+        }
+        else if (args.Type == Waves.Core.Models.Enums.GameContextActionType.Clear)
+        {
+            await AppContext.TryInvokeAsync(() =>
+            {
+                ShowDownload();
+                this.Progress = args.Progress;
+                this.IsProgressRingActive = false;
+                VerifyOrDownloadString = $"正在移动文件:{args.CurrentFile}/{args.MaxFile}";
+                this.Maxnum = 100;
+                return;
             });
         }
         else if (args.Type == Waves.Core.Models.Enums.GameContextActionType.None)
         {
-            await AppContext.TryInvokeAsync(() =>
-            {
-                StartGameBthVisibility = Visibility.Collapsed;
-                SelectGameVisibility = Visibility.Collapsed;
-                UpdateVisibility = Visibility.Visible;
-                ProgressVisibility = Visibility.Visible;
-                VerifyOrDownloadString = $"校验完成";
-            });
-            Debug.WriteLine("当前无动作");
             var result = await GameContext.GetGameStausAsync();
             await AppContext.TryInvokeAsync(() =>
             {
-                if (!result.IsDownloadComplete) { }
-                else
+                if (result.IsDownloadComplete && result.IsSelectDownloadFolder)
                 {
-                    StartGameBthVisibility = Visibility.Visible;
-                    UpdateVisibility = Visibility.Collapsed;
+                    ShowStartGame();
+                }
+                else if (!result.IsDownloadComplete && !result.IsSelectDownloadFolder)
+                {
+                    ShowSelectFolder();
                 }
             });
         }
@@ -124,11 +132,31 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     {
         IsLoading = true;
         var status = await GameContext.GetGameStausAsync(this.CTS.Token);
+        if (!status.IsSelectDownloadFolder)
+        {
+            ShowSelectFolder();
+        }
+        if (status.IsSelectDownloadFolder && status.IsDownloadComplete)
+        {
+            ShowStartGame();
+        }
+        if (!status.IsDownloadComplete)
+        {
+            if (status.IsSelectDownloadFolder)
+            {
+                DownloadIcon = "\uE768";
+                DownloadText = "继续下载";
+                ProgressVisibility = Visibility.Visible;
+                ShowDownload();
+            }
+        }
         if (status.IsVerify)
         {
-            ShowVerify();
+            ShowDownload();
             this.IsProgressRingActive = true;
             VerifyOrDownloadString = "读取校验状态";
+            DownloadIcon = "\uE769";
+            DownloadText = "暂停下载";
             await LoadedAfter();
             IsLoading = false;
             return;
@@ -138,44 +166,65 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
             ShowDownload();
             this.IsProgressRingActive = true;
             VerifyOrDownloadString = "读取下载状态";
+            DownloadIcon = "\uE769";
+            DownloadText = "暂停下载";
             await LoadedAfter();
             IsLoading = false;
             return;
-        }
-        if (!status.IsDownloadComplete)
-        {
-            if (!status.IsLauncheExists)
-            {
-                StartGameBthVisibility = Microsoft.UI.Xaml.Visibility.Collapsed;
-                UpdateVisibility = Microsoft.UI.Xaml.Visibility.Visible;
-                SelectGameVisibility = Visibility.Visible;
-                ProgressVisibility = Visibility.Collapsed;
-            }
-            else
-            {
-                StartGameBthVisibility = Microsoft.UI.Xaml.Visibility.Visible;
-                UpdateVisibility = Microsoft.UI.Xaml.Visibility.Collapsed;
-                SelectGameVisibility = Visibility.Collapsed;
-            }
         }
         await LoadedAfter();
         IsLoading = false;
     }
 
-    private void ShowDownload()
+    [RelayCommand]
+    async Task SwitchDownload()
     {
-        StartGameBthVisibility = Visibility.Collapsed;
-        SelectGameVisibility = Visibility.Collapsed;
-        UpdateVisibility = Visibility.Visible;
-        ProgressVisibility = Visibility.Visible;
+        var status = await GameContext.GetGameStausAsync(this.CTS.Token);
+        if (status.IsDownload)
+        {
+            await GameContext.CancelDownloadAsync();
+            DownloadIcon = "\uE768";
+            DownloadText = "继续下载";
+        }
+        else
+        {
+            GameContext.StartDownloadGame(
+                await GameContext.GameLocalConfig.GetConfigAsync(
+                    GameLocalSettingName.GameLauncherBassFolder
+                ),
+                false
+            );
+
+            DownloadIcon = "\uE769";
+            DownloadText = "暂停下载";
+        }
     }
 
-    private void ShowVerify()
+    [RelayCommand]
+    async Task DeleteGameResource()
     {
-        StartGameBthVisibility = Visibility.Collapsed;
-        SelectGameVisibility = Visibility.Collapsed;
-        UpdateVisibility = Visibility.Visible;
+        await this.GameContext.ClearGameResourceAsync();
+    }
+
+    private void ShowDownload()
+    {
         ProgressVisibility = Visibility.Visible;
+        SelectGameVisibility = Visibility.Collapsed;
+        StartGameVisibility = Visibility.Collapsed;
+    }
+
+    private void ShowSelectFolder()
+    {
+        SelectGameVisibility = Visibility.Visible;
+        ProgressVisibility = Visibility.Collapsed;
+        StartGameVisibility = Visibility.Collapsed;
+    }
+
+    private void ShowStartGame()
+    {
+        SelectGameVisibility = Visibility.Collapsed;
+        ProgressVisibility = Visibility.Collapsed;
+        StartGameVisibility = Visibility.Visible;
     }
 
     [RelayCommand]
@@ -191,7 +240,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     {
         var folder = await PickersService.GetFolderPicker();
         IsProgressRingActive = true;
-        GameContext.StartDownloadGame(folder.Path);
+        GameContext.StartDownloadGame(folder.Path, true);
     }
 
     [RelayCommand]

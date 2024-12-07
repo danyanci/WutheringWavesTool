@@ -19,4 +19,5 @@ public class GameContextOutputArgs
     public string SpeedString { get; set; }
 
     public double Speed { get; set; }
+    public string RemainingTime { get; internal set; }
 }
