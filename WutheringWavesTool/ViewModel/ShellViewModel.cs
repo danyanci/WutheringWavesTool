@@ -11,10 +11,12 @@ namespace WutheringWavesTool.ViewModel;
 public sealed partial class ShellViewModel : ViewModelBase
 {
     public ShellViewModel(
-        [FromKeyedServices(nameof(HomeNavigationService))] INavigationService homeNavigationService
+        [FromKeyedServices(nameof(HomeNavigationService))] INavigationService homeNavigationService,
+        ITipShow tipShow
     )
     {
         HomeNavigationService = homeNavigationService;
+        TipShow = tipShow;
     }
 
     [RelayCommand]
@@ -54,4 +56,5 @@ public sealed partial class ShellViewModel : ViewModelBase
     }
 
     public INavigationService HomeNavigationService { get; }
+    public ITipShow TipShow { get; }
 }

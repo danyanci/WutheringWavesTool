@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using SqlSugar;
 using Waves.Api.Models;
 using Waves.Core.Common;
 using Waves.Core.Contracts;
@@ -25,7 +26,7 @@ public abstract partial class GameContextBase : IGameContext
 
     public virtual async Task InitAsync()
     {
-        this.HttpClientService.BuildClient(ContextName);
+        this.HttpClientService.BuildClient();
         Directory.CreateDirectory(GamerConfigPath);
         this.GameLocalConfig = new GameLocalConfig();
         GameLocalConfig.SettingPath = GamerConfigPath + "\\Settings.db";
@@ -81,6 +82,7 @@ public abstract partial class GameContextBase : IGameContext
     public bool IsPause { get; private set; }
 
     public IGameContextDownloadCache GameContextDownloadCahce { get; private set; }
+    public Process NowProcess { get; private set; }
 
     public async Task<GameContextStatus> GetGameStausAsync(CancellationToken token = default)
     {
@@ -91,12 +93,18 @@ public abstract partial class GameContextBase : IGameContext
         var programPath = await this.GameLocalConfig.GetConfigAsync(
             GameLocalSettingName.GameLauncherBassProgram
         );
+        var gameversion = await this.GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.LocalGameVersion
+        );
         if (
             (!string.IsNullOrWhiteSpace(gamePath) || Directory.Exists(gamePath))
             && (!string.IsNullOrWhiteSpace(gamePath) || Directory.Exists(gamePath))
         )
         {
-            if (!string.IsNullOrWhiteSpace(programPath) || File.Exists(programPath))
+            if (
+                (!string.IsNullOrWhiteSpace(programPath) || File.Exists(programPath))
+                && (!string.IsNullOrWhiteSpace(gameversion))
+            )
             {
                 status.IsDownloadComplete = true;
                 status.IsSelectDownloadFolder = true;
@@ -110,6 +118,44 @@ public abstract partial class GameContextBase : IGameContext
         status.IsVerify = this.IsVerify;
         status.IsDownload = this.IsDownload;
         status.IsClear = this.IsClear;
+        if (this.DownloadBaseUrl != null)
+        {
+            var result = await NetworkCheck.PingAsync(DownloadBaseUrl);
+            if (result == null)
+                status.ConnectNetwork = false;
+            else if (result.Status == System.Net.NetworkInformation.IPStatus.Success)
+                status.ConnectNetwork = true;
+            else
+                status.ConnectNetwork = false;
+        }
+        else
+        {
+            var baiduResult = await NetworkCheck.PingAsync("https://baidu.com");
+            if (baiduResult == null)
+                status.ConnectNetwork = false;
+            else if (baiduResult.Status == System.Net.NetworkInformation.IPStatus.Success)
+                status.ConnectNetwork = true;
+            else
+                status.ConnectNetwork = false;
+        }
+        try
+        {
+            if (this.NowProcess != null)
+            {
+                if (NowProcess.HasExited)
+                    status.IsLauncherGame = false;
+                else
+                    status.IsLauncherGame = true;
+            }
+            else
+            {
+                status.IsLauncherGame = false;
+            }
+        }
+        catch (Exception)
+        {
+            status.IsLauncherGame = false;
+        }
         return status;
     }
 
@@ -212,49 +258,101 @@ public abstract partial class GameContextBase : IGameContext
         });
     }
 
-    public void StartDownloadGame(string folder, bool isNew)
+    public void StartDownloadGame(
+        string folder,
+        WavesIndex waves,
+        GameResource resource,
+        bool isNew
+    )
     {
         this.IsPause = false;
         Task.Run(async () =>
         {
-            this.IsDownload = true;
-            if (!Directory.Exists(folder))
-                Directory.CreateDirectory(folder);
-            await GameLocalConfig.SaveConfigAsync(
-                GameLocalSettingName.GameLauncherBassFolder,
-                folder
-            );
-            var launcherIndex = await GetGameIndexAsync();
-            if (launcherIndex == null)
+            try
+            {
+                this.HttpClientService.BuildClient();
+                this.IsDownload = true;
+                if (!Directory.Exists(folder))
+                    Directory.CreateDirectory(folder);
+                await GameLocalConfig.SaveConfigAsync(
+                    GameLocalSettingName.GameLauncherBassFolder,
+                    folder
+                );
+                var launcherIndex = await GetGameIndexAsync();
+                if (launcherIndex == null)
+                    return;
+                this.WavesIndex = launcherIndex;
+                this.Cdn = launcherIndex
+                    .Default.CdnList.Where(p => p.P > 0)
+                    .OrderByDescending(p => p.P)
+                    .LastOrDefault();
+                this.DownloadBaseUrl = Cdn.Url + WavesIndex.Default.ResourcesBasePath;
+                var resourceUrl = Cdn.Url + launcherIndex.Default.Resources;
+                var version = launcherIndex.Default.ResourceChunk.LastVersion;
+                this.Resources = (await this.GetGameResourceAsync(resourceUrl)).Resource;
+                var maxSize = Resources.Sum(x => x.Size);
+                this.gameContextOutputDelegate?.Invoke(
+                    this,
+                    new GameContextOutputArgs()
+                    {
+                        Type = Models.Enums.GameContextActionType.Download,
+                        CurrentFile = 0,
+                        MaxFile = Resources.Count,
+                        Progress = 0.0,
+                        CurrentSize = 0,
+                        Speed = 0,
+                        SpeedString = "0MB/s",
+                        MaxSize = maxSize,
+                    }
+                );
+                this._downloadCTS = new();
+                await DownloadGameFiles(
+                    folder,
+                    Resources.ToList(),
+                    this.WavesIndex.Default.ResourceChunk.LastVersion,
+                    _downloadCTS.Token
+                );
+            }
+            catch (IOException ex)
+            {
+                this.IsDownload = false;
+                this.IsVerify = false;
+                this.gameContextOutputDelegate?.Invoke(
+                    this,
+                    new() { Type = GameContextActionType.Error, ErrorMessage = "网络断开！" }
+                );
+                this.Lock = new RateLimiter(SpeedValue * 1024 * 1024);
                 return;
-            this.WavesIndex = launcherIndex;
-            this.Cdn = launcherIndex.Default.CdnList.OrderByDescending(p => p.P).LastOrDefault();
-            this.DownloadBaseUrl = Cdn.Url + WavesIndex.Default.ResourcesBasePath;
-            var resourceUrl = Cdn.Url + launcherIndex.Default.Resources;
-            this.Resources = (await this.GetGameResourceAsync(resourceUrl)).Resource;
-            var maxSize = Resources.Sum(x => x.Size);
-            this.gameContextOutputDelegate?.Invoke(
-                this,
-                new GameContextOutputArgs()
-                {
-                    Type = Models.Enums.GameContextActionType.Download,
-                    CurrentFile = 0,
-                    MaxFile = Resources.Count,
-                    Progress = 0.0,
-                    CurrentSize = 0,
-                    Speed = 0,
-                    SpeedString = "0MB/s",
-                    MaxSize = maxSize,
-                }
-            );
-            this._downloadCTS = new();
-            await DownloadGameFiles(folder, Resources.ToList(), _downloadCTS.Token);
+            }
+            catch (HttpRequestException httpEx)
+            {
+                this.IsDownload = false;
+                this.IsVerify = false;
+                this.gameContextOutputDelegate?.Invoke(
+                    this,
+                    new() { Type = GameContextActionType.Error, ErrorMessage = "网络断开！" }
+                );
+                this.Lock = new RateLimiter(SpeedValue * 1024 * 1024);
+                return;
+            }
+            catch (Exception ex)
+            {
+                this.IsDownload = false;
+                this.IsVerify = false;
+                this.gameContextOutputDelegate?.Invoke(
+                    this,
+                    new() { Type = GameContextActionType.Error, ErrorMessage = ex.Message }
+                );
+                this.Lock = new RateLimiter(SpeedValue * 1024 * 1024);
+                return;
+            }
         });
     }
 
     private async Task DownloadGameFiles(
         string folder,
         List<Resource> resources,
+        string version = "",
         CancellationToken token = default
     )
     {
@@ -286,20 +384,6 @@ public abstract partial class GameContextBase : IGameContext
                 maxSize,
                 0
             );
-            //this.gameContextOutputDelegate?.Invoke(
-            //    this,
-            //    new GameContextOutputArgs()
-            //    {
-            //        Type = Models.Enums.GameContextActionType.Verify,
-            //        CurrentFile = 0,
-            //        MaxFile = resources.Count,
-            //        Progress = 0.0,
-            //        Speed = 0,
-            //        SpeedString = "0MB/s",
-            //        CurrentSize = totalBytesRead,
-            //        MaxSize = (long)maxSize,
-            //    }
-            //);
             for (global::System.Int32 i = 0; i < list.Length; i++)
             {
                 if (token.IsCancellationRequested)
@@ -333,20 +417,6 @@ public abstract partial class GameContextBase : IGameContext
                             maxSize,
                             0
                         );
-                        //this.gameContextOutputDelegate?.Invoke(
-                        //    this,
-                        //    new GameContextOutputArgs()
-                        //    {
-                        //        Type = Models.Enums.GameContextActionType.Download,
-                        //        CurrentSize = totalBytesRead,
-                        //        MaxSize = maxSize,
-                        //        Speed = 0,
-                        //        SpeedString = "",
-                        //        CurrentFile = i,
-                        //        MaxFile = list.Length,
-                        //        Progress = progresssValue,
-                        //    }
-                        //);
                         Debug.WriteLine(progresssValue);
                         totalBytesRead += size;
                         continue;
@@ -360,7 +430,7 @@ public abstract partial class GameContextBase : IGameContext
                     {
                         request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(
                             size,
-                            list[i].Size - 1
+                            null
                         );
                         totalBytesRead += size;
                         fs = new FileStream(cachefile, FileMode.Append, FileAccess.Write);
@@ -373,7 +443,8 @@ public abstract partial class GameContextBase : IGameContext
                 using (
                     var response = await HttpClientService.GameDownloadClient.SendAsync(
                         request,
-                        HttpCompletionOption.ResponseHeadersRead
+                        HttpCompletionOption.ResponseHeadersRead,
+                        _downloadCTS.Token
                     )
                 )
                 {
@@ -428,20 +499,6 @@ public abstract partial class GameContextBase : IGameContext
                                     speed,
                                     $"{speed / 1024 / 1024:F2} MB"
                                 );
-                                //this.gameContextOutputDelegate?.Invoke(
-                                //    this,
-                                //    new GameContextOutputArgs()
-                                //    {
-                                //        Type = Models.Enums.GameContextActionType.Download,
-                                //        CurrentSize = totalBytesRead,
-                                //        MaxSize = maxSize,
-                                //        Speed = speed / 1024 / 1024,
-                                //        SpeedString = $"{speed / 1024 / 1024:F2} MB",
-                                //        CurrentFile = i,
-                                //        MaxFile = list.Length,
-                                //        Progress = progresssValue,
-                                //    }
-                                //);
                             }
                         }
                         var currentTime2 = DateTime.UtcNow;
@@ -460,20 +517,6 @@ public abstract partial class GameContextBase : IGameContext
                             speed2,
                             $"{speed2 / 1024 / 1024:F2} MB"
                         );
-                        //this.gameContextOutputDelegate?.Invoke(
-                        //    this,
-                        //    new GameContextOutputArgs()
-                        //    {
-                        //        Type = Models.Enums.GameContextActionType.Download,
-                        //        CurrentSize = totalBytesRead,
-                        //        MaxSize = maxSize,
-                        //        Speed = speed2 / 1024 / 1024,
-                        //        SpeedString = $"{speed2 / 1024 / 1024:F2} MB",
-                        //        CurrentFile = i,
-                        //        MaxFile = list.Length,
-                        //        Progress = progresssValue2,
-                        //    }
-                        //);
                         await fs.FlushAsync();
                     }
                 }
@@ -500,12 +543,35 @@ public abstract partial class GameContextBase : IGameContext
                 new GameContextOutputArgs() { Type = Models.Enums.GameContextActionType.None }
             );
             this.IsDownload = false;
-            await ClearGameCacheAsync(folder, this.Resources);
+            await ClearGameCacheAsync(folder, this.Resources, version);
             this.IsClear = true;
         }
-        catch (Exception)
+        catch (System.IO.IOException ioEx)
         {
-            return;
+            this.gameContextOutputDelegate?.Invoke(
+                this,
+                new() { Type = GameContextActionType.Error, ErrorMessage = "网络断开！" }
+            );
+            this.IsDownload = false;
+            this.Lock = new RateLimiter(SpeedValue * 1024 * 1024);
+        }
+        catch (HttpRequestException httpex)
+        {
+            this.gameContextOutputDelegate?.Invoke(
+                this,
+                new() { Type = GameContextActionType.Error, ErrorMessage = httpex.Message }
+            );
+            this.IsDownload = false;
+            this.Lock = new RateLimiter(SpeedValue * 1024 * 1024);
+        }
+        catch (Exception ex)
+        {
+            this.gameContextOutputDelegate?.Invoke(
+                this,
+                new() { Type = GameContextActionType.Error, ErrorMessage = ex.Message }
+            );
+            this.IsDownload = false;
+            this.Lock = new RateLimiter(SpeedValue * 1024 * 1024);
         }
     }
 
@@ -540,33 +606,37 @@ public abstract partial class GameContextBase : IGameContext
         string speedString = "0MB/s"
     )
     {
-        var progress = Math.Round((double)currentSize / maxSize * 100, 2);
-        var averageSpeed = CalculateAverageSpeed(speed);
-        // 计算剩余时间
-        string remainingTimeString = "N/A";
-        var speedValue = speed;
-        if (averageSpeed > 0)
+        try
         {
-            var remainingBytes = maxSize - currentSize;
-            var remainingTime = TimeSpan.FromSeconds(remainingBytes / speedValue);
-            remainingTimeString = $"{remainingTime:hh\\:mm\\:ss}";
-        }
-
-        this.gameContextOutputDelegate?.Invoke(
-            this,
-            new GameContextOutputArgs()
+            var progress = Math.Round((double)currentSize / maxSize * 100, 2);
+            var averageSpeed = CalculateAverageSpeed(speed);
+            // 计算剩余时间
+            string remainingTimeString = "N/A";
+            var speedValue = speed;
+            if (averageSpeed > 0)
             {
-                Type = type,
-                CurrentFile = currentFile,
-                MaxFile = maxFile,
-                CurrentSize = currentSize,
-                MaxSize = maxSize,
-                Speed = speed,
-                SpeedString = speedString,
-                Progress = progress,
-                RemainingTime = remainingTimeString,
+                var remainingBytes = maxSize - currentSize;
+                var remainingTime = TimeSpan.FromSeconds(remainingBytes / speedValue);
+                remainingTimeString = $"{remainingTime:hh\\:mm\\:ss}";
             }
-        );
+
+            this.gameContextOutputDelegate?.Invoke(
+                this,
+                new GameContextOutputArgs()
+                {
+                    Type = type,
+                    CurrentFile = currentFile,
+                    MaxFile = maxFile,
+                    CurrentSize = currentSize,
+                    MaxSize = maxSize,
+                    Speed = speed,
+                    SpeedString = speedString,
+                    Progress = progress,
+                    RemainingTime = remainingTimeString,
+                }
+            );
+        }
+        catch (Exception ex) { }
     }
 
     private long ReadFileSize(string cachefile)
@@ -575,7 +645,11 @@ public abstract partial class GameContextBase : IGameContext
         return file.Length;
     }
 
-    private async Task ClearGameCacheAsync(string folder, List<Resource> resources)
+    private async Task ClearGameCacheAsync(
+        string folder,
+        List<Resource> resources,
+        string version = ""
+    )
     {
         try
         {
@@ -635,6 +709,11 @@ public abstract partial class GameContextBase : IGameContext
                 GameLocalSettingName.GameLauncherBassProgram,
                 $"{folder}\\Wuthering Waves.exe"
             );
+            if (!string.IsNullOrWhiteSpace(version))
+                await GameLocalConfig.SaveConfigAsync(
+                    GameLocalSettingName.LocalGameVersion,
+                    version
+                );
             this.gameContextOutputDelegate?.Invoke(
                 this,
                 new()
@@ -736,6 +815,7 @@ public abstract partial class GameContextBase : IGameContext
         Directory.Delete(gameFolder, true);
         await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.GameLauncherBassProgram, "");
         await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.GameLauncherBassFolder, "");
+        await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.LocalGameVersion, "");
         this.IsDownload = false;
         this.IsVerify = false;
         this.IsPause = false;
@@ -744,5 +824,28 @@ public abstract partial class GameContextBase : IGameContext
             this,
             new GameContextOutputArgs() { Type = GameContextActionType.None }
         );
+    }
+
+    public async Task StartLauncheAsync()
+    {
+        var gameProgram = await this.GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.GameLauncherBassProgram
+        );
+        if (File.Exists(gameProgram))
+        {
+            var folder = System.IO.Path.GetDirectoryName(gameProgram);
+            this.NowProcess = new Process()
+            {
+                StartInfo = new ProcessStartInfo(gameProgram)
+                {
+                    WorkingDirectory = folder,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    Arguments = "Client -dx12",
+                    Verb = "runas",
+                },
+            };
+            NowProcess.Start();
+        }
     }
 }

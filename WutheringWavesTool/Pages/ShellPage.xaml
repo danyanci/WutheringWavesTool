@@ -17,9 +17,15 @@
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
+        <ui:ImageControl
+            Grid.Row="2"
+            Canvas.ZIndex="-1"
+            Source="ms-appx:///Assets/backup.jpg"
+            Stretch="UniformToFill" />
         <ui:TitleBar
             x:Name="titlebar"
             x:FieldModifier="public"
+            FooterVerticalAlignment="Center"
             IsExtendsContentIntoTitleBar="True"
             TitleMode="Tall">
             <ui:TitleBar.Header>
@@ -60,21 +66,22 @@
             </ui:TitleBar.Header>
             <ui:TitleBar.Footer>
                 <Button Command="{x:Bind ViewModel.OpenSettingCommand}" Style="{ThemeResource TransparentButtonStyle}">
-                    <AnimatedIcon x:Name="AnimatedIcon">
-                        <AnimatedIcon.Source>
-                            <animatedvisuals:AnimatedSettingsVisualSource />
-                        </AnimatedIcon.Source>
-                        <AnimatedIcon.FallbackIconSource>
-                            <FontIconSource Glyph="&#xE713;" />
-                        </AnimatedIcon.FallbackIconSource>
-                    </AnimatedIcon>
+                    <Viewbox Height="15">
+                        <AnimatedIcon x:Name="AnimatedIcon">
+                            <AnimatedIcon.Source>
+                                <animatedvisuals:AnimatedSettingsVisualSource />
+                            </AnimatedIcon.Source>
+                            <AnimatedIcon.FallbackIconSource>
+                                <FontIconSource Glyph="&#xE713;" />
+                            </AnimatedIcon.FallbackIconSource>
+                        </AnimatedIcon>
+                    </Viewbox>
 
                 </Button>
             </ui:TitleBar.Footer>
         </ui:TitleBar>
-        <Frame
-            x:Name="frame"
-            Grid.Row="1"
-            Margin="25" />
+        <Grid x:Name="panel" Grid.Row="1">
+            <Frame x:Name="frame" />
+        </Grid>
     </Grid>
 </Page>

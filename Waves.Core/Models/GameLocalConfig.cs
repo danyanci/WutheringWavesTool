@@ -15,6 +15,11 @@ public class GameLocalSettingName
     /// 游戏启动可执行文件
     /// </summary>
     public const string GameLauncherBassProgram = nameof(GameLauncherBassProgram);
+
+    /// <summary>
+    /// 本地游戏版本
+    /// </summary>
+    public const string LocalGameVersion = nameof(LocalGameVersion);
 }
 
 public class GameLocalConfig

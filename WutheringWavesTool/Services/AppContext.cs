@@ -49,6 +49,10 @@ namespace WutheringWavesTool.Services
             winManager.IsMaximizable = false;
             this.App.MainWindow = win;
             win.Activate();
+            if (win.Content is FrameworkElement fe)
+            {
+                fe.RequestedTheme = ElementTheme.Dark;
+            }
             this.App.MainWindow.AppWindow.Closing += AppWindow_Closing;
         }
 

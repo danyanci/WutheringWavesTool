@@ -1,4 +1,5 @@
 ﻿using Waves.Core.Contracts;
+using Waves.Core.Models.Handlers;
 
 namespace Waves.Core.Services;
 
@@ -14,9 +15,9 @@ public class HttpClientService : IHttpClientService
 
     public HttpClient GameDownloadClient { get; private set; }
 
-    public void BuildClient(string name)
+    public void BuildClient()
     {
-        this.HttpClient = HttpClientFactory.CreateClient("GameServer");
-        this.GameDownloadClient = HttpClientFactory.CreateClient("GameDownloadServer");
+        this.HttpClient = new HttpClient(new WavesGameHandler());
+        this.GameDownloadClient = new HttpClient(new WavesGameHandler());
     }
 }

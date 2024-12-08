@@ -6,5 +6,5 @@ public interface IHttpClientService
 
     public HttpClient GameDownloadClient { get; }
 
-    public void BuildClient(string name);
+    public void BuildClient();
 }

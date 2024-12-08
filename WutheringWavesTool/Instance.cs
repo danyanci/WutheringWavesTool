@@ -28,6 +28,7 @@ public static class Instance
             #region Navigation
             .AddTransient<IPageService, PageService>()
             .AddTransient<IPickersService, PickersService>()
+            .AddSingleton<ITipShow, TipShow>()
             #endregion
             #region Base
             .AddSingleton<IAppContext<App>, AppContext<App>>()

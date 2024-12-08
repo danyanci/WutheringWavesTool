@@ -51,14 +51,7 @@ public static class Waves
                 }
             )
             .AddTransient<IHttpClientService, HttpClientService>();
-        services
-            .AddHttpClient("GameServer")
-            .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-            .ConfigurePrimaryHttpMessageHandler(() => new WavesGameHandler());
-        services
-            .AddHttpClient("GameDownloadServer")
-            .SetHandlerLifetime(TimeSpan.FromMinutes(5))
-            .ConfigurePrimaryHttpMessageHandler(() => new WavesGameHandler());
+        services.AddHttpClient();
         return services;
     }
 }

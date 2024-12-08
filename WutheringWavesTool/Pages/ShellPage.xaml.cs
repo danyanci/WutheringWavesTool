@@ -12,6 +12,7 @@ public sealed partial class ShellPage : Page
         this.ViewModel = Instance.Service.GetRequiredService<ShellViewModel>();
         this.Loaded += ShellPage_Loaded;
         this.ViewModel.HomeNavigationService.RegisterView(this.frame);
+        this.ViewModel.TipShow.Owner = this.panel;
     }
 
     public ShellViewModel ViewModel { get; }

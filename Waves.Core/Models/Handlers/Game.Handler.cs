@@ -6,7 +6,7 @@ public delegate void GameVerifyDelegate();
 
 public delegate void GameDownloadDelegate();
 
-public delegate void GameContextOutputDelegate(object sender, GameContextOutputArgs args);
+public delegate Task GameContextOutputDelegate(object sender, GameContextOutputArgs args);
 
 partial class GameContextBase
 {

@@ -1,4 +1,5 @@
-﻿using Waves.Api.Models;
+﻿using System.Diagnostics;
+using Waves.Api.Models;
 using Waves.Core.Contracts;
 using Waves.Core.Models;
 
@@ -29,7 +30,7 @@ public interface IGameContext
     Task<GameContextStatus> GetGameStausAsync(CancellationToken token = default);
     void StartVerifyGame(string folder);
 
-    void StartDownloadGame(string folder, bool isNew);
+    void StartDownloadGame(string folder, WavesIndex waves, GameResource resource, bool isNew);
 
     Task CancelDownloadAsync();
 
@@ -37,4 +38,9 @@ public interface IGameContext
 
     Task<GameResource> GetGameResourceAsync(string resourceUrl, CancellationToken token = default);
     Task ClearGameResourceAsync();
+
+    #region 启动游戏
+    Task StartLauncheAsync();
+
+    #endregion
 }

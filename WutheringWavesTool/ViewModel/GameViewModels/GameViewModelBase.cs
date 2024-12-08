@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Waves.Api.Models;
 using Waves.Core.GameContext;
 using Waves.Core.Models;
 using Windows.Devices.WiFi;
@@ -43,33 +47,57 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     public partial double Progress { get; set; }
 
     [ObservableProperty]
+    public partial string SpeedString { get; set; }
+
+    [ObservableProperty]
+    public partial string SurplusValue { get; set; }
+
+    [ObservableProperty]
+    public partial string LastTime { get; set; }
+
+    [ObservableProperty]
     public partial double Maxnum { get; set; }
 
     [ObservableProperty]
     public partial string DownloadIcon { get; set; }
 
     [ObservableProperty]
+    public partial bool DownloadGameEnable { get; set; } = true;
+
+    [ObservableProperty]
     public partial string DownloadText { get; set; }
+
+    [ObservableProperty]
+    public partial string WorkType { get; set; }
 
     [ObservableProperty]
     public partial string VerifyOrDownloadString { get; set; }
     public IGameContext GameContext { get; }
     public IPickersService PickersService { get; }
     public IAppContext<App> AppContext { get; }
+    public ITipShow TipShow { get; }
+
+    [ObservableProperty]
+    public partial string LastVerision { get; set; }
+
+    [ObservableProperty]
+    public partial bool LauncherGameEnable { get; set; }
 
     public GameViewModelBase(
         IGameContext gameContext,
         IPickersService pickersService,
-        IAppContext<App> appContext
+        IAppContext<App> appContext,
+        ITipShow tipShow
     )
     {
         GameContext = gameContext;
         PickersService = pickersService;
         AppContext = appContext;
+        TipShow = tipShow;
         this.GameContext.GameContextOutput += GameContext_GameContextOutput;
     }
 
-    private async void GameContext_GameContextOutput(
+    private async Task GameContext_GameContextOutput(
         object sender,
         Waves.Core.Models.GameContextOutputArgs args
     )
@@ -80,7 +108,11 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
             {
                 ShowDownload();
                 this.Progress = args.CurrentFile;
+                this.SurplusValue = args.RemainingTime;
+                this.SpeedString = "0MB";
+                this.WorkType = "校验";
                 this.Maxnum = args.MaxFile;
+                this.LastTime = "0GB";
                 this.IsProgressRingActive = false;
                 VerifyOrDownloadString = $"校验文件：{args.Progress}%";
             });
@@ -89,8 +121,15 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         {
             await AppContext.TryInvokeAsync(() =>
             {
+                DownloadIcon = "\uE769";
+                DownloadText = "暂停下载";
                 ShowDownload();
                 this.Progress = args.Progress;
+                this.SurplusValue = args.RemainingTime;
+                this.SpeedString = args.SpeedString;
+                this.Maxnum = args.MaxFile;
+                this.WorkType = "下载";
+                this.LastTime = $"{(args.MaxSize - args.CurrentSize) / 1024 / 1024 / 1024:F2}GB";
                 this.IsProgressRingActive = false;
                 VerifyOrDownloadString =
                     $"下载进度：{this.Progress}%，速度:{args.SpeedString}，剩余:{(args.MaxSize - args.CurrentSize) / 1024 / 1024 / 1024:F2}GB，预计:{args.RemainingTime}";
@@ -103,26 +142,36 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
             await AppContext.TryInvokeAsync(() =>
             {
                 ShowDownload();
-                this.Progress = args.Progress;
+                DownloadGameEnable = false;
+                this.Progress = args.CurrentFile;
+                this.SurplusValue = args.RemainingTime;
+                this.SpeedString = args.SpeedString;
+                this.Maxnum = args.MaxFile;
+                this.WorkType = "清理";
+                this.LastTime = $"0GB";
                 this.IsProgressRingActive = false;
                 VerifyOrDownloadString = $"正在移动文件:{args.CurrentFile}/{args.MaxFile}";
                 this.Maxnum = 100;
                 return;
             });
         }
-        else if (args.Type == Waves.Core.Models.Enums.GameContextActionType.None)
+        else if (
+            args.Type == Waves.Core.Models.Enums.GameContextActionType.None
+            || args.Type == Waves.Core.Models.Enums.GameContextActionType.Error
+        )
         {
-            var result = await GameContext.GetGameStausAsync();
             await AppContext.TryInvokeAsync(() =>
             {
-                if (result.IsDownloadComplete && result.IsSelectDownloadFolder)
+                if (args.Type == Waves.Core.Models.Enums.GameContextActionType.Error)
                 {
-                    ShowStartGame();
+                    this.TipShow.ShowMessage($"{args.ErrorMessage}", Symbol.Clear);
+                    VerifyOrDownloadString = $"下载或校验出现网络问题";
+                    this.IsProgressRingActive = false;
                 }
-                else if (!result.IsDownloadComplete && !result.IsSelectDownloadFolder)
-                {
-                    ShowSelectFolder();
-                }
+            });
+            await AppContext.TryInvokeAsync(async () =>
+            {
+                await RefreshStatus();
             });
         }
     }
@@ -131,14 +180,27 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     async Task Loaded()
     {
         IsLoading = true;
+        await RefreshStatus();
+        await LoadedAfter();
+        IsLoading = false;
+    }
+
+    async Task RefreshStatus()
+    {
         var status = await GameContext.GetGameStausAsync(this.CTS.Token);
         if (!status.IsSelectDownloadFolder)
         {
+            var index = await GameContext.GetGameIndexAsync(this.CTS.Token);
+            this.LastVerision = index.Default.ResourceChunk.LastVersion;
             ShowSelectFolder();
         }
         if (status.IsSelectDownloadFolder && status.IsDownloadComplete)
         {
             ShowStartGame();
+            if (status.IsLauncherGame)
+                LauncherGameEnable = false;
+            else
+                LauncherGameEnable = true;
         }
         if (!status.IsDownloadComplete)
         {
@@ -172,8 +234,6 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
             IsLoading = false;
             return;
         }
-        await LoadedAfter();
-        IsLoading = false;
     }
 
     [RelayCommand]
@@ -188,16 +248,21 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         }
         else
         {
-            GameContext.StartDownloadGame(
+            await StartDown(
                 await GameContext.GameLocalConfig.GetConfigAsync(
                     GameLocalSettingName.GameLauncherBassFolder
-                ),
-                false
+                )
             );
-
             DownloadIcon = "\uE769";
             DownloadText = "暂停下载";
         }
+    }
+
+    [RelayCommand]
+    async Task LauncheGameAsync()
+    {
+        await GameContext.StartLauncheAsync();
+        await this.RefreshStatus();
     }
 
     [RelayCommand]
@@ -240,7 +305,26 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     {
         var folder = await PickersService.GetFolderPicker();
         IsProgressRingActive = true;
-        GameContext.StartDownloadGame(folder.Path, true);
+        await StartDown(folder.Path);
+    }
+
+    async Task StartDown(string folder)
+    {
+        var launcherIndex = await GameContext.GetGameIndexAsync();
+        var Cdn = launcherIndex
+            .Default.CdnList.Where(p => p.P > 0)
+            .OrderByDescending(p => p.P)
+            .LastOrDefault();
+        if (Cdn == null)
+        {
+            TipShow.ShowMessage("CDN解析错误", Symbol.Clear);
+            return;
+        }
+        var url = Cdn!.Url + launcherIndex.Default.ResourcesBasePath;
+        var resourceUrl = Cdn.Url + launcherIndex.Default.Resources;
+        var resource = await GameContext.GetGameResourceAsync(url);
+
+        GameContext.StartDownloadGame(folder, launcherIndex, resource, true);
     }
 
     [RelayCommand]
