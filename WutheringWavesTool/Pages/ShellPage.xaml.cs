@@ -21,4 +21,6 @@ public sealed partial class ShellPage : Page
     {
         this.titlebar.UpDate();
     }
+
+    private void appIcon_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) { }
 }

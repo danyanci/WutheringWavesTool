@@ -27,4 +27,6 @@ public interface INavigationService
     public event NavigatedEventHandler Navigated;
 
     public event NavigationFailedEventHandler NavigationFailed;
+
+    public void ClearHistory();
 }

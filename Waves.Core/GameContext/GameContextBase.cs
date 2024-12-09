@@ -259,8 +259,17 @@ public abstract partial class GameContextBase : IGameContext
                     GameLocalSettingName.GameLauncherBassProgram,
                     exefile
                 );
+                await this.GameLocalConfig.SaveConfigAsync(
+                    GameLocalSettingName.LocalGameResourceVersion,
+                    launcherIndex.Default.ResourceChunk.LastVersion
+                );
+                await this.GameLocalConfig.SaveConfigAsync(
+                    GameLocalSettingName.LocalGameVersion,
+                    launcherIndex.Default.Version
+                );
                 this.IsLaunch = true;
                 this.IsVerify = false;
+
                 this.gameContextOutputDelegate?.Invoke(
                     this,
                     new GameContextOutputArgs() { Type = Models.Enums.GameContextActionType.None }
@@ -930,5 +939,9 @@ public abstract partial class GameContextBase : IGameContext
         {
             await this.verifyCts.CancelAsync();
         }
+        this.gameContextOutputDelegate?.Invoke(
+            this,
+            new GameContextOutputArgs() { Type = GameContextActionType.None }
+        );
     }
 }

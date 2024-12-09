@@ -23,10 +23,12 @@ public sealed partial class MainGamePage : GamePageBase, IPage
     protected override void OnNavigatedFrom(NavigationEventArgs e)
     {
         this.ViewModel.Dispose();
+        this.ViewModel = null;
+        GC.Collect();
         base.OnNavigatedFrom(e);
     }
 
     public Type PageType => typeof(MainGamePage);
 
-    public MainGameViewModel ViewModel { get; }
+    public MainGameViewModel ViewModel { get; protected set; }
 }

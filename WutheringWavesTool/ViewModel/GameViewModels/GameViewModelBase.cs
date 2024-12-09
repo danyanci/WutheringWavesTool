@@ -365,7 +365,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         }
         var url = Cdn!.Url + launcherIndex.Default.ResourcesBasePath;
         var resourceUrl = Cdn.Url + launcherIndex.Default.Resources;
-        var resource = await GameContext.GetGameResourceAsync(url);
+        var resource = await GameContext.GetGameResourceAsync(resourceUrl);
 
         GameContext.StartDownloadGame(folder, launcherIndex, resource, true);
     }
@@ -378,6 +378,12 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
                 GameLocalSettingName.GameLauncherBassProgram
             )
         );
+    }
+
+    [RelayCommand]
+    async Task DeleteGame()
+    {
+        await GameContext.ClearGameResourceAsync();
     }
 
     public virtual Task LoadedAfter()

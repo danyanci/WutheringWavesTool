@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using System;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media.Animation;
 using WutheringWavesTool.Common;
@@ -10,6 +12,12 @@ namespace WutheringWavesTool.ViewModel;
 
 public sealed partial class ShellViewModel : ViewModelBase
 {
+    public INavigationService HomeNavigationService { get; }
+    public ITipShow TipShow { get; }
+
+    [ObservableProperty]
+    public partial string ServerName { get; set; }
+
     public ShellViewModel(
         [FromKeyedServices(nameof(HomeNavigationService))] INavigationService homeNavigationService,
         ITipShow tipShow
@@ -17,6 +25,22 @@ public sealed partial class ShellViewModel : ViewModelBase
     {
         HomeNavigationService = homeNavigationService;
         TipShow = tipShow;
+        HomeNavigationService.Navigated += HomeNavigationService_Navigated;
+    }
+
+    private void HomeNavigationService_Navigated(
+        object sender,
+        Microsoft.UI.Xaml.Navigation.NavigationEventArgs e
+    )
+    {
+        HomeNavigationService.ClearHistory();
+        GC.Collect();
+    }
+
+    [RelayCommand]
+    void Loaded()
+    {
+        this.OpenMain();
     }
 
     [RelayCommand]
@@ -26,6 +50,7 @@ public sealed partial class ShellViewModel : ViewModelBase
             "MainServer",
             new DrillInNavigationTransitionInfo()
         );
+        ServerName = "官服";
     }
 
     [RelayCommand]
@@ -35,6 +60,7 @@ public sealed partial class ShellViewModel : ViewModelBase
             "Bilibili",
             new DrillInNavigationTransitionInfo()
         );
+        ServerName = "B服";
     }
 
     [RelayCommand]
@@ -44,6 +70,7 @@ public sealed partial class ShellViewModel : ViewModelBase
             "Global",
             new DrillInNavigationTransitionInfo()
         );
+        ServerName = "国际服";
     }
 
     [RelayCommand]
@@ -54,7 +81,4 @@ public sealed partial class ShellViewModel : ViewModelBase
             new DrillInNavigationTransitionInfo()
         );
     }
-
-    public INavigationService HomeNavigationService { get; }
-    public ITipShow TipShow { get; }
 }

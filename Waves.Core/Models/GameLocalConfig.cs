@@ -63,7 +63,7 @@ public class GameLocalConfig
     {
         string connectionString = $"Data Source={SettingPath};";
         using (
-            ISqlSugarClient context = new SqlSugarClient(
+            SqlSugarClient context = new SqlSugarClient(
                 new ConnectionConfig()
                 {
                     ConnectionString = connectionString,

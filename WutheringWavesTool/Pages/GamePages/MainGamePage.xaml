@@ -171,13 +171,50 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
             Visibility="{x:Bind ViewModel.StartGameVisibility, Mode=OneWay}">
+
             <SplitButton
                 Padding="15"
                 Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
-                Content="开始游戏"
+                Command="{x:Bind ViewModel.LauncheGameCommand}"
+                CornerRadius="5"
                 FontFamily="{ThemeResource DefaultFont}"
-                FontSize="20"
-                Style="{ThemeResource AcrylicBackgroundSplitButton}" />
+                FontSize="22"
+                IsEnabled="{x:Bind ViewModel.LauncherGameEnable, Mode=OneWay}"
+                Style="{ThemeResource AcrylicBackgroundSplitButton}">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="22"
+                        Glyph="&#xE768;" />
+                    <TextBlock
+                        Margin="5,0,0,0"
+                        FontSize="22"
+                        Text="开始游戏" />
+                </StackPanel>
+                <SplitButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Command="{x:Bind ViewModel.CheckGameUpdateCommand}" Text="检查更新">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE72C;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutSeparator />
+                        <MenuFlyoutItem Command="{x:Bind ViewModel.VerifyGameCommand}" Text="修复游戏文件">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEC7A;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                        <MenuFlyoutItem Text="清理本地游戏资源">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon
+                                    FontFamily="Segoe Fluent Icons"
+                                    Foreground="Red"
+                                    Glyph="&#xE894;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </SplitButton.Flyout>
+            </SplitButton>
         </Grid>
     </Grid>
 </bases:GamePageBase>

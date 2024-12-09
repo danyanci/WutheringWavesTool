@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Pages.Bases;
 using WutheringWavesTool.ViewModel.GameViewModels;
@@ -15,8 +16,21 @@ namespace WutheringWavesTool.Pages.GamePages
             this.ViewModel = Instance.Service.GetRequiredService<GlobalGameViewModel>();
         }
 
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            this.ViewModel.Dispose();
+            this.ViewModel = null;
+            GC.Collect();
+            base.OnNavigatedFrom(e);
+        }
+
         public Type PageType => typeof(GlobalGamePage);
 
-        public GlobalGameViewModel ViewModel { get; }
+        public GlobalGameViewModel ViewModel { get; protected set; }
     }
 }
