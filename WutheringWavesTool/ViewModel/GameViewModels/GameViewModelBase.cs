@@ -26,6 +26,9 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     [ObservableProperty]
     public partial bool IsLoading { get; set; }
 
+    [ObservableProperty]
+    public partial WavesIndex WavesIndex { get; private set; }
+
     #region Visibility
     /// <summary>
     /// 进度条框
@@ -107,12 +110,14 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
             await AppContext.TryInvokeAsync(() =>
             {
                 ShowDownload();
-                this.Progress = args.CurrentFile;
+                this.Progress = args.Progress;
                 this.SurplusValue = args.RemainingTime;
                 this.SpeedString = "0MB";
                 this.WorkType = "校验";
-                this.Maxnum = args.MaxFile;
+                this.Maxnum = 100;
                 this.LastTime = "0GB";
+                DownloadGameEnable = false;
+                DownloadText = "校验中";
                 this.IsProgressRingActive = false;
                 VerifyOrDownloadString = $"校验文件：{args.Progress}%";
             });
@@ -121,6 +126,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         {
             await AppContext.TryInvokeAsync(() =>
             {
+                DownloadGameEnable = true;
                 DownloadIcon = "\uE769";
                 DownloadText = "暂停下载";
                 ShowDownload();
@@ -180,6 +186,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     async Task Loaded()
     {
         IsLoading = true;
+        this.WavesIndex = await GameContext.GetGameIndexAsync(this.CTS.Token);
         await RefreshStatus();
         await LoadedAfter();
         IsLoading = false;
@@ -187,11 +194,10 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
 
     async Task RefreshStatus()
     {
-        var status = await GameContext.GetGameStausAsync(this.CTS.Token);
+        var status = await GameContext.GetGameStatusAsync(this.CTS.Token);
         if (!status.IsSelectDownloadFolder)
         {
-            var index = await GameContext.GetGameIndexAsync(this.CTS.Token);
-            this.LastVerision = index.Default.ResourceChunk.LastVersion;
+            this.LastVerision = WavesIndex.Default.ResourceChunk.LastVersion;
             ShowSelectFolder();
         }
         if (status.IsSelectDownloadFolder && status.IsDownloadComplete)
@@ -239,7 +245,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     [RelayCommand]
     async Task SwitchDownload()
     {
-        var status = await GameContext.GetGameStausAsync(this.CTS.Token);
+        var status = await GameContext.GetGameStatusAsync(this.CTS.Token);
         if (status.IsDownload)
         {
             await GameContext.CancelDownloadAsync();
@@ -259,6 +265,35 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
+    async Task VerifyGame()
+    {
+        var status = await GameContext.GetGameStatusAsync(this.CTS.Token);
+        if (status.IsDownloadComplete && status.IsSelectDownloadFolder)
+        {
+            this.ShowDownload();
+            this.DownloadGameEnable = false;
+            var exeFile = await GameContext.GameLocalConfig.GetConfigAsync(
+                GameLocalSettingName.GameLauncherBassProgram
+            );
+            GameContext.StartVerifyGame(exeFile);
+        }
+    }
+
+    [RelayCommand]
+    async Task CheckGameUpdate()
+    {
+        var update = await GameContext.CheckUpdateAsync(this.CTS.Token);
+        if (update)
+        {
+            this.TipShow.ShowMessage("无任何更新", Symbol.Accept);
+        }
+        else
+        {
+            this.TipShow.ShowMessage("开始自动更新", Symbol.Accept);
+        }
+    }
+
+    [RelayCommand]
     async Task LauncheGameAsync()
     {
         await GameContext.StartLauncheAsync();
@@ -268,7 +303,15 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     [RelayCommand]
     async Task DeleteGameResource()
     {
-        await this.GameContext.ClearGameResourceAsync();
+        var status = await this.GameContext.GetGameStatusAsync();
+        if (status.IsDownload)
+        {
+            await this.GameContext.ClearGameResourceAsync();
+        }
+        else if (status.IsVerify)
+        {
+            await this.GameContext.StopGameVerify();
+        }
     }
 
     private void ShowDownload()

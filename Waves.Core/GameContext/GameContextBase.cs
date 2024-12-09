@@ -17,6 +17,7 @@ public abstract partial class GameContextBase : IGameContext
     private bool isLimtSpeed;
     private CancellationTokenSource _downloadCTS;
     private CancellationTokenSource _clearCTS;
+    private CancellationTokenSource verifyCts;
 
     public GameContextBase(GameApiContextConfig config, string contextName)
     {
@@ -84,7 +85,7 @@ public abstract partial class GameContextBase : IGameContext
     public IGameContextDownloadCache GameContextDownloadCahce { get; private set; }
     public Process NowProcess { get; private set; }
 
-    public async Task<GameContextStatus> GetGameStausAsync(CancellationToken token = default)
+    public async Task<GameContextStatus> GetGameStatusAsync(CancellationToken token = default)
     {
         GameContextStatus status = new();
         var gamePath = await this.GameLocalConfig.GetConfigAsync(
@@ -94,7 +95,7 @@ public abstract partial class GameContextBase : IGameContext
             GameLocalSettingName.GameLauncherBassProgram
         );
         var gameversion = await this.GameLocalConfig.GetConfigAsync(
-            GameLocalSettingName.LocalGameVersion
+            GameLocalSettingName.LocalGameResourceVersion
         );
         if (
             (!string.IsNullOrWhiteSpace(gamePath) || Directory.Exists(gamePath))
@@ -165,6 +166,7 @@ public abstract partial class GameContextBase : IGameContext
         {
             try
             {
+                this.verifyCts = new CancellationTokenSource();
                 this.IsVerify = true;
                 var folder = System.IO.Path.GetDirectoryName(exefile);
                 if (folder == null)
@@ -192,6 +194,19 @@ public abstract partial class GameContextBase : IGameContext
                 List<Resource> resources = new();
                 for (int i = 0; i < Resources.Count; i++)
                 {
+                    if (verifyCts.IsCancellationRequested)
+                    {
+                        this.IsLaunch = true;
+                        this.IsVerify = false;
+                        this.gameContextOutputDelegate?.Invoke(
+                            this,
+                            new GameContextOutputArgs()
+                            {
+                                Type = Models.Enums.GameContextActionType.None,
+                            }
+                        );
+                        return;
+                    }
                     this.IsVerify = true;
                     var file = folder + this.Resources[i].Dest.Replace('/', '\\');
                     if (!File.Exists(file))
@@ -233,7 +248,7 @@ public abstract partial class GameContextBase : IGameContext
                 {
                     this.IsVerify = false;
                     //进入下载
-                    await DownloadGameFiles(folder, resources);
+                    await DownloadGameFiles(GameDownloadActionSource.Verify, folder, resources);
                     return;
                 }
                 await this.GameLocalConfig.SaveConfigAsync(
@@ -245,7 +260,7 @@ public abstract partial class GameContextBase : IGameContext
                     exefile
                 );
                 this.IsLaunch = true;
-
+                this.IsVerify = false;
                 this.gameContextOutputDelegate?.Invoke(
                     this,
                     new GameContextOutputArgs() { Type = Models.Enums.GameContextActionType.None }
@@ -307,9 +322,11 @@ public abstract partial class GameContextBase : IGameContext
                 );
                 this._downloadCTS = new();
                 await DownloadGameFiles(
+                    GameDownloadActionSource.Download,
                     folder,
                     Resources.ToList(),
                     this.WavesIndex.Default.ResourceChunk.LastVersion,
+                    this.WavesIndex.Default.Version,
                     _downloadCTS.Token
                 );
             }
@@ -350,8 +367,10 @@ public abstract partial class GameContextBase : IGameContext
     }
 
     private async Task DownloadGameFiles(
+        GameDownloadActionSource actionSource,
         string folder,
         List<Resource> resources,
+        string resourceVersion = "",
         string version = "",
         CancellationToken token = default
     )
@@ -389,7 +408,15 @@ public abstract partial class GameContextBase : IGameContext
                 if (token.IsCancellationRequested)
                     return;
                 this.IsDownload = true;
-                var cachefile = folder + "\\DownloadCache" + list[i].Dest.Replace('/', '\\');
+                string cachefile = "";
+                if (actionSource == GameDownloadActionSource.Download)
+                {
+                    cachefile = folder + "\\DownloadCache" + list[i].Dest.Replace('/', '\\');
+                }
+                else
+                {
+                    cachefile = folder + list[i].Dest.Replace('/', '\\');
+                }
                 Directory.CreateDirectory(System.IO.Path.GetDirectoryName(cachefile)!);
                 var url = DownloadBaseUrl + list[i].Dest;
                 nowFileSize = 0;
@@ -421,19 +448,30 @@ public abstract partial class GameContextBase : IGameContext
                         totalBytesRead += size;
                         continue;
                     }
-                    if (size > list[i].Size)
+                    if (actionSource == GameDownloadActionSource.Download)
+                    {
+                        if (size > list[i].Size)
+                        {
+                            File.Delete(cachefile);
+                            fs = new FileStream(cachefile, FileMode.Create, FileAccess.Write);
+                        }
+                        else
+                        {
+                            request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(
+                                size,
+                                null
+                            );
+                            totalBytesRead += size;
+                            fs = new FileStream(cachefile, FileMode.Append, FileAccess.Write);
+                        }
+                    }
+                    else if (
+                        actionSource == GameDownloadActionSource.Verify
+                        || actionSource == GameDownloadActionSource.Update
+                    )
                     {
                         File.Delete(cachefile);
                         fs = new FileStream(cachefile, FileMode.Create, FileAccess.Write);
-                    }
-                    else
-                    {
-                        request.Headers.Range = new System.Net.Http.Headers.RangeHeaderValue(
-                            size,
-                            null
-                        );
-                        totalBytesRead += size;
-                        fs = new FileStream(cachefile, FileMode.Append, FileAccess.Write);
                     }
                 }
                 else
@@ -543,8 +581,16 @@ public abstract partial class GameContextBase : IGameContext
                 new GameContextOutputArgs() { Type = Models.Enums.GameContextActionType.None }
             );
             this.IsDownload = false;
-            await ClearGameCacheAsync(folder, this.Resources, version);
-            this.IsClear = true;
+            if (actionSource == GameDownloadActionSource.Download)
+            {
+                await ClearGameCacheAsync(folder, this.Resources, resourceVersion, version);
+                this.IsClear = true;
+                return;
+            }
+            var exeFile = await GameLocalConfig.GetConfigAsync(
+                GameLocalSettingName.GameLauncherBassProgram
+            );
+            Task.Run(async () => StartVerifyGame(exeFile));
         }
         catch (System.IO.IOException ioEx)
         {
@@ -648,6 +694,7 @@ public abstract partial class GameContextBase : IGameContext
     private async Task ClearGameCacheAsync(
         string folder,
         List<Resource> resources,
+        string resourceVersion = "",
         string version = ""
     )
     {
@@ -709,10 +756,15 @@ public abstract partial class GameContextBase : IGameContext
                 GameLocalSettingName.GameLauncherBassProgram,
                 $"{folder}\\Wuthering Waves.exe"
             );
+            if (!string.IsNullOrWhiteSpace(resourceVersion))
+                await GameLocalConfig.SaveConfigAsync(
+                    GameLocalSettingName.LocalGameResourceVersion,
+                    resourceVersion
+                );
             if (!string.IsNullOrWhiteSpace(version))
                 await GameLocalConfig.SaveConfigAsync(
                     GameLocalSettingName.LocalGameVersion,
-                    version
+                    resourceVersion
                 );
             this.gameContextOutputDelegate?.Invoke(
                 this,
@@ -815,7 +867,7 @@ public abstract partial class GameContextBase : IGameContext
         Directory.Delete(gameFolder, true);
         await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.GameLauncherBassProgram, "");
         await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.GameLauncherBassFolder, "");
-        await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.LocalGameVersion, "");
+        await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.LocalGameResourceVersion, "");
         this.IsDownload = false;
         this.IsVerify = false;
         this.IsPause = false;
@@ -846,6 +898,37 @@ public abstract partial class GameContextBase : IGameContext
                 },
             };
             NowProcess.Start();
+        }
+    }
+
+    public async Task<bool> CheckUpdateAsync(CancellationToken token = default)
+    {
+        var exeFile = await this.GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.GameLauncherBassProgram
+        );
+        var resourceVersion = await this.GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.LocalGameResourceVersion
+        );
+        var localVersion = await this.GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.LocalGameVersion
+        );
+        this.WavesIndex = await this.GetGameIndexAsync(token);
+        if (
+            resourceVersion == WavesIndex.Default.ResourceChunk.LastVersion
+            && localVersion == WavesIndex.Default.Version
+        )
+        {
+            return true;
+        }
+        StartVerifyGame(exeFile);
+        return false;
+    }
+
+    public async Task StopGameVerify()
+    {
+        if (verifyCts != null)
+        {
+            await this.verifyCts.CancelAsync();
         }
     }
 }

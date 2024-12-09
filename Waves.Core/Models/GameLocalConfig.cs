@@ -19,6 +19,8 @@ public class GameLocalSettingName
     /// <summary>
     /// 本地游戏版本
     /// </summary>
+    public const string LocalGameResourceVersion = nameof(LocalGameResourceVersion);
+
     public const string LocalGameVersion = nameof(LocalGameVersion);
 }
 
