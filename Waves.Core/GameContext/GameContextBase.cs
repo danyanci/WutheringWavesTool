@@ -31,9 +31,17 @@ public abstract partial class GameContextBase : IGameContext
         Directory.CreateDirectory(GamerConfigPath);
         this.GameLocalConfig = new GameLocalConfig();
         GameLocalConfig.SettingPath = GamerConfigPath + "\\Settings.db";
-        var selectFolder = await this.GameLocalConfig.GetConfigAsync(
-            GameLocalSettingName.GameLauncherBassFolder
-        );
+        await InitSettingAsync();
+    }
+
+    private async Task InitSettingAsync()
+    {
+        var config = await this.ReadContextConfigAsync();
+        if (config.LimitSpeed > 0)
+        {
+            this.SpeedValue = config.LimitSpeed;
+            this.IsLimitSpeed = true;
+        }
     }
 
     public IHttpClientService HttpClientService { get; set; }
@@ -247,6 +255,7 @@ public abstract partial class GameContextBase : IGameContext
                 if (resources.Count > 0)
                 {
                     this.IsVerify = false;
+                    _downloadCTS = new();
                     //进入下载
                     await DownloadGameFiles(GameDownloadActionSource.Verify, folder, resources);
                     return;
@@ -290,6 +299,8 @@ public abstract partial class GameContextBase : IGameContext
     )
     {
         this.IsPause = false;
+        if (IsDownload)
+            return;
         Task.Run(async () =>
         {
             try
@@ -335,8 +346,7 @@ public abstract partial class GameContextBase : IGameContext
                     folder,
                     Resources.ToList(),
                     this.WavesIndex.Default.ResourceChunk.LastVersion,
-                    this.WavesIndex.Default.Version,
-                    _downloadCTS.Token
+                    this.WavesIndex.Default.Version
                 );
             }
             catch (IOException ex)
@@ -380,13 +390,14 @@ public abstract partial class GameContextBase : IGameContext
         string folder,
         List<Resource> resources,
         string resourceVersion = "",
-        string version = "",
-        CancellationToken token = default
+        string version = ""
     )
     {
         try
         {
-            if (token.IsCancellationRequested)
+            if (_downloadCTS.Token.IsCancellationRequested)
+                return;
+            if (this.IsDownload)
                 return;
             this.IsDownload = true;
             this.gameContextOutputDelegate?.Invoke(
@@ -412,11 +423,11 @@ public abstract partial class GameContextBase : IGameContext
                 maxSize,
                 0
             );
+            this.IsDownload = true;
             for (global::System.Int32 i = 0; i < list.Length; i++)
             {
-                if (token.IsCancellationRequested)
+                if (_downloadCTS.Token.IsCancellationRequested)
                     return;
-                this.IsDownload = true;
                 string cachefile = "";
                 if (actionSource == GameDownloadActionSource.Download)
                 {
@@ -495,6 +506,8 @@ public abstract partial class GameContextBase : IGameContext
                     )
                 )
                 {
+                    if (_downloadCTS.Token.IsCancellationRequested)
+                        return;
                     response.EnsureSuccessStatusCode();
                     using (var responseStream = await response.Content.ReadAsStreamAsync())
                     using (fs)
@@ -514,7 +527,7 @@ public abstract partial class GameContextBase : IGameContext
                             ) > 0
                         )
                         {
-                            if (token.IsCancellationRequested)
+                            if (_downloadCTS.Token.IsCancellationRequested)
                             {
                                 await fs.FlushAsync();
                                 fs.Close();
@@ -943,5 +956,34 @@ public abstract partial class GameContextBase : IGameContext
             this,
             new GameContextOutputArgs() { Type = GameContextActionType.None }
         );
+    }
+
+    public async Task<GameContextConfig> ReadContextConfigAsync(CancellationToken token = default)
+    {
+        GameContextConfig config = new();
+        var speed = await this.GameLocalConfig.GetConfigAsync(GameLocalSettingName.LimitSpeed);
+        if (int.TryParse(speed, out var rate))
+        {
+            config.LimitSpeed = rate;
+        }
+        else
+            config.LimitSpeed = 0;
+        return config;
+    }
+
+    public async Task<bool> SetLimitSpeedAsync(int value, CancellationToken token = default)
+    {
+        if (
+            await this.GameLocalConfig.SaveConfigAsync(
+                GameLocalSettingName.LimitSpeed,
+                value.ToString()
+            )
+        )
+        {
+            this.SpeedValue = value;
+            this.IsLimitSpeed = true;
+            return true;
+        }
+        return false;
     }
 }

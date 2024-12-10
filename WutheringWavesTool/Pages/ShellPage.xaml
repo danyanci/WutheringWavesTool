@@ -26,7 +26,8 @@
             Grid.Row="2"
             Canvas.ZIndex="-1"
             Source="ms-appx:///Assets/backup.jpg"
-            Stretch="UniformToFill" />
+            Stretch="UniformToFill"
+            Visibility="Collapsed" />
         <ui:TitleBar
             x:Name="titlebar"
             x:FieldModifier="public"

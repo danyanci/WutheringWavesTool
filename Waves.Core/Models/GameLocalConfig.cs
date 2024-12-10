@@ -17,45 +17,58 @@ public class GameLocalSettingName
     public const string GameLauncherBassProgram = nameof(GameLauncherBassProgram);
 
     /// <summary>
-    /// 本地游戏版本
+    /// 本地游戏资源版本
     /// </summary>
     public const string LocalGameResourceVersion = nameof(LocalGameResourceVersion);
 
+    /// <summary>
+    /// 本地游戏版本
+    /// </summary>
     public const string LocalGameVersion = nameof(LocalGameVersion);
+
+    public const string LimitSpeed = nameof(LimitSpeed);
 }
 
 public class GameLocalConfig
 {
     public string SettingPath { get; set; }
 
-    public async Task SaveConfigAsync(string key, string value)
+    public async Task<bool> SaveConfigAsync(string key, string value)
     {
-        string connectionString = $"Data Source={SettingPath};";
-        using (
-            ISqlSugarClient context = new SqlSugarClient(
-                new ConnectionConfig()
-                {
-                    ConnectionString = connectionString,
-                    DbType = DbType.Sqlite,
-                    IsAutoCloseConnection = true,
-                }
-            )
-        )
+        try
         {
-            context.CodeFirst.InitTables<LocalSettings>();
-            var settings = new LocalSettings() { Key = key, Value = value };
-            var existingSetting = (
-                await context.Queryable<LocalSettings>().Where(x => x.Key == key).AnyAsync()
-            );
-            if (existingSetting)
+            string connectionString = $"Data Source={SettingPath};";
+            using (
+                ISqlSugarClient context = new SqlSugarClient(
+                    new ConnectionConfig()
+                    {
+                        ConnectionString = connectionString,
+                        DbType = DbType.Sqlite,
+                        IsAutoCloseConnection = true,
+                    }
+                )
+            )
             {
-                await context.Updateable(settings).ExecuteCommandAsync();
+                context.CodeFirst.InitTables<LocalSettings>();
+                var settings = new LocalSettings() { Key = key, Value = value };
+                var existingSetting = (
+                    await context.Queryable<LocalSettings>().Where(x => x.Key == key).AnyAsync()
+                );
+                if (existingSetting)
+                {
+                    await context.Updateable(settings).ExecuteCommandAsync();
+                }
+                else
+                {
+                    await context.Insertable(settings).ExecuteCommandAsync();
+                }
+                context.Ado.CommitTran();
+                return true;
             }
-            else
-            {
-                await context.Insertable(settings).ExecuteCommandAsync();
-            }
-            context.Ado.CommitTran();
+        }
+        catch (Exception)
+        {
+            return false;
         }
     }
 

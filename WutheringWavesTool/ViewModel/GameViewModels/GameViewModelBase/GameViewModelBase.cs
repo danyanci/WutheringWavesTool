@@ -75,6 +75,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
 
     [ObservableProperty]
     public partial string VerifyOrDownloadString { get; set; }
+
     public IGameContext GameContext { get; }
     public IPickersService PickersService { get; }
     public IAppContext<App> AppContext { get; }
@@ -188,6 +189,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         IsLoading = true;
         this.WavesIndex = await GameContext.GetGameIndexAsync(this.CTS.Token);
         await RefreshStatus();
+        await ReadContextConfig();
         await LoadedAfter();
         IsLoading = false;
     }
@@ -403,13 +405,6 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
             disposedValue = true;
         }
     }
-
-    // // TODO: 仅当“Dispose(bool disposing)”拥有用于释放未托管资源的代码时才替代终结器
-    // ~GameViewModelBase()
-    // {
-    //     // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
-    //     Dispose(disposing: false);
-    // }
 
     public void Dispose()
     {

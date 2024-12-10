@@ -46,4 +46,10 @@ public interface IGameContext
     Task StopGameVerify();
 
     #endregion
+
+    #region Core Config
+    Task<GameContextConfig> ReadContextConfigAsync(CancellationToken token = default);
+
+    Task<bool> SetLimitSpeedAsync(int value, CancellationToken token = default);
+    #endregion
 }

@@ -13,7 +13,7 @@ namespace WutheringWavesTool.Pages.GamePages
         public GlobalGamePage()
         {
             this.InitializeComponent();
-            this.ViewModel = Instance.Service.GetRequiredService<GlobalGameViewModel>();
+            this.ViewModel = Instance.Service?.GetRequiredService<GlobalGameViewModel>();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -23,7 +23,8 @@ namespace WutheringWavesTool.Pages.GamePages
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            this.ViewModel.Dispose();
+            if (this.ViewModel != null)
+                this.ViewModel.Dispose();
             this.ViewModel = null;
             GC.Collect();
             base.OnNavigatedFrom(e);
@@ -31,6 +32,6 @@ namespace WutheringWavesTool.Pages.GamePages
 
         public Type PageType => typeof(GlobalGamePage);
 
-        public GlobalGameViewModel ViewModel { get; protected set; }
+        public GlobalGameViewModel? ViewModel { get; protected set; }
     }
 }

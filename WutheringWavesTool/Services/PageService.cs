@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Controls;
 using WutheringWavesTool.Pages;
+using WutheringWavesTool.Pages.Bases;
 using WutheringWavesTool.Pages.GamePages;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.ViewModel;

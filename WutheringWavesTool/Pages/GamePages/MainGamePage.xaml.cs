@@ -12,7 +12,7 @@ public sealed partial class MainGamePage : GamePageBase, IPage
     public MainGamePage()
     {
         this.InitializeComponent();
-        this.ViewModel = Instance.Service!.GetRequiredService<MainGameViewModel>();
+        this.ViewModel = Instance.Service?.GetRequiredService<MainGameViewModel>();
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -22,7 +22,8 @@ public sealed partial class MainGamePage : GamePageBase, IPage
 
     protected override void OnNavigatedFrom(NavigationEventArgs e)
     {
-        this.ViewModel.Dispose();
+        if (this.ViewModel != null)
+            this.ViewModel.Dispose();
         this.ViewModel = null;
         GC.Collect();
         base.OnNavigatedFrom(e);
@@ -30,5 +31,5 @@ public sealed partial class MainGamePage : GamePageBase, IPage
 
     public Type PageType => typeof(MainGamePage);
 
-    public MainGameViewModel ViewModel { get; protected set; }
+    public MainGameViewModel? ViewModel { get; protected set; }
 }
