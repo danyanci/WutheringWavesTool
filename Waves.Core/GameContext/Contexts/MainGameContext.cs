@@ -4,6 +4,6 @@ namespace Waves.Core.GameContext.Contexts;
 
 public class MainGameContext : GameContextBase
 {
-    public MainGameContext(GameApiContextConfig config)
+    internal MainGameContext(GameApiContextConfig config)
         : base(config, nameof(MainGameContext)) { }
 }

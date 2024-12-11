@@ -10,6 +10,6 @@ namespace Waves.Core.GameContext.Contexts;
 
 public class GlobalGameContext : GameContextBase
 {
-    public GlobalGameContext(GameApiContextConfig config)
+    internal GlobalGameContext(GameApiContextConfig config)
         : base(config, nameof(GlobalGameContext)) { }
 }

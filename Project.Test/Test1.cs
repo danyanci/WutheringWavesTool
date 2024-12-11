@@ -17,24 +17,11 @@ namespace Project.Test
         public async Task TestMethod1()
         {
             GameContextFactory.GameBassPath = "C:\\Users\\30140\\Documents\\Waves";
-
-            var main = Register.ServiceProvider.GetRequiredKeyedService<IGameContext>(
+            var bilibili = Register.ServiceProvider.GetRequiredKeyedService<IGameContext>(
                 nameof(MainGameContext)
             );
-            if (main.IsNext)
-            {
-                Console.WriteLine("可以执行下一步");
-            }
-            else
-            {
-                await main.InitGameSettingsAsync();
-            }
-            await main.SaveConfigAsync(
-                GameLocalSettingName.GameLauncherBassFolder,
-                "D:\\Wuthering Waves\\Wuthering Waves Game"
-            );
-            var result = await main.ReadConfig(GameLocalSettingName.GameLauncherBassFolder);
-            Console.WriteLine("配置参数不完整！");
+            var heander = await bilibili.GetGameLauncherSourceAsync();
+            var show = await bilibili.GetGameLauncherStarterAsync(heander, true);
         }
     }
 }

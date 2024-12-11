@@ -5,6 +5,6 @@ namespace Waves.Core.GameContext.Contexts;
 
 public class BilibiliGameContext : GameContextBase
 {
-    public BilibiliGameContext(GameApiContextConfig config)
+    internal BilibiliGameContext(GameApiContextConfig config)
         : base(config, nameof(BilibiliGameContext)) { }
 }

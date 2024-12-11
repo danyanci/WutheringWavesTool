@@ -22,12 +22,13 @@
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
+
         <ui:ImageControl
             Grid.Row="2"
             Canvas.ZIndex="-1"
             Source="ms-appx:///Assets/backup.jpg"
             Stretch="UniformToFill"
-            Visibility="Collapsed" />
+            Visibility="Visible" />
         <ui:TitleBar
             x:Name="titlebar"
             x:FieldModifier="public"
@@ -202,6 +203,9 @@
             </ui:TitleBar.Header>
             <ui:TitleBar.Footer>
                 <Button Command="{x:Bind ViewModel.OpenSettingCommand}" Style="{ThemeResource TransparentButtonStyle}">
+                    <i:Interaction.Behaviors>
+                        <sound:ButtonSoundBehavior />
+                    </i:Interaction.Behaviors>
                     <Viewbox Height="15">
                         <AnimatedIcon x:Name="AnimatedIcon">
                             <AnimatedIcon.Source>

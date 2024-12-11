@@ -1,8 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using Waves.Api.Models;
 using Waves.Core.GameContext;
 using Waves.Core.GameContext.Contexts;
+using WutheringWavesTool.Common;
 using WutheringWavesTool.Services.Contracts;
 
 namespace WutheringWavesTool.ViewModel.GameViewModels;
@@ -17,13 +21,49 @@ public sealed partial class MainGameViewModel : GameViewModelBase
     )
         : base(gameContext, pickersService, appContext, tipShow) { }
 
-    public override Task LoadedAfter()
+    private ObservableCollection<Content> activity;
+    private ObservableCollection<Content> news;
+    private ObservableCollection<Content> notice;
+
+    [ObservableProperty]
+    public partial ObservableCollection<Content> NowNews { get; set; }
+
+    [ObservableProperty]
+    public partial bool SelectBarLoad { get; set; } = false;
+
+    public override async Task LoadedAfter()
     {
-        return base.LoadedAfter();
+        var result =
+            await this.GameContext.GetGameLauncherStarterAsync(
+                await this.GameContext.GetGameLauncherSourceAsync(),
+                true
+            ) ?? null;
+        if (result != null && result.Guidance != null)
+        {
+            this.news = result.Guidance.News.Contents.ToObservableCollection();
+            this.notice = result.Guidance.Notice.Contents.ToObservableCollection();
+            this.activity = result.Guidance.Activity.Contents.ToObservableCollection();
+        }
+        this.SelectBarLoad = true;
     }
 
-    protected override void Dispose(bool disposing)
+    internal void SelectNews(string? v)
     {
-        base.Dispose(disposing);
+        if (this.IsLoading)
+            return;
+        switch (v)
+        {
+            case "Dynamic":
+                this.NowNews = this.activity;
+                break;
+            case "Subtitle":
+                this.NowNews = this.notice;
+                break;
+            case "News":
+                this.NowNews = this.news;
+                break;
+            default:
+                break;
+        }
     }
 }

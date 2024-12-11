@@ -52,4 +52,16 @@ public interface IGameContext
 
     Task<bool> SetLimitSpeedAsync(int value, CancellationToken token = default);
     #endregion
+
+    #region WebApi
+    Task<LauncherHeader?> GetLauncherHeaderAsync(CancellationToken token = default);
+
+    Task<GameLauncherSource> GetGameLauncherSourceAsync(CancellationToken token = default);
+
+    Task<GameLauncherStarter?> GetGameLauncherStarterAsync(
+        GameLauncherSource launcheSource,
+        bool ishans,
+        CancellationToken token = default
+    );
+    #endregion
 }

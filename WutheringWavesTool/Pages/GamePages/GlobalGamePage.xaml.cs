@@ -32,6 +32,14 @@ namespace WutheringWavesTool.Pages.GamePages
 
         public Type PageType => typeof(GlobalGamePage);
 
-        public GlobalGameViewModel? ViewModel { get; protected set; }
+        public GlobalGameViewModel ViewModel { get; private set; }
+
+        private void SelectorBar_SelectionChanged(
+            SelectorBar sender,
+            SelectorBarSelectionChangedEventArgs args
+        )
+        {
+            this.ViewModel.SelectNews(sender.SelectedItem.Tag.ToString());
+        }
     }
 }

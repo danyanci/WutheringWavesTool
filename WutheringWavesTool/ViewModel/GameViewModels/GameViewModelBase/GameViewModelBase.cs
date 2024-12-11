@@ -190,6 +190,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         this.WavesIndex = await GameContext.GetGameIndexAsync(this.CTS.Token);
         await RefreshStatus();
         await ReadContextConfig();
+        await GetApiDataAsync();
         await LoadedAfter();
         IsLoading = false;
     }
@@ -199,7 +200,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         var status = await GameContext.GetGameStatusAsync(this.CTS.Token);
         if (!status.IsSelectDownloadFolder)
         {
-            this.LastVerision = WavesIndex.Default.ResourceChunk.LastVersion;
+            this.LastVerision = WavesIndex.Default.Version;
             ShowSelectFolder();
         }
         if (status.IsSelectDownloadFolder && status.IsDownloadComplete)
@@ -224,9 +225,10 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         {
             ShowDownload();
             this.IsProgressRingActive = true;
+            this.DownloadGameEnable = false;
             VerifyOrDownloadString = "读取校验状态";
             DownloadIcon = "\uE769";
-            DownloadText = "暂停下载";
+            DownloadText = "校验中";
             await LoadedAfter();
             IsLoading = false;
             return;
@@ -235,6 +237,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         {
             ShowDownload();
             this.IsProgressRingActive = true;
+            this.DownloadGameEnable = true;
             VerifyOrDownloadString = "读取下载状态";
             DownloadIcon = "\uE769";
             DownloadText = "暂停下载";
@@ -274,10 +277,10 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         {
             this.ShowDownload();
             this.DownloadGameEnable = false;
-            var exeFile = await GameContext.GameLocalConfig.GetConfigAsync(
-                GameLocalSettingName.GameLauncherBassProgram
+            var folder = await GameContext.GameLocalConfig.GetConfigAsync(
+                GameLocalSettingName.GameLauncherBassFolder
             );
-            GameContext.StartVerifyGame(exeFile);
+            GameContext.StartVerifyGame(folder);
         }
     }
 
@@ -314,6 +317,10 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         {
             await this.GameContext.StopGameVerify();
         }
+        else if (status.IsSelectDownloadFolder && !status.IsDownloadComplete)
+        {
+            await this.GameContext.ClearGameResourceAsync();
+        }
     }
 
     private void ShowDownload()
@@ -342,7 +349,9 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     {
         var folder = await PickersService.GetFileOpenPicker(new() { ".exe" });
         IsProgressRingActive = true;
-        GameContext.StartVerifyGame(folder.Path);
+        if (folder == null)
+            return;
+        GameContext.StartVerifyGame(System.IO.Path.GetDirectoryName(folder.Path));
     }
 
     [RelayCommand]
@@ -350,6 +359,8 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     {
         var folder = await PickersService.GetFolderPicker();
         IsProgressRingActive = true;
+        if (folder == null)
+            return;
         await StartDown(folder.Path);
     }
 
@@ -377,7 +388,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     {
         GameContext.StartVerifyGame(
             await this.GameContext.GameLocalConfig.GetConfigAsync(
-                GameLocalSettingName.GameLauncherBassProgram
+                GameLocalSettingName.GameLauncherBassFolder
             )
         );
     }

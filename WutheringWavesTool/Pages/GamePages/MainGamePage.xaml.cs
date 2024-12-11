@@ -31,5 +31,13 @@ public sealed partial class MainGamePage : GamePageBase, IPage
 
     public Type PageType => typeof(MainGamePage);
 
-    public MainGameViewModel? ViewModel { get; protected set; }
+    public MainGameViewModel ViewModel { get; private set; }
+
+    private void SelectorBar_SelectionChanged(
+        Microsoft.UI.Xaml.Controls.SelectorBar sender,
+        Microsoft.UI.Xaml.Controls.SelectorBarSelectionChangedEventArgs args
+    )
+    {
+        this.ViewModel.SelectNews(sender.SelectedItem.Tag.ToString());
+    }
 }
