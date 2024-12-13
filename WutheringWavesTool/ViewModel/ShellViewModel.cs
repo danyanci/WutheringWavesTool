@@ -44,6 +44,15 @@ public sealed partial class ShellViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    void OpenCommunity()
+    {
+        this.HomeNavigationService.NavigationTo<CommunityViewModel>(
+            "Community",
+            new DrillInNavigationTransitionInfo()
+        );
+    }
+
+    [RelayCommand]
     void OpenMain()
     {
         this.HomeNavigationService.NavigationTo<MainGameViewModel>(

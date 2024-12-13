@@ -29,6 +29,10 @@
             Source="ms-appx:///Assets/backup.jpg"
             Stretch="UniformToFill"
             Visibility="Visible" />
+        <Border
+            Grid.RowSpan="1"
+            Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
+            Opacity="1" />
         <ui:TitleBar
             x:Name="titlebar"
             x:FieldModifier="public"
@@ -116,7 +120,7 @@
                                             Margin="0,5,0,0"
                                             HorizontalAlignment="Left"
                                             Orientation="Horizontal">
-                                            <Button Command="{x:Bind ViewModel.OpenMainCommand}">
+                                            <Button Command="{x:Bind ViewModel.OpenMainCommand}" Style="{ThemeResource TransparentButtonStyle}">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image
                                                         Width="25"
@@ -128,7 +132,10 @@
                                                         Text="官服" />
                                                 </StackPanel>
                                             </Button>
-                                            <Button Margin="5,0,0,0" Command="{x:Bind ViewModel.OpenBilibiliCommand}">
+                                            <Button
+                                                Margin="5,0,0,0"
+                                                Command="{x:Bind ViewModel.OpenBilibiliCommand}"
+                                                Style="{ThemeResource TransparentButtonStyle}">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image
                                                         Width="25"
@@ -140,7 +147,10 @@
                                                         Text="B服" />
                                                 </StackPanel>
                                             </Button>
-                                            <Button Margin="5,0,0,0" Command="{x:Bind ViewModel.OpenGlobalCommand}">
+                                            <Button
+                                                Margin="5,0,0,0"
+                                                Command="{x:Bind ViewModel.OpenGlobalCommand}"
+                                                Style="{ThemeResource TransparentButtonStyle}">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image
                                                         Width="25"
@@ -153,7 +163,32 @@
                                                 </StackPanel>
                                             </Button>
                                         </StackPanel>
+
                                         <NavigationViewItemSeparator Margin="0,5,0,0" HorizontalAlignment="Stretch" />
+                                        <TextBlock
+                                            Margin="0,10,0,0"
+                                            HorizontalAlignment="Left"
+                                            FontFamily="{ThemeResource DefaultFont}"
+                                            FontSize="15"
+                                            Text="社区" />
+                                        <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
+                                            <Button
+                                                Padding="5"
+                                                Command="{x:Bind ViewModel.OpenCommunityCommand}"
+                                                Style="{ThemeResource TransparentButtonStyle}">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image
+                                                        Width="21"
+                                                        Height="25"
+                                                        Source="ms-appx:///Assets/kLogo.png" />
+                                                    <TextBlock
+                                                        Margin="5,0,0,0"
+                                                        VerticalAlignment="Center"
+                                                        FontSize="15"
+                                                        Text="库街区" />
+                                                </StackPanel>
+                                            </Button>
+                                        </StackPanel>
                                     </StackPanel>
                                 </Grid>
 

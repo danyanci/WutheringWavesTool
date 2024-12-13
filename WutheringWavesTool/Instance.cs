@@ -19,11 +19,13 @@ public static class Instance
         Service = new ServiceCollection()
             #region View and ViewModel
             .AddSingleton<ShellPage>()
+            .AddTransient<IWindowFactorys, WindowFactorys>()
             .AddSingleton<ShellViewModel>()
             .AddTransient<MainGameViewModel>()
             .AddTransient<BilibiliGameViewModel>()
             .AddTransient<GlobalGameViewModel>()
             .AddTransient<SettingViewModel>()
+            .AddTransient<CommunityViewModel>()
             #endregion
             #region Navigation
             .AddTransient<IPageService, PageService>()

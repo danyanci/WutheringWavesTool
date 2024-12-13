@@ -26,6 +26,8 @@ public static class WindowExtension
     public const int GWL_EXSTYLE = -20;
     public const int LWA_ALPHA = 0;
 
+    public const int GWL_HWNDPARENT = (-8);
+
     public static Window CreateTransparentWindow(Window win, CreateType type)
     {
         var window = new Window();

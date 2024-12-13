@@ -22,6 +22,7 @@ public sealed partial class PageService : IPageService
         this.RegisterView<BilibiliGamePage, BilibiliGameViewModel>();
         this.RegisterView<GlobalGamePage, GlobalGameViewModel>();
         this.RegisterView<SettingPage, SettingViewModel>();
+        this.RegisterView<CommunityPage, CommunityViewModel>();
     }
 
     public Type GetPage(string key)
