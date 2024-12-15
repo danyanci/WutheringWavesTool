@@ -225,7 +225,7 @@
                                 VerticalAlignment="Center"
                                 FontFamily="{ThemeResource DefaultFont}"
                                 FontSize="15"
-                                Text="鸣潮" />
+                                Text="鸣潮工具箱" />
                         </StackPanel>
                     </Button>
                     <TextBlock

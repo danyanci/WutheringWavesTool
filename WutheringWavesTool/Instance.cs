@@ -1,11 +1,15 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Controls;
 using Waves.Core;
+using WavesLauncher.Core.Contracts;
 using WutheringWavesTool.Pages;
+using WutheringWavesTool.Pages.Dialogs;
 using WutheringWavesTool.Services;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.Services.Navigations;
 using WutheringWavesTool.ViewModel;
+using WutheringWavesTool.ViewModel.DialogViewModels;
 using WutheringWavesTool.ViewModel.GameViewModels;
 
 namespace WutheringWavesTool;
@@ -19,13 +23,17 @@ public static class Instance
         Service = new ServiceCollection()
             #region View and ViewModel
             .AddSingleton<ShellPage>()
-            .AddTransient<IWindowFactorys, WindowFactorys>()
+            .AddTransient<IViewFactorys, ViewFactorys>()
             .AddSingleton<ShellViewModel>()
             .AddTransient<MainGameViewModel>()
             .AddTransient<BilibiliGameViewModel>()
             .AddTransient<GlobalGameViewModel>()
             .AddTransient<SettingViewModel>()
             .AddTransient<CommunityViewModel>()
+            #region Dialog
+            .AddTransient<LoginDialog>()
+            .AddTransient<LoginViewModel>()
+            #endregion
             #endregion
             #region Navigation
             .AddTransient<IPageService, PageService>()
@@ -34,6 +42,7 @@ public static class Instance
             #endregion
             #region Base
             .AddSingleton<IAppContext<App>, AppContext<App>>()
+            .AddSingleton<IWavesClient, WavesClient>()
             #endregion
             #region Navigation
             .AddKeyedSingleton<INavigationService, HomeNavigationService>(

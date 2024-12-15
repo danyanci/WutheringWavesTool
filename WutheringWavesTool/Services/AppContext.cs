@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 using CommunityToolkit.WinUI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Waves.Core.GameContext;
 using Waves.Core.GameContext.Contexts;
+using WavesLauncher.Core.Contracts;
 using WinUIEx;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Pages;
+using WutheringWavesTool.Pages.Dialogs;
 using WutheringWavesTool.Services.Contracts;
 
 namespace WutheringWavesTool.Services
@@ -20,7 +23,22 @@ namespace WutheringWavesTool.Services
     public class AppContext<T> : IAppContext<T>
         where T : ClientApplication
     {
+        public AppContext(IWavesClient wavesClient)
+        {
+            WavesClient = wavesClient;
+        }
+
+        private ContentDialog _dialog;
+
         public T App { get; private set; }
+
+        public XamlRoot Root { get; private set; }
+        public IWavesClient WavesClient { get; }
+
+        public void RegisterRoot(XamlRoot root)
+        {
+            this.Root = root;
+        }
 
         public async Task LauncherAsync(T app)
         {
@@ -84,6 +102,28 @@ namespace WutheringWavesTool.Services
                 this.App.MainWindow.DispatcherQueue,
                 action
             );
+        }
+
+        public async Task ShowLoginDialogAsync() => await ShowDialogAsync<LoginDialog>();
+
+        public async Task ShowDialogAsync<T>()
+            where T : ContentDialog, IDialog
+        {
+            if (_dialog != null)
+                return;
+            var dialog = Instance.Service.GetRequiredService<T>();
+            dialog.XamlRoot = this.Root;
+            this._dialog = dialog;
+            await _dialog.ShowAsync();
+        }
+
+        public void CloseDialog()
+        {
+            if (_dialog == null)
+                return;
+            _dialog.Hide();
+            _dialog = null;
+            GC.Collect();
         }
     }
 }

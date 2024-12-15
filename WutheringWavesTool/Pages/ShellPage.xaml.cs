@@ -13,6 +13,12 @@ public sealed partial class ShellPage : Page
         this.Loaded += ShellPage_Loaded;
         this.ViewModel.HomeNavigationService.RegisterView(this.frame);
         this.ViewModel.TipShow.Owner = this.panel;
+        Loaded += ShellPage_Loaded1;
+    }
+
+    private void ShellPage_Loaded1(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    {
+        this.ViewModel.AppContext.RegisterRoot(this.XamlRoot);
     }
 
     public ShellViewModel ViewModel { get; }

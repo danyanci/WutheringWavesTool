@@ -5,8 +5,15 @@ using WutheringWavesTool.WindowModels;
 
 namespace WutheringWavesTool.Services;
 
-public class WindowFactorys : IWindowFactorys
+public class ViewFactorys : IViewFactorys
 {
+    public ViewFactorys(IAppContext<App> appContext)
+    {
+        AppContext = appContext;
+    }
+
+    public IAppContext<App> AppContext { get; }
+
     public GetGeetWindow CreateGeetWindow()
     {
         var windw = new GetGeetWindow();

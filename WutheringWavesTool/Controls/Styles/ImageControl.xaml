@@ -7,7 +7,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ImageControl">
-                    <Grid>
+                    <Grid CornerRadius="{TemplateBinding CornerRadius}">
                         <Image
                             x:Name="PARA_MainImage"
                             Source="{TemplateBinding Source}"

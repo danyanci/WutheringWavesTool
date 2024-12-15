@@ -14,17 +14,20 @@ public sealed partial class ShellViewModel : ViewModelBase
 {
     public INavigationService HomeNavigationService { get; }
     public ITipShow TipShow { get; }
+    public IAppContext<App> AppContext { get; }
 
     [ObservableProperty]
     public partial string ServerName { get; set; }
 
     public ShellViewModel(
         [FromKeyedServices(nameof(HomeNavigationService))] INavigationService homeNavigationService,
-        ITipShow tipShow
+        ITipShow tipShow,
+        IAppContext<App> appContext
     )
     {
         HomeNavigationService = homeNavigationService;
         TipShow = tipShow;
+        AppContext = appContext;
         HomeNavigationService.Navigated += HomeNavigationService_Navigated;
     }
 
@@ -50,6 +53,8 @@ public sealed partial class ShellViewModel : ViewModelBase
             "Community",
             new DrillInNavigationTransitionInfo()
         );
+
+        ServerName = "库街区";
     }
 
     [RelayCommand]
