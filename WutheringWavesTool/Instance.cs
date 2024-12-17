@@ -4,8 +4,10 @@ using Microsoft.UI.Xaml.Controls;
 using Waves.Core;
 using WavesLauncher.Core.Contracts;
 using WutheringWavesTool.Pages;
+using WutheringWavesTool.Pages.Communitys;
 using WutheringWavesTool.Pages.Dialogs;
 using WutheringWavesTool.Services;
+using WutheringWavesTool.Services.Communitys;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.Services.Navigations;
 using WutheringWavesTool.ViewModel;
@@ -30,6 +32,10 @@ public static class Instance
             .AddTransient<GlobalGameViewModel>()
             .AddTransient<SettingViewModel>()
             .AddTransient<CommunityViewModel>()
+            #region Community
+            .AddTransient<GamerSignPage>()
+            .AddTransient<GamerSignViewModel>()
+            #endregion
             #region Dialog
             .AddTransient<LoginDialog>()
             .AddTransient<LoginViewModel>()

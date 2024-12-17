@@ -62,7 +62,6 @@
                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                 BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
                 BorderThickness="1">
-
                 <Grid.ChildrenTransitions>
                     <TransitionCollection>
                         <RepositionThemeTransition />
@@ -119,20 +118,35 @@
                         </DataTemplate>
                     </ComboBox.ItemTemplate>
                 </ComboBox>
-                <Button
-                    Grid.Column="1"
-                    Margin="10,0,0,0"
-                    Style="{ThemeResource TransparentButtonStyle}">
-                    <FontIcon
-                        FontFamily="Segoe Fluent Icons"
-                        FontSize="15"
-                        Glyph="&#xE712;" />
-                    <Button.Flyout>
-                        <MenuFlyout Placement="Bottom">
-                            <MenuFlyoutItem Command="{x:Bind ViewModel.UnLoginCommand}" Text="退出登录" />
-                        </MenuFlyout>
-                    </Button.Flyout>
-                </Button>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button
+                        Grid.Column="1"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Command="{x:Bind ViewModel.OpenSignWindowCommand}"
+                        Style="{ThemeResource TransparentButtonStyle}"
+                        ToolTipService.ToolTip="签到">
+                        <FontIcon
+                            FontFamily="Segoe Fluent Icons"
+                            FontSize="15"
+                            Glyph="&#xEE56;" />
+                    </Button>
+                    <Button
+                        Grid.Column="1"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center"
+                        Style="{ThemeResource TransparentButtonStyle}">
+                        <FontIcon
+                            FontFamily="Segoe Fluent Icons"
+                            FontSize="15"
+                            Glyph="&#xE712;" />
+                        <Button.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem Command="{x:Bind ViewModel.UnLoginCommand}" Text="退出登录" />
+                            </MenuFlyout>
+                        </Button.Flyout>
+                    </Button>
+                </StackPanel>
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>

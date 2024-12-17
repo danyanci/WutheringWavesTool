@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Media.Animation;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Services.Contracts;
-using WutheringWavesTool.Services.Navigations;
 using WutheringWavesTool.ViewModel.GameViewModels;
 
 namespace WutheringWavesTool.ViewModel;

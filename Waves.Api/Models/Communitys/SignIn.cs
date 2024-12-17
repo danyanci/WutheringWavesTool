@@ -228,6 +228,9 @@ public class SignInGoodsConfigsItem
 
     [JsonIgnore]
     public string SignResult { get; set; }
+
+    [JsonIgnore]
+    public bool IsSign { get; set; }
 }
 
 public class DisposableGoodsListItem
