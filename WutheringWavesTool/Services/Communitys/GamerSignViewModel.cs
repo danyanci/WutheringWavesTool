@@ -1,10 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml.Media.Imaging;
 using Waves.Api.Models.Communitys;
 using WavesLauncher.Core.Contracts;
+using Windows.System.RemoteSystems;
 using WutheringWavesTool.Common;
 
 namespace WutheringWavesTool.Services.Communitys;
@@ -37,6 +40,15 @@ public sealed partial class GamerSignViewModel : ViewModelBase
     [ObservableProperty]
     public partial string SignStatus { get; set; }
 
+    [ObservableProperty]
+    public partial string SignMessage { get; set; }
+
+    [ObservableProperty]
+    public partial BitmapImage SignImage { get; set; }
+
+    [ObservableProperty]
+    public partial string SignName { get; set; }
+
     [RelayCommand]
     async Task Loaded()
     {
@@ -67,13 +79,27 @@ public sealed partial class GamerSignViewModel : ViewModelBase
             {
                 SignBthEnable = false;
                 SignBthCheck = true;
-                SignStatus = "今日已签到";
+                var todaySign = result.Data.SignInGoodsConfigs.Skip(signCount).Take(1);
+                if (todaySign.Any())
+                {
+                    SignImage = new BitmapImage(new System.Uri(todaySign.First().GoodsUrl));
+                    SignName = todaySign.First().GoodsName + $"×{todaySign.First().GoodsNum}";
+                    SignStatus = "明日再来吧（奖励在上面写着呢）";
+                }
+                else
+                {
+                    SignMessage = "本月奖励已获得";
+                    SignStatus = "今日已签到";
+                }
             }
             else
             {
                 SignBthEnable = true;
                 SignBthCheck = false;
-                SignStatus = "点击签到";
+                var todaySign = result.Data.SignInGoodsConfigs.Skip(signCount - 1).Take(1);
+                SignStatus = "领取奖励";
+                SignImage = new BitmapImage(new System.Uri(todaySign.First().GoodsUrl));
+                SignName = todaySign.First().GoodsName + $"×{todaySign.First().GoodsNum}";
             }
         }
     }

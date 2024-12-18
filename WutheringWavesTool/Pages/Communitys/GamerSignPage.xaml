@@ -17,6 +17,11 @@
         </core:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Grid>
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <EntranceThemeTransition FromVerticalOffset="20" IsStaggeringEnabled="True" />
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition />
@@ -53,10 +58,12 @@
                 IsChecked="{x:Bind ViewModel.SignBthCheck, Mode=OneWay}"
                 IsEnabled="{x:Bind ViewModel.SignBthEnable, Mode=OneWay}">
                 <StackPanel Orientation="Vertical">
-                    <FontIcon
-                        FontFamily="Segoe Fluent Icons"
-                        FontSize="25"
-                        Glyph="&#xEE56;" />
+                    <Image
+                        Width="40"
+                        Height="40"
+                        Source="{x:Bind ViewModel.SignImage, Mode=OneWay}"
+                        Stretch="Uniform" />
+                    <TextBlock FontSize="10" Text="{x:Bind ViewModel.SignName, Mode=OneWay}" />
                 </StackPanel>
             </ToggleButton>
             <TextBlock

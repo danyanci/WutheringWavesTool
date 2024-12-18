@@ -50,7 +50,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     {
         this.HomeNavigationService.NavigationTo<CommunityViewModel>(
             "Community",
-            new DrillInNavigationTransitionInfo()
+            new EntranceNavigationTransitionInfo()
         );
 
         ServerName = "库街区";
