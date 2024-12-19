@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Controls;
 using Waves.Api.Models.Communitys;
+using WavesLauncher.Core.Contracts;
 using WutheringWavesTool.Common;
+using WutheringWavesTool.Services.Contracts;
 
 namespace WutheringWavesTool.ViewModel.Communitys;
 
@@ -9,14 +12,30 @@ public sealed partial class GameCountViewModel : ViewModelBase, IDisposable
 {
     private bool disposedValue;
 
-    public GameCountViewModel() { }
+    public IWavesClient WavesClient { get; }
+    public ITipShow TipShow { get; }
+
+    public GameCountViewModel(IWavesClient wavesClient, ITipShow tipShow)
+    {
+        WavesClient = wavesClient;
+        TipShow = tipShow;
+    }
 
     internal async Task SetRoilAsync(GameRoilDataItem item)
     {
         await RefreshDataAsync(item);
     }
 
-    private async Task RefreshDataAsync(GameRoilDataItem item) { }
+    private async Task RefreshDataAsync(GameRoilDataItem item)
+    {
+        var data = await WavesClient.RefreshGamerDataAsync(item, this.CTS.Token);
+        if (!data.Success)
+        {
+            TipShow.ShowMessage(data.Msg, Symbol.Clear);
+            return;
+        }
+        var gameData = await WavesClient.GetGamerDataAsync(item, this.CTS.Token);
+    }
 
     private void Dispose(bool disposing)
     {
@@ -25,6 +44,7 @@ public sealed partial class GameCountViewModel : ViewModelBase, IDisposable
             if (disposing)
             {
                 // TODO: 释放托管状态(托管对象)
+                this.CTS.Cancel();
             }
 
             // TODO: 释放未托管的资源(未托管的对象)并重写终结器

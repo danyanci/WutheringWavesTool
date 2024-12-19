@@ -234,10 +234,10 @@
         <!--  GameLocal Manager End  -->
         <!--  GameContext Setting Start  -->
         <StackPanel
-            Margin="0,15,15,0"
+            Margin="15,0,0,15"
             Padding="5,5"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
             Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
             CornerRadius="5"
             Orientation="Horizontal">
@@ -260,10 +260,11 @@
         </StackPanel>
         <SplitView
             x:Name="splitView"
+            Canvas.ZIndex="3"
             CornerRadius="5"
             OpenPaneLength="300"
             PaneBackground="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
-            PanePlacement="Right">
+            PanePlacement="Left">
             <SplitView.Pane>
                 <ScrollView Margin="10">
                     <StackPanel HorizontalAlignment="Stretch" Orientation="Vertical">
@@ -305,19 +306,79 @@
         </SplitView>
         <!--  GameContext Setting End  -->
         <Grid
-            Margin="15,15,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            CornerRadius="5">
+            Width="350"
+            Height="175"
+            Margin="0,15,15,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto" />
                 <ColumnDefinition />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            <ScrollViewer
-                Height="200"
-                ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                ScrollViewer.VerticalScrollBarVisibility="Hidden">
-                <Border Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" CornerRadius="5">
+            <Grid
+                x:Name="selectBar"
+                Margin="5,0,0,0"
+                x:Load="{x:Bind ViewModel.SelectBarLoad, Mode=OneWay}"
+                Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+                CornerRadius="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <ScrollView>
+                    <SelectorBar SelectionChanged="SelectorBar_SelectionChanged">
+                        <SelectorBar.Transitions>
+                            <TransitionCollection>
+                                <ContentThemeTransition />
+                            </TransitionCollection>
+                        </SelectorBar.Transitions>
+                        <SelectorBarItem
+                            FontSize="12"
+                            IsSelected="True"
+                            Tag="Dynamic"
+                            Text="活动" />
+                        <SelectorBarItem
+                            FontSize="12"
+                            Tag="Subtitle"
+                            Text="公告" />
+                        <SelectorBarItem
+                            FontSize="12"
+                            Tag="News"
+                            Text="新闻" />
+                    </SelectorBar>
+                </ScrollView>
+                <ScrollView Grid.Row="1" Margin="10,5,10,10">
+                    <ItemsControl
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        ItemsSource="{x:Bind ViewModel.NowNews, Mode=OneWay}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="cModel:Content">
+                                <HyperlinkButton
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Left"
+                                    NavigateUri="{x:Bind JumpUrl, Mode=OneWay}">
+                                    <TextBlock
+                                        FontSize="12"
+                                        Text="{x:Bind TContent, Mode=OneWay}"
+                                        TextTrimming="CharacterEllipsis" />
+                                </HyperlinkButton>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollView>
+            </Grid>
+            <Border
+                Grid.Column="1"
+                Margin="5,0,0,0"
+                Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+                CornerRadius="5">
+                <ScrollViewer ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                     <ItemsRepeater
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
@@ -349,59 +410,8 @@
                             </Button>
                         </DataTemplate>
                     </ItemsRepeater>
-                </Border>
-            </ScrollViewer>
-            <Grid
-                x:Name="selectBar"
-                Grid.Column="1"
-                Width="370"
-                Height="200"
-                Margin="5,0,0,0"
-                x:Load="{x:Bind ViewModel.SelectBarLoad, Mode=OneWay}"
-                Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
-                CornerRadius="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <ScrollView>
-                    <SelectorBar SelectionChanged="SelectorBar_SelectionChanged">
-                        <SelectorBar.Transitions>
-                            <TransitionCollection>
-                                <ContentThemeTransition />
-                            </TransitionCollection>
-                        </SelectorBar.Transitions>
-                        <SelectorBarItem
-                            IsSelected="True"
-                            Tag="Dynamic"
-                            Text="活动" />
-                        <SelectorBarItem Tag="Subtitle" Text="公告" />
-                        <SelectorBarItem Tag="News" Text="新闻" />
-                    </SelectorBar>
-                </ScrollView>
-                <ScrollView Grid.Row="1" Margin="10">
-                    <ItemsControl
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch"
-                        ItemsSource="{x:Bind ViewModel.NowNews, Mode=OneWay}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="cModel:Content">
-                                <HyperlinkButton
-                                    HorizontalAlignment="Stretch"
-                                    HorizontalContentAlignment="Left"
-                                    NavigateUri="{x:Bind JumpUrl, Mode=OneWay}">
-                                    <TextBlock Text="{x:Bind TContent, Mode=OneWay}" TextTrimming="CharacterEllipsis" />
-                                </HyperlinkButton>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                    </ItemsControl>
-                </ScrollView>
-            </Grid>
+                </ScrollViewer>
+            </Border>
         </Grid>
     </Grid>
 </bases:GamePageBase>
