@@ -80,6 +80,8 @@ public sealed partial class MainGameViewModel : GameViewModelBase
 
     private async Task RefreshBindAsync()
     {
+        if (!(await WavesClient.IsLoginAsync()))
+            return;
         var bindUser = await GameContext.GameLocalConfig.GetConfigAsync(
             GameContextExtension.BindUser
         );
@@ -91,9 +93,8 @@ public sealed partial class MainGameViewModel : GameViewModelBase
         else
         {
             var gamers = await WavesClient.GetWavesGamerAsync();
-            var rr = await WavesClient.GetGamerDataAsync(
-                gamers!.Data.Where(x => x.RoleId.ToString() == bindUser).First()
-            );
+            var first = gamers!.Data.Where(x => x.RoleId.ToString() == bindUser).First();
+            var rr = await WavesClient.GetGamerDataAsync(first);
             this.GamerData = rr!;
             GamerDataVisibility = Visibility.Visible;
             //刷新每日体力
