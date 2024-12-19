@@ -16,7 +16,7 @@
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
         <core:EventTriggerBehavior EventName="Loaded">
-            <core:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" CommandParameter="{x:Bind frame, Mode=OneWay}" />
         </core:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Grid Margin="25">
@@ -26,8 +26,8 @@
             Padding="20"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            x:Load="{x:Bind ViewModel.IsLogin, Mode=OneWay, Converter={StaticResource BoolReversalConvert}}"
-            CornerRadius="5">
+            CornerRadius="5"
+            Visibility="{x:Bind ViewModel.IsLogin, Mode=OneWay, Converter={StaticResource BoolToVisibilityReversalConverter}}">
             <StackPanel Orientation="Vertical">
                 <Image
                     Height="70"
@@ -46,7 +46,7 @@
             </StackPanel>
         </Grid>
         <!--  未登录结束  -->
-        <Grid x:Name="loginyes" x:Load="{x:Bind ViewModel.IsLogin, Mode=OneWay}">
+        <Grid x:Name="loginyes" Visibility="{x:Bind ViewModel.IsLogin, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition />
@@ -154,14 +154,24 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <wuc:SelectorBarSegmented>
-                    <SelectorBarItem Text="统计数据" />
-                    <SelectorBarItem Text="共鸣者" />
-                    <SelectorBarItem Text="数据坞与声骸" />
-                    <SelectorBarItem Text="挑战数据" />
-                    <SelectorBarItem Text="逆境深塔" />
-                    <SelectorBarItem Text="世界探索" />
+                <wuc:SelectorBarSegmented
+                    x:Name="dataSelect"
+                    x:Load="{x:Bind ViewModel.DataLoad, Mode=OneWay}"
+                    SelectionChanged="dataSelect_SelectionChanged">
+                    <SelectorBarItem
+                        IsSelected="True"
+                        Tag="DataCount"
+                        Text="统计数据" />
+                    <SelectorBarItem Tag="DataGamer" Text="共鸣者" />
+                    <SelectorBarItem Tag="DataDock" Text="数据坞与声骸" />
+                    <SelectorBarItem Tag="DataChallenge" Text="挑战数据" />
+                    <SelectorBarItem Tag="DataAbyss" Text="逆境深塔" />
+                    <SelectorBarItem Tag="DataWorld" Text="世界探索" />
                 </wuc:SelectorBarSegmented>
+                <Frame
+                    x:Name="frame"
+                    Grid.Row="1"
+                    Margin="0,5,0,0" />
             </Grid>
         </Grid>
     </Grid>

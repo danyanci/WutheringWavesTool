@@ -15,6 +15,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.ViewModel;
+using WutheringWavesTool.ViewModel.Communitys;
 
 namespace WutheringWavesTool.Pages;
 
@@ -26,7 +27,39 @@ public sealed partial class CommunityPage : Page, IPage
         this.ViewModel = Instance.Service.GetRequiredService<CommunityViewModel>();
     }
 
+    protected override void OnNavigatedFrom(NavigationEventArgs e)
+    {
+        this.ViewModel.Dispose();
+        base.OnNavigatedFrom(e);
+    }
+
     public Type PageType => typeof(CommunityPage);
 
     public CommunityViewModel ViewModel { get; }
+
+    private void dataSelect_SelectionChanged(
+        SelectorBar sender,
+        SelectorBarSelectionChangedEventArgs args
+    )
+    {
+        switch (sender.SelectedItem.Tag.ToString())
+        {
+            case "DataCount":
+                ViewModel.NavigationService.NavigationTo<GameCountViewModel>(
+                    this.ViewModel.SelectRoil,
+                    new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
+                );
+                break;
+            case "DataGamer":
+                break;
+            case "DataDock":
+                break;
+            case "DataChallenge":
+                break;
+            case "DataAbyss":
+                break;
+            case "DataWorld":
+                break;
+        }
+    }
 }

@@ -10,7 +10,7 @@ using WavesLauncher.Core.Contracts;
 using Windows.System.RemoteSystems;
 using WutheringWavesTool.Common;
 
-namespace WutheringWavesTool.Services.Communitys;
+namespace WutheringWavesTool.ViewModel.Communitys;
 
 public sealed partial class GamerSignViewModel : ViewModelBase
 {

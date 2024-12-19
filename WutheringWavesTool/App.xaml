@@ -19,6 +19,8 @@
             </ResourceDictionary.MergedDictionaries>
 
             <converter:BoolReversalConvert x:Key="BoolReversalConvert" />
+            <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityReversalConverter" Reversal="True" />
+            <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" Reversal="False" />
             <FontFamily x:Key="DefaultFont">ms-appx:///Assets/Font.ttf#文鼎方新书H7GBK</FontFamily>
         </ResourceDictionary>
     </tool:ClientApplication.Resources>

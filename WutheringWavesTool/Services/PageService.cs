@@ -4,9 +4,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Controls;
 using WutheringWavesTool.Pages;
 using WutheringWavesTool.Pages.Bases;
+using WutheringWavesTool.Pages.Communitys;
 using WutheringWavesTool.Pages.GamePages;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.ViewModel;
+using WutheringWavesTool.ViewModel.Communitys;
 using WutheringWavesTool.ViewModel.GameViewModels;
 
 namespace WutheringWavesTool.Services;
@@ -23,6 +25,8 @@ public sealed partial class PageService : IPageService
         this.RegisterView<GlobalGamePage, GlobalGameViewModel>();
         this.RegisterView<SettingPage, SettingViewModel>();
         this.RegisterView<CommunityPage, CommunityViewModel>();
+
+        this.RegisterView<GameCountPage, GameCountViewModel>();
     }
 
     public Type GetPage(string key)

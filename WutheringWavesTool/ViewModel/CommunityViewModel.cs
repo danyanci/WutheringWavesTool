@@ -4,13 +4,15 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Controls;
 using Waves.Api.Models.Communitys;
 using Waves.Api.Models.Messanger;
 using WavesLauncher.Core.Contracts;
-using WinUIEx;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Services.Contracts;
+using WutheringWavesTool.Services.Navigations;
 
 namespace WutheringWavesTool.ViewModel;
 
@@ -19,18 +21,21 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     public CommunityViewModel(
         IWavesClient wavesClient,
         IAppContext<App> appContext,
-        IViewFactorys viewFactorys
+        IViewFactorys viewFactorys,
+        [FromKeyedServices(nameof(CommunityNavigationService))] INavigationService navigationService
     )
     {
         WavesClient = wavesClient;
         AppContext = appContext;
         ViewFactorys = viewFactorys;
+        NavigationService = navigationService;
         RegisterMessanger();
     }
 
     public IWavesClient WavesClient { get; }
     public IAppContext<App> AppContext { get; }
     public IViewFactorys ViewFactorys { get; }
+    public INavigationService NavigationService { get; }
 
     [ObservableProperty]
     public partial bool IsLogin { get; set; }
@@ -40,6 +45,9 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     public partial GameRoilDataItem SelectRoil { get; set; }
+
+    [ObservableProperty]
+    public partial bool DataLoad { get; set; } = false;
 
     private void RegisterMessanger()
     {
@@ -60,9 +68,13 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
-    async Task Loaded()
+    async Task Loaded(Frame frame = null)
     {
-        this.IsLogin = await WavesClient.IsLoginAsync();
+        if (frame != null)
+        {
+            this.NavigationService.RegisterView(frame);
+        }
+        this.IsLogin = (await WavesClient.IsLoginAsync());
         if (!IsLogin)
             return;
         var gamers = await WavesClient.GetWavesGamerAsync(this.CTS.Token);
@@ -72,6 +84,7 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
         if (Roils.Count > 0)
         {
             SelectRoil = Roils[0];
+            this.DataLoad = true;
         }
     }
 
@@ -79,7 +92,6 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     void OpenSignWindow()
     {
         var win = ViewFactorys.ShowSignWindow(this.SelectRoil);
-
         win.MaxHeight = 350;
         win.MaxWidth = 350;
         (win.AppWindow.Presenter as OverlappedPresenter)!.IsMaximizable = false;
@@ -96,6 +108,7 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
 
     public void Dispose()
     {
+        this.NavigationService.UnRegisterView();
         this.Messenger.UnregisterAll(this);
         this.CTS.Cancel();
     }

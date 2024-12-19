@@ -3,7 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Waves.Api.Models.Communitys;
 using WutheringWavesTool.Common;
-using WutheringWavesTool.Services.Communitys;
+using WutheringWavesTool.ViewModel.Communitys;
 
 namespace WutheringWavesTool.Pages.Communitys;
 

@@ -7,10 +7,10 @@ using WutheringWavesTool.Pages;
 using WutheringWavesTool.Pages.Communitys;
 using WutheringWavesTool.Pages.Dialogs;
 using WutheringWavesTool.Services;
-using WutheringWavesTool.Services.Communitys;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.Services.Navigations;
 using WutheringWavesTool.ViewModel;
+using WutheringWavesTool.ViewModel.Communitys;
 using WutheringWavesTool.ViewModel.DialogViewModels;
 using WutheringWavesTool.ViewModel.GameViewModels;
 
@@ -35,6 +35,7 @@ public static class Instance
             #region Community
             .AddTransient<GamerSignPage>()
             .AddTransient<GamerSignViewModel>()
+            .AddTransient<GameCountViewModel>()
             #endregion
             #region Dialog
             .AddTransient<LoginDialog>()
@@ -53,6 +54,9 @@ public static class Instance
             #region Navigation
             .AddKeyedSingleton<INavigationService, HomeNavigationService>(
                 nameof(HomeNavigationService)
+            )
+            .AddKeyedSingleton<INavigationService, CommunityNavigationService>(
+                nameof(CommunityNavigationService)
             )
             #endregion
             .AddGameContext()
