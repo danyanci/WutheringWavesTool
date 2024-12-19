@@ -235,15 +235,17 @@
         <!--  GameContext Setting Start  -->
         <StackPanel
             Margin="15,0,0,15"
-            Padding="5,5"
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom"
             Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
             CornerRadius="5"
             Orientation="Horizontal">
-            <Button Padding="5" Style="{ThemeResource TransparentButtonStyle}">
+            <Button
+                Padding="8"
+                Style="{ThemeResource TransparentButtonStyle}"
+                ToolTipService.ToolTip="启动核心配置">
                 <FontIcon
-                    FontFamily="/Assets/Fonts/seguiemj.ttf#Segoe UI Emoji"
+                    FontFamily="Segoe UI Emoji"
                     FontSize="15"
                     Glyph="&#x1F527;" />
                 <i:Interaction.Behaviors>
@@ -253,6 +255,21 @@
                             TargetObject="{x:Bind splitView}"
                             Value="True" />
                     </core:EventTriggerBehavior>
+
+                    <sound:ButtonSoundBehavior />
+                </i:Interaction.Behaviors>
+            </Button>
+            <Button
+                Margin="0,0,0,0"
+                Padding="8"
+                Command="{x:Bind ViewModel.ShowBindCommand}"
+                Style="{ThemeResource TransparentButtonStyle}"
+                ToolTipService.ToolTip="绑定账户">
+                <FontIcon
+                    FontFamily="Segoe UI Emoji"
+                    FontSize="15"
+                    Glyph="&#x1FA84;" />
+                <i:Interaction.Behaviors>
 
                     <sound:ButtonSoundBehavior />
                 </i:Interaction.Behaviors>
@@ -412,6 +429,117 @@
                     </ItemsRepeater>
                 </ScrollViewer>
             </Border>
+        </Grid>
+
+        <Grid
+            Width="350"
+            Height="175"
+            Margin="10,10,0,0"
+            Padding="20"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
+            CornerRadius="5"
+            Visibility="{x:Bind ViewModel.GamerDataVisibility, Mode=OneWay}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <TextBlock HorizontalAlignment="Right" Text="{x:Bind ViewModel.GamerData.Data.SignInTxt, Mode=OneWay}" />
+            <TextBlock FontSize="15" Text="{x:Bind ViewModel.GamerData.Data.RoleName, Mode=OneWay}" />
+            <Grid Grid.Row="1" HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid BorderBrush="Red" BorderThickness="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image
+                        Width="35"
+                        Source="{x:Bind ViewModel.GamerData.Data.EnergyData.Img, Mode=OneWay}"
+                        Stretch="Uniform" />
+                    <StackPanel
+                        Grid.Column="1"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center">
+                        <TextBlock Text="结晶波片" />
+                        <TextBlock>
+                            <Run Text="{x:Bind ViewModel.GamerData.Data.EnergyData.Cur, Mode=OneWay}" />
+                            <Run Text="/" />
+                            <Run Text="{x:Bind ViewModel.GamerData.Data.EnergyData.Total, Mode=OneWay}" />
+                        </TextBlock>
+
+                    </StackPanel>
+                </Grid>
+                <Grid
+                    Grid.Column="1"
+                    Margin="35,10,0,0"
+                    BorderBrush="Red"
+                    BorderThickness="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image
+                        Width="40"
+                        Source="{x:Bind ViewModel.GamerData.Data.LivenessData.Img, Mode=OneWay}"
+                        Stretch="Uniform" />
+                    <StackPanel
+                        Grid.Column="1"
+                        Margin="10,0,0,0"
+                        VerticalAlignment="Center">
+                        <TextBlock Text="活跃度" />
+                        <TextBlock>
+                            <Run Text="{x:Bind ViewModel.GamerData.Data.LivenessData.Cur, Mode=OneWay}" />
+                            <Run Text="/" />
+                            <Run Text="{x:Bind ViewModel.GamerData.Data.LivenessData.Total, Mode=OneWay}" />
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <NavigationViewItemSeparator Grid.Row="2" />
+            <Grid Grid.Row="3" Margin="0,10,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <TextBlock>
+                    <Run Text="先约电台  " />
+                    <Run Text="LV:" />
+                    <Run Text="{x:Bind ViewModel.GamerData.Data.BattlePassData[0].Cur, Mode=OneWay}" />
+                </TextBlock>
+                <Grid Grid.Row="1" Margin="0,6,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="{x:Bind ViewModel.GamerData.Data.BattlePassData[1].Name, Mode=OneWay}" />
+                    <TextBlock Grid.Column="1" Margin="10,0,0,0">
+                        <Run Text="{x:Bind ViewModel.GamerData.Data.BattlePassData[1].Cur, Mode=OneWay}" />
+                        <Run Text=" / " />
+                        <Run Text="{x:Bind ViewModel.GamerData.Data.BattlePassData[1].Total, Mode=OneWay}" />
+                    </TextBlock>
+                </Grid>
+            </Grid>
+            <Button
+                Grid.RowSpan="4"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Command="{x:Bind ViewModel.RefershGamerDataCommand}"
+                Style="{ThemeResource TransparentButtonStyle}">
+                <FontIcon
+                    FontFamily="Segoe Fluent Icons"
+                    FontSize="15"
+                    Glyph="&#xE72C;" />
+                <i:Interaction.Behaviors>
+                    <sound:ButtonSoundBehavior />
+                </i:Interaction.Behaviors>
+            </Button>
         </Grid>
     </Grid>
 </bases:GamePageBase>

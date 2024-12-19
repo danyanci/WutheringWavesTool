@@ -106,6 +106,9 @@ namespace WutheringWavesTool.Services
 
         public async Task ShowLoginDialogAsync() => await ShowDialogAsync<LoginDialog>();
 
+        public async Task<ContentDialogResult> ShowBindGameDataAsync(string name) =>
+            await ShowDialogAsync<BindGameDataDialog>(name);
+
         public async Task ShowDialogAsync<T>()
             where T : ContentDialog, IDialog
         {
@@ -115,6 +118,18 @@ namespace WutheringWavesTool.Services
             dialog.XamlRoot = this.Root;
             this._dialog = dialog;
             await _dialog.ShowAsync();
+        }
+
+        public async Task<ContentDialogResult> ShowDialogAsync<T>(object data)
+            where T : ContentDialog, IDialog
+        {
+            if (_dialog != null)
+                return ContentDialogResult.None;
+            var dialog = Instance.Service.GetRequiredService<T>();
+            dialog.XamlRoot = this.Root;
+            dialog.SetData(data);
+            this._dialog = dialog;
+            return await _dialog.ShowAsync();
         }
 
         public void CloseDialog()

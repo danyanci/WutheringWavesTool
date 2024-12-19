@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using WutheringWavesTool.Common;
 
 namespace WutheringWavesTool.Services.Contracts;
@@ -19,5 +20,6 @@ public interface IAppContext<T>
     public void RegisterRoot(XamlRoot root);
 
     public Task ShowLoginDialogAsync();
+    public Task<ContentDialogResult> ShowBindGameDataAsync(string name);
     public void CloseDialog();
 }

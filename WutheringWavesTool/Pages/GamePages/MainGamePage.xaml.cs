@@ -9,6 +9,10 @@ namespace WutheringWavesTool.Pages.GamePages;
 
 public sealed partial class MainGamePage : GamePageBase, IPage
 {
+    public Type PageType => typeof(MainGamePage);
+
+    public MainGameViewModel ViewModel { get; private set; }
+
     public MainGamePage()
     {
         this.InitializeComponent();
@@ -28,10 +32,6 @@ public sealed partial class MainGamePage : GamePageBase, IPage
         GC.Collect();
         base.OnNavigatedFrom(e);
     }
-
-    public Type PageType => typeof(MainGamePage);
-
-    public MainGameViewModel ViewModel { get; private set; }
 
     private void SelectorBar_SelectionChanged(
         Microsoft.UI.Xaml.Controls.SelectorBar sender,

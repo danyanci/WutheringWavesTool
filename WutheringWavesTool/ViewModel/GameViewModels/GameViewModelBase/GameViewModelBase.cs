@@ -410,6 +410,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         {
             if (disposing)
             {
+                this.Messenger.UnregisterAll(this);
                 this.GameContext.GameContextOutput -= GameContext_GameContextOutput;
             }
 

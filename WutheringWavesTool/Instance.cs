@@ -40,6 +40,8 @@ public static class Instance
             #region Dialog
             .AddTransient<LoginDialog>()
             .AddTransient<LoginViewModel>()
+            .AddTransient<BindGameDataDialog>()
+            .AddTransient<BindGameDataViewModel>()
             #endregion
             #endregion
             #region Navigation
