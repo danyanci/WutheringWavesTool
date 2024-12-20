@@ -44,13 +44,11 @@ public sealed partial class CommunityPage : Page, IPage
     {
         switch (sender.SelectedItem.Tag.ToString())
         {
-            case "DataCount":
-                ViewModel.NavigationService.NavigationTo<GameCountViewModel>(
+            case "DataGamer":
+                ViewModel.NavigationService.NavigationTo<GameRoilsViewModel>(
                     this.ViewModel.SelectRoil,
                     new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
                 );
-                break;
-            case "DataGamer":
                 break;
             case "DataDock":
                 break;

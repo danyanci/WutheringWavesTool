@@ -165,7 +165,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\Communitys\GameCountPage.xaml">
+    <Page Update="Pages\Communitys\GamerRoilsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

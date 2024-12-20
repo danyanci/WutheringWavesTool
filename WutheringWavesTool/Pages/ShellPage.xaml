@@ -237,7 +237,10 @@
                 </StackPanel>
             </ui:TitleBar.Header>
             <ui:TitleBar.Footer>
-                <Button Command="{x:Bind ViewModel.OpenSettingCommand}" Style="{ThemeResource TransparentButtonStyle}">
+                <Button
+                    Command="{x:Bind ViewModel.OpenSettingCommand}"
+                    Style="{ThemeResource TransparentButtonStyle}"
+                    Visibility="Collapsed">
                     <i:Interaction.Behaviors>
                         <sound:ButtonSoundBehavior />
                     </i:Interaction.Behaviors>

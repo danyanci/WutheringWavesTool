@@ -160,9 +160,8 @@
                     SelectionChanged="dataSelect_SelectionChanged">
                     <SelectorBarItem
                         IsSelected="True"
-                        Tag="DataCount"
-                        Text="统计数据" />
-                    <SelectorBarItem Tag="DataGamer" Text="共鸣者" />
+                        Tag="DataGamer"
+                        Text="共鸣者" />
                     <SelectorBarItem Tag="DataDock" Text="数据坞与声骸" />
                     <SelectorBarItem Tag="DataChallenge" Text="挑战数据" />
                     <SelectorBarItem Tag="DataAbyss" Text="逆境深塔" />

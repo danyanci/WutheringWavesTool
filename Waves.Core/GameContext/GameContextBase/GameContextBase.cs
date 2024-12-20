@@ -947,7 +947,7 @@ public abstract partial class GameContextBase : IGameContext
         {
             return true;
         }
-        StartVerifyGame(System.IO.Path.GetDirectoryName(folder)!);
+        StartVerifyGame(folder);
         return false;
     }
 

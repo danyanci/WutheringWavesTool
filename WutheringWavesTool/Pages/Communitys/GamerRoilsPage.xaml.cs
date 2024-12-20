@@ -8,12 +8,12 @@ using WutheringWavesTool.ViewModel.Communitys;
 
 namespace WutheringWavesTool.Pages.Communitys;
 
-public sealed partial class GameCountPage : Page, IPage
+public sealed partial class GamerRoilsPage : Page, IPage
 {
-    public GameCountPage()
+    public GamerRoilsPage()
     {
         this.InitializeComponent();
-        this.ViewModel = Instance.Service!.GetRequiredService<GameCountViewModel>();
+        this.ViewModel = Instance.Service!.GetRequiredService<GameRoilsViewModel>();
     }
 
     protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -31,7 +31,7 @@ public sealed partial class GameCountPage : Page, IPage
         base.OnNavigatedFrom(e);
     }
 
-    public Type PageType => typeof(GameCountPage);
+    public Type PageType => typeof(GamerRoilsPage);
 
-    public GameCountViewModel ViewModel { get; }
+    public GameRoilsViewModel ViewModel { get; }
 }

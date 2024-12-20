@@ -58,7 +58,7 @@
 
     </UserControl.Resources>
 
-    <Grid x:Name="grid">
+    <Grid x:Name="grid" RequestedTheme="Dark">
         <Border
             Name="PopupContainer"
             Padding="10"

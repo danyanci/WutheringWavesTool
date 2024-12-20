@@ -26,7 +26,7 @@
         <!--  GameLocal Manager Start  -->
         <Grid
             Width="300"
-            Margin="10"
+            Margin="15"
             Padding="20"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
@@ -350,33 +350,40 @@
                             </TransitionCollection>
                         </SelectorBar.Transitions>
                         <SelectorBarItem
-                            FontSize="12"
+                            FontSize="14"
                             IsSelected="True"
                             Tag="Dynamic"
                             Text="活动" />
                         <SelectorBarItem
-                            FontSize="12"
+                            FontSize="14"
                             Tag="Subtitle"
                             Text="公告" />
                         <SelectorBarItem
-                            FontSize="12"
+                            FontSize="14"
                             Tag="News"
                             Text="新闻" />
                     </SelectorBar>
                 </ScrollView>
-                <ScrollView Grid.Row="1" Margin="10,5,10,10">
+                <ScrollView Grid.Row="1" Margin="15,5,15,15">
                     <ItemsControl
                         HorizontalAlignment="Stretch"
                         VerticalAlignment="Stretch"
                         ItemsSource="{x:Bind ViewModel.NowNews, Mode=OneWay}">
+                        <ItemsControl.ItemContainerTransitions>
+                            <TransitionCollection>
+                                <ContentThemeTransition />
+                                <AddDeleteThemeTransition />
+                            </TransitionCollection>
+                        </ItemsControl.ItemContainerTransitions>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="cModel:Content">
                                 <HyperlinkButton
                                     HorizontalAlignment="Stretch"
                                     HorizontalContentAlignment="Left"
-                                    NavigateUri="{x:Bind JumpUrl, Mode=OneWay}">
+                                    NavigateUri="{x:Bind JumpUrl, Mode=OneWay}"
+                                    ToolTipService.ToolTip="{x:Bind TContent, Mode=OneWay}">
                                     <TextBlock
-                                        FontSize="12"
+                                        FontSize="13"
                                         Text="{x:Bind TContent, Mode=OneWay}"
                                         TextTrimming="CharacterEllipsis" />
                                 </HyperlinkButton>

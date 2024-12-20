@@ -35,7 +35,7 @@ public static class Instance
             #region Community
             .AddTransient<GamerSignPage>()
             .AddTransient<GamerSignViewModel>()
-            .AddTransient<GameCountViewModel>()
+            .AddTransient<GameRoilsViewModel>()
             #endregion
             #region Dialog
             .AddTransient<LoginDialog>()
