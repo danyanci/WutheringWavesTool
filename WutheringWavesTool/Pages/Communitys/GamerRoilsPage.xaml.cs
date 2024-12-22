@@ -8,7 +8,7 @@ using WutheringWavesTool.ViewModel.Communitys;
 
 namespace WutheringWavesTool.Pages.Communitys;
 
-public sealed partial class GamerRoilsPage : UserControl
+public sealed partial class GamerRoilsPage : Page, IPage
 {
     private GameRoilsViewModel viewModel;
 

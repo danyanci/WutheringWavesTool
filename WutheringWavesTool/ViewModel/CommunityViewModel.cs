@@ -4,12 +4,14 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
 using Waves.Api.Models.Communitys;
 using Waves.Api.Models.Messanger;
 using WavesLauncher.Core.Contracts;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Services.Contracts;
+using WutheringWavesTool.Services.Navigations;
 
 namespace WutheringWavesTool.ViewModel;
 
@@ -18,12 +20,14 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     public CommunityViewModel(
         IWavesClient wavesClient,
         IAppContext<App> appContext,
-        IViewFactorys viewFactorys
+        IViewFactorys viewFactorys,
+        [FromKeyedServices(nameof(CommunityNavigationService))] INavigationService navigationService
     )
     {
         WavesClient = wavesClient;
         AppContext = appContext;
         ViewFactorys = viewFactorys;
+        NavigationService = navigationService;
         RegisterMessanger();
     }
 
@@ -33,6 +37,7 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     public IWavesClient WavesClient { get; }
     public IAppContext<App> AppContext { get; }
     public IViewFactorys ViewFactorys { get; }
+    public INavigationService NavigationService { get; }
 
     [ObservableProperty]
     public partial bool IsLogin { get; set; }
