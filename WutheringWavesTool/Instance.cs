@@ -58,7 +58,7 @@ public static class Instance
             .AddKeyedSingleton<INavigationService, HomeNavigationService>(
                 nameof(HomeNavigationService)
             )
-            .AddKeyedSingleton<INavigationService, CommunityNavigationService>(
+            .AddKeyedTransient<INavigationService, CommunityNavigationService>(
                 nameof(CommunityNavigationService)
             )
             #endregion

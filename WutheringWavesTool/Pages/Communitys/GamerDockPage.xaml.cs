@@ -26,6 +26,12 @@ public sealed partial class GamerDockPage : Page, IPage
         base.OnNavigatedTo(e);
     }
 
+    protected override void OnNavigatedFrom(NavigationEventArgs e)
+    {
+        this.ViewModel.Dispose();
+        base.OnNavigatedFrom(e);
+    }
+
     public GamerDockViewModel ViewModel { get; }
 
     public Type PageType => typeof(GamerDockViewModel);

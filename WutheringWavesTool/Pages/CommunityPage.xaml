@@ -17,21 +17,9 @@
     xmlns:wuc="using:WinUICommunity"
     Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
     mc:Ignorable="d">
-    <Page.Resources>
-        <selector:CommunitySelector
-            x:Key="CommunitySelector"
-            GamerDockPage="{StaticResource GamerDockPage}"
-            GamerRoilsPage="{StaticResource GamerRoilPage}" />
-        <DataTemplate x:Key="GamerRoilPage" x:DataType="uvm:GameRoilsViewModel">
-            <us:GamerRoilsPage ViewModel="{x:Bind}" />
-        </DataTemplate>
-        <DataTemplate x:Key="GamerDockPage" x:DataType="uvm:GamerDockViewModel">
-            <us:GamerDockPage ViewModel="{x:Bind}" />
-        </DataTemplate>
-    </Page.Resources>
     <i:Interaction.Behaviors>
         <core:EventTriggerBehavior EventName="Loaded">
-            <core:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
+            <core:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" CommandParameter="{x:Bind frame}" />
         </core:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Grid Margin="25">
@@ -180,14 +168,12 @@
                     <SelectorBarItem Tag="DataAbyss" Text="逆境深塔" />
                     <SelectorBarItem Tag="DataWorld" Text="世界探索" />
                 </wuc:SelectorBarSegmented>
-                <ContentControl
+                <Frame
                     x:Name="frame"
                     Grid.Row="1"
                     Margin="0,5,0,0"
                     HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"
-                    Content="{x:Bind ViewModel.ChildViewModel, Mode=OneWay}"
-                    ContentTemplateSelector="{ThemeResource CommunitySelector}" />
+                    VerticalContentAlignment="Stretch" />
             </Grid>
         </Grid>
     </Grid>

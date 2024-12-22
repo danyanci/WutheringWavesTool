@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
+using Microsoft.UI.Xaml.Controls;
 using Waves.Api.Models.Communitys;
 using Waves.Api.Models.Messanger;
 using WavesLauncher.Core.Contracts;
@@ -28,11 +29,21 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
         AppContext = appContext;
         ViewFactorys = viewFactorys;
         NavigationService = navigationService;
+        NavigationService.Navigated += NavigationService_Navigated;
         RegisterMessanger();
     }
 
-    [ObservableProperty]
-    public partial ICommunityViewModel ChildViewModel { get; set; }
+    private void NavigationService_Navigated(
+        object sender,
+        Microsoft.UI.Xaml.Navigation.NavigationEventArgs e
+    )
+    {
+        if (sender is Frame frame)
+        {
+            frame.BackStack.Clear();
+            GC.Collect();
+        }
+    }
 
     public IWavesClient WavesClient { get; }
     public IAppContext<App> AppContext { get; }
@@ -70,8 +81,10 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
-    async Task Loaded()
+    async Task Loaded(Frame frame = null)
     {
+        if (frame != null)
+            this.NavigationService.RegisterView(frame);
         this.IsLogin = (await WavesClient.IsLoginAsync());
         if (!IsLogin)
             return;
@@ -109,7 +122,6 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
         this.Messenger.UnregisterAll(this);
         Roils.RemoveAll();
         Roils = null;
-        this.ChildViewModel.Dispose();
         this.CTS.Cancel();
     }
 }

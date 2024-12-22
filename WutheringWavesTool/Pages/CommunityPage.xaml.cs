@@ -20,11 +20,7 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
 
     protected override void OnNavigatedFrom(NavigationEventArgs e)
     {
-        //this.ViewModel.Dispose();
-        //this.frame.Content = null;
-
-        //this.ViewModel = null;
-        //GC.Collect();
+        this.Dispose();
     }
 
     public Type PageType => typeof(CommunityPage);
@@ -36,19 +32,13 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
         SelectorBarSelectionChangedEventArgs args
     )
     {
-        if (this.ViewModel.ChildViewModel != null)
-        {
-            this.ViewModel.ChildViewModel.Dispose();
-            this.ViewModel.ChildViewModel = null;
-            this.frame.Content = null;
-            GC.Collect();
-        }
         switch (sender.SelectedItem.Tag.ToString())
         {
             case "DataGamer":
-                var data = Instance.Service.GetRequiredService<GameRoilsViewModel>();
-                await data.SetDataAsync(this.ViewModel.SelectRoil);
-                this.ViewModel.ChildViewModel = data;
+                ViewModel.NavigationService.NavigationTo<GameRoilsViewModel>(
+                    this.ViewModel.SelectRoil,
+                    new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
+                );
                 break;
             case "DataDock":
                 ViewModel.NavigationService.NavigationTo<GamerDockViewModel>(
@@ -71,9 +61,9 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
         {
             if (disposing)
             {
+                this.ViewModel.NavigationService.UnRegisterView();
                 this.Bindings.StopTracking();
                 this.ViewModel.Dispose();
-                this.frame.Content = null;
                 this.ViewModel = null;
                 GC.Collect();
             }
@@ -84,6 +74,5 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
     public void Dispose()
     {
         Dispose(disposing: true);
-        GC.SuppressFinalize(this);
     }
 }

@@ -9,7 +9,6 @@
     xmlns:ui="using:WutheringWavesTool.Controls"
     xmlns:wModel="using:WutheringWavesTool.Models.Wrapper"
     xmlns:wuc="using:WinUICommunity"
-    NavigationCacheMode="Disabled"
     mc:Ignorable="d">
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
