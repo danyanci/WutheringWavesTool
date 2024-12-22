@@ -51,6 +51,10 @@ public sealed partial class CommunityPage : Page, IPage
                 );
                 break;
             case "DataDock":
+                ViewModel.NavigationService.NavigationTo<GamerDockViewModel>(
+                    this.ViewModel.SelectRoil,
+                    new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
+                );
                 break;
             case "DataChallenge":
                 break;
