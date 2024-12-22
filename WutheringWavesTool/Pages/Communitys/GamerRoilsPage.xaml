@@ -12,6 +12,7 @@
     xmlns:ui="using:WutheringWavesTool.Controls"
     xmlns:vModel="using:WutheringWavesTool.Models"
     xmlns:wuc="using:WinUICommunity"
+    NavigationCacheMode="Disabled"
     mc:Ignorable="d">
 
     <Grid>

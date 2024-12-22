@@ -51,9 +51,10 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
                 this.ViewModel.ChildViewModel = data;
                 break;
             case "DataDock":
-                var dock = Instance.Service.GetRequiredService<GamerDockViewModel>();
-                await dock.SetDataAsync(this.ViewModel.SelectRoil);
-                this.ViewModel.ChildViewModel = dock;
+                ViewModel.NavigationService.NavigationTo<GamerDockViewModel>(
+                    this.ViewModel.SelectRoil,
+                    new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
+                );
                 break;
             case "DataChallenge":
                 break;

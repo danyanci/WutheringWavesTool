@@ -25,6 +25,9 @@ public sealed partial class PageService : IPageService
         this.RegisterView<GlobalGamePage, GlobalGameViewModel>();
         this.RegisterView<SettingPage, SettingViewModel>();
         this.RegisterView<CommunityPage, CommunityViewModel>();
+
+        this.RegisterView<GamerRoilsPage, GameRoilsViewModel>();
+        this.RegisterView<GamerDockPage, GamerDockViewModel>();
     }
 
     public Type GetPage(string key)

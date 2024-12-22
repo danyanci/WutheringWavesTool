@@ -10,7 +10,7 @@ using WutheringWavesTool.Models.Wrapper;
 
 namespace WutheringWavesTool.ViewModel.Communitys;
 
-public partial class GamerDockViewModel : ViewModelBase, ICommunityViewModel
+public partial class GamerDockViewModel : ViewModelBase, IDisposable
 {
     public IWavesClient WavesClient { get; }
 
@@ -28,9 +28,7 @@ public partial class GamerDockViewModel : ViewModelBase, ICommunityViewModel
 
     public void Dispose()
     {
-        GamerCalabash = null;
-        this.GamerPhantoms.RemoveAll();
-        this.GamerPhantoms = null;
+        this.CTS.Cancel();
     }
 
     private async Task RefreshDataAsync(GameRoilDataItem item)

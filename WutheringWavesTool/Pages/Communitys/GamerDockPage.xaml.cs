@@ -9,26 +9,24 @@ using WutheringWavesTool.ViewModel.Communitys;
 
 namespace WutheringWavesTool.Pages.Communitys;
 
-public sealed partial class GamerDockPage : UserControl, ICommunityViewModel
+public sealed partial class GamerDockPage : Page, IPage
 {
     public GamerDockPage()
     {
         this.InitializeComponent();
+        this.ViewModel = Instance.Service.GetRequiredService<GamerDockViewModel>();
     }
 
-    public GamerDockViewModel ViewModel { get; set; }
-
-    public Type PageType => typeof(GamerDockPage);
-
-    public void Dispose()
+    protected override async void OnNavigatedTo(NavigationEventArgs e)
     {
-        this.ViewModel.Dispose();
-        this.ViewModel = null;
-        GC.Collect();
+        if (e.Parameter is GameRoilDataItem item)
+        {
+            await this.ViewModel.SetDataAsync(item);
+        }
+        base.OnNavigatedTo(e);
     }
 
-    public async Task SetDataAsync(GameRoilDataItem item)
-    {
-        await this.ViewModel.SetDataAsync(item);
-    }
+    public GamerDockViewModel ViewModel { get; }
+
+    public Type PageType => typeof(GamerDockViewModel);
 }
