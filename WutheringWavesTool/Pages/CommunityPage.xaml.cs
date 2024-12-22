@@ -1,18 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.ViewModel;
 using WutheringWavesTool.ViewModel.Communitys;
@@ -30,27 +19,39 @@ public sealed partial class CommunityPage : Page, IPage
     protected override void OnNavigatedFrom(NavigationEventArgs e)
     {
         this.ViewModel.Dispose();
-        base.OnNavigatedFrom(e);
+        this.frame.Content = null;
+
+        this.ViewModel = null;
+        GC.Collect();
     }
 
     public Type PageType => typeof(CommunityPage);
 
-    public CommunityViewModel ViewModel { get; }
+    public CommunityViewModel ViewModel { get; private set; }
 
-    private void dataSelect_SelectionChanged(
+    private async void dataSelect_SelectionChanged(
         SelectorBar sender,
         SelectorBarSelectionChangedEventArgs args
     )
     {
+        if (this.ViewModel.ChildViewModel != null)
+        {
+            this.ViewModel.ChildViewModel.Dispose();
+            this.ViewModel.ChildViewModel = null;
+            this.frame.Content = null;
+            GC.Collect();
+        }
         switch (sender.SelectedItem.Tag.ToString())
         {
             case "DataGamer":
-                ViewModel.NavigationService.NavigationTo<GameRoilsViewModel>(
-                    this.ViewModel.SelectRoil,
-                    new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
-                );
+                var data = Instance.Service.GetRequiredService<GameRoilsViewModel>();
+                await data.SetDataAsync(this.ViewModel.SelectRoil);
+                this.ViewModel.ChildViewModel = data;
                 break;
             case "DataDock":
+                var dock = Instance.Service.GetRequiredService<GamerDockViewModel>();
+                await dock.SetDataAsync(this.ViewModel.SelectRoil);
+                this.ViewModel.ChildViewModel = dock;
                 break;
             case "DataChallenge":
                 break;

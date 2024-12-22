@@ -15,7 +15,7 @@ using WutheringWavesTool.Services.Contracts;
 
 namespace WutheringWavesTool.ViewModel.Communitys;
 
-public sealed partial class GameRoilsViewModel : ViewModelBase, IDisposable
+public sealed partial class GameRoilsViewModel : ViewModelBase, ICommunityViewModel
 {
     private bool disposedValue;
     private ObservableCollection<DataCenterRoilItemWrapper> cacheRoils;
@@ -30,7 +30,7 @@ public sealed partial class GameRoilsViewModel : ViewModelBase, IDisposable
         TipShow = tipShow;
     }
 
-    internal async Task SetRoilAsync(GameRoilDataItem item)
+    public async Task SetDataAsync(GameRoilDataItem item)
     {
         await RefreshDataAsync(item);
     }
@@ -54,6 +54,8 @@ public sealed partial class GameRoilsViewModel : ViewModelBase, IDisposable
 
     partial void OnSelectFilterChanged(GamerRoleFilter value)
     {
+        if (value == null)
+            return;
         if (value.Id == 0)
         {
             this.RoleDatas = this.cacheRoils.ToObservableCollection();
@@ -106,12 +108,15 @@ public sealed partial class GameRoilsViewModel : ViewModelBase, IDisposable
         {
             if (disposing)
             {
-                // TODO: 释放托管状态(托管对象)
+                RoleDatas.RemoveAll();
+                RoleDatas = null;
+                SelectFilter = null;
+                GamerFilter.RemoveAll();
+                cacheRoils.RemoveAll();
+                GamerFilter = null;
+                cacheRoils = null;
                 this.CTS.Cancel();
             }
-
-            // TODO: 释放未托管的资源(未托管的对象)并重写终结器
-            // TODO: 将大型字段设置为 null
             disposedValue = true;
         }
     }
@@ -127,6 +132,5 @@ public sealed partial class GameRoilsViewModel : ViewModelBase, IDisposable
     {
         // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
         Dispose(disposing: true);
-        GC.SuppressFinalize(this);
     }
 }

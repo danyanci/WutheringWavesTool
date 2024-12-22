@@ -4,15 +4,12 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Controls;
 using Waves.Api.Models.Communitys;
 using Waves.Api.Models.Messanger;
 using WavesLauncher.Core.Contracts;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Services.Contracts;
-using WutheringWavesTool.Services.Navigations;
 
 namespace WutheringWavesTool.ViewModel;
 
@@ -21,21 +18,21 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     public CommunityViewModel(
         IWavesClient wavesClient,
         IAppContext<App> appContext,
-        IViewFactorys viewFactorys,
-        [FromKeyedServices(nameof(CommunityNavigationService))] INavigationService navigationService
+        IViewFactorys viewFactorys
     )
     {
         WavesClient = wavesClient;
         AppContext = appContext;
         ViewFactorys = viewFactorys;
-        NavigationService = navigationService;
         RegisterMessanger();
     }
+
+    [ObservableProperty]
+    public partial ICommunityViewModel ChildViewModel { get; set; }
 
     public IWavesClient WavesClient { get; }
     public IAppContext<App> AppContext { get; }
     public IViewFactorys ViewFactorys { get; }
-    public INavigationService NavigationService { get; }
 
     [ObservableProperty]
     public partial bool IsLogin { get; set; }
@@ -68,12 +65,8 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
-    async Task Loaded(Frame frame = null)
+    async Task Loaded()
     {
-        if (frame != null)
-        {
-            this.NavigationService.RegisterView(frame);
-        }
         this.IsLogin = (await WavesClient.IsLoginAsync());
         if (!IsLogin)
             return;
@@ -108,8 +101,10 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
 
     public void Dispose()
     {
-        this.NavigationService.UnRegisterView();
         this.Messenger.UnregisterAll(this);
+        Roils.RemoveAll();
+        Roils = null;
+        this.ChildViewModel.Dispose();
         this.CTS.Cancel();
     }
 }

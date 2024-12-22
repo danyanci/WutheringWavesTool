@@ -36,6 +36,7 @@
     <None Remove="Controls\Styles\SpiltButtonStyle.xaml" />
     <None Remove="Controls\Styles\TitleBar.xaml" />
     <None Remove="Pages\CommunityPage.xaml" />
+    <None Remove="Pages\Communitys\GamerDockPage.xaml" />
     <None Remove="Pages\Communitys\GamerSignPage.xaml" />
     <None Remove="Pages\Dialogs\BindGameDataDialog.xaml" />
     <None Remove="Pages\Dialogs\LoginDialog.xaml" />
@@ -158,6 +159,11 @@
     <Content Update="Assets\GameIcons\global.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Communitys\GamerDockPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Dialogs\BindGameDataDialog.xaml">

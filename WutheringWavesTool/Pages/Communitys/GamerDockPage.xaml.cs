@@ -2,32 +2,33 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using Waves.Api.Models.Communitys;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.ViewModel.Communitys;
 
 namespace WutheringWavesTool.Pages.Communitys;
 
-public sealed partial class GamerRoilsPage : UserControl
+public sealed partial class GamerDockPage : UserControl, ICommunityViewModel
 {
-    private GameRoilsViewModel viewModel;
-
-    public GamerRoilsPage()
+    public GamerDockPage()
     {
         this.InitializeComponent();
     }
+
+    public GamerDockViewModel ViewModel { get; set; }
+
+    public Type PageType => typeof(GamerDockPage);
 
     public void Dispose()
     {
         this.ViewModel.Dispose();
         this.ViewModel = null;
+        GC.Collect();
     }
 
-    public Type PageType => typeof(GamerRoilsPage);
-
-    public GameRoilsViewModel ViewModel
+    public async Task SetDataAsync(GameRoilDataItem item)
     {
-        get => viewModel;
-        set => viewModel = value;
+        await this.ViewModel.SetDataAsync(item);
     }
 }

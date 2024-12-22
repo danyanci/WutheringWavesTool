@@ -65,9 +65,3 @@ public partial class DataCenterRoilItemWrapper : ObservableObject
         }
     }
 }
-
-public partial class DataCenterPhantomItemWrapper : ObservableObject
-{
-    [ObservableProperty]
-    public partial PhantomList BassData { get; set; }
-}
