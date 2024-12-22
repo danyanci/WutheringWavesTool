@@ -15,7 +15,7 @@ public class NavigationServiceBase : INavigationService
         PageService = pageService;
     }
 
-    private object _parameter;
+    public object Paramter { get; set; }
 
     public IPageService PageService { get; }
 
@@ -49,7 +49,11 @@ public class NavigationServiceBase : INavigationService
         return false;
     }
 
-    public bool NavigationTo(string key, object args, NavigationTransitionInfo transitionInfo)
+    public virtual bool NavigationTo(
+        string key,
+        object args,
+        NavigationTransitionInfo transitionInfo
+    )
     {
         var pageType = PageService.GetPage(key);
         if (pageType == null)
@@ -58,17 +62,17 @@ public class NavigationServiceBase : INavigationService
         {
             if (
                 RootFrame != null
-                && (OrginpageType.PageType != pageType || args != null && !args.Equals(_parameter))
+                && (OrginpageType.PageType != pageType || args != null && !args.Equals(Paramter))
             )
             {
-                _parameter = args;
-                return RootFrame.Navigate(pageType, _parameter, transitionInfo);
+                Paramter = args;
+                return RootFrame.Navigate(pageType, Paramter, transitionInfo);
             }
         }
         else if (RootFrame.Content == null)
         {
-            _parameter = args;
-            return RootFrame.Navigate(pageType, _parameter, new DrillInNavigationTransitionInfo());
+            Paramter = args;
+            return RootFrame.Navigate(pageType, Paramter, new DrillInNavigationTransitionInfo());
         }
         return false;
     }

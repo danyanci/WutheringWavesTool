@@ -8,8 +8,10 @@ using WutheringWavesTool.ViewModel.Communitys;
 
 namespace WutheringWavesTool.Pages;
 
-public sealed partial class CommunityPage : Page, IPage
+public sealed partial class CommunityPage : Page, IPage, IDisposable
 {
+    private bool disposedValue;
+
     public CommunityPage()
     {
         this.InitializeComponent();
@@ -18,11 +20,11 @@ public sealed partial class CommunityPage : Page, IPage
 
     protected override void OnNavigatedFrom(NavigationEventArgs e)
     {
-        this.ViewModel.Dispose();
-        this.frame.Content = null;
+        //this.ViewModel.Dispose();
+        //this.frame.Content = null;
 
-        this.ViewModel = null;
-        GC.Collect();
+        //this.ViewModel = null;
+        //GC.Collect();
     }
 
     public Type PageType => typeof(CommunityPage);
@@ -60,5 +62,27 @@ public sealed partial class CommunityPage : Page, IPage
             case "DataWorld":
                 break;
         }
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                this.Bindings.StopTracking();
+                this.ViewModel.Dispose();
+                this.frame.Content = null;
+                this.ViewModel = null;
+                GC.Collect();
+            }
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

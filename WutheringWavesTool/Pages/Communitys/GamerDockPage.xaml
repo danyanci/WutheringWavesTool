@@ -173,7 +173,7 @@
                                                 </LinearGradientBrush>
                                             </wuc:OpacityMaskView.OpacityMask>
                                             <Border VerticalAlignment="Stretch" CornerRadius="5">
-                                                <ui:ImageControl Source="{x:Bind BassData.Phantom.IconUrl}" Stretch="Uniform" />
+                                                <Image Source="{x:Bind BassData.Phantom.IconUrl}" Stretch="Uniform" />
                                             </Border>
                                         </wuc:OpacityMaskView>
                                         <Border
