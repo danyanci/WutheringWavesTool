@@ -48,7 +48,7 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     public IWavesClient WavesClient { get; }
     public IAppContext<App> AppContext { get; }
     public IViewFactorys ViewFactorys { get; }
-    public INavigationService NavigationService { get; }
+    public INavigationService NavigationService { get; set; }
 
     [ObservableProperty]
     public partial bool IsLogin { get; set; }
@@ -120,6 +120,7 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     public void Dispose()
     {
         this.Messenger.UnregisterAll(this);
+        this.NavigationService = null;
         Roils.RemoveAll();
         Roils = null;
         this.CTS.Cancel();

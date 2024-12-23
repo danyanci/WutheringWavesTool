@@ -20,6 +20,7 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
 
     protected override void OnNavigatedFrom(NavigationEventArgs e)
     {
+        dataSelect.SelectionChanged -= dataSelect_SelectionChanged;
         this.Dispose();
     }
 
@@ -65,7 +66,6 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
                 this.Bindings.StopTracking();
                 this.ViewModel.Dispose();
                 this.ViewModel = null;
-                GC.Collect();
             }
             disposedValue = true;
         }

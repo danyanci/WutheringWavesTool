@@ -39,12 +39,17 @@ public sealed partial class GameRoilsViewModel : ViewModelBase, ICommunityViewMo
     {
         this.User = item;
         var data = await WavesClient.RefreshGamerDataAsync(item, this.CTS.Token);
-        if (!data.Success)
+        if (data == null || (data != null && !data.Success))
         {
-            TipShow.ShowMessage(data.Msg, Symbol.Clear);
+            TipShow.ShowMessage("数据请求错误", Symbol.Clear);
             return;
         }
         var GameRoil = await WavesClient.GetGamerRoleDataAsync(User, this.CTS.Token);
+        if (GameRoil == null)
+        {
+            TipShow.ShowMessage("数据请求错误", Symbol.Clear);
+            return;
+        }
         this.cacheRoils = FormatRole(GameRoil);
         if (this.SelectFilter == null)
         {
