@@ -1,41 +1,29 @@
-# 呼啸山庄工具箱（bushi
+# 鸣潮增强型工具箱
 
-#### 这是一款全新的鸣潮启动器！
+![Main](img/main.png)
 
-启动器预计功能包含
+基于WindowsAppSdk 1.6与.Net 8进行编写的全新的鸣潮启动器。
 
-1. 国际服下载，维护，更新
+##### 安装需求
 
-2. B服下载，维护，更新
+Windows系统版本：Windows 11
 
-3. 官服下载，维护，更新
+其他：无要求
 
-4. `国服`库街区信息（个人基础信息、声骸信息、拥有角色信息、深塔等级）
+##### 程序发布周期
 
-5. 双登录（手机号和授权码）
+1.0-1.1：完善应用程序基础功能
 
-6. 增强内容（性能分析器、本地抽卡链接获取`不包含抽卡分析`）
-   
-   
+1.2：抽卡记录
 
-我的PC配置
+##### 参与开发
 
-CPU: Intel 11代 i5
+随便看看，随便玩玩，随便写写。
 
-GPU: NVIDIA GeForce RTX 3050 Laptop 4GB VRAM
+##### 安装方法
 
-RAM:16GB
+本项目采用github代码控制与SourceForge分发。
 
-
-
-校验文件情况下CPU占用10%-15%，磁盘读取速率达到400mb/s
-
-在动态壁纸中，GPU持续占用8%-15%左右（想要性能直接关掉动态壁纸）
-
-持续运行中，RAM占用仅为150MB上下浮动，由于Windows底层的挂起优化，长时间运行，实际RAM会更小。
-
-
-
-预计公布：不知道
+SourceForge地址：[WutheringWavesTool download | SourceForge.net](https://sourceforge.net/projects/wutheringwavestool/)
 
 
