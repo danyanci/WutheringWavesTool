@@ -87,7 +87,7 @@ public sealed partial class MainGameViewModel : GameViewModelBase
         );
         if (string.IsNullOrWhiteSpace(bindUser))
         {
-            GamerDataVisibility = Visibility.Collapsed;
+            HideUserBind();
             return;
         }
         else
@@ -96,9 +96,38 @@ public sealed partial class MainGameViewModel : GameViewModelBase
             var first = gamers!.Data.Where(x => x.RoleId.ToString() == bindUser).First();
             var rr = await WavesClient.GetGamerDataAsync(first);
             this.GamerData = rr!;
-            GamerDataVisibility = Visibility.Visible;
-            //刷新每日体力
+            ShowUserBind();
         }
+    }
+
+    [ObservableProperty]
+    public partial int UserRow { get; set; }
+
+    [ObservableProperty]
+    public partial int UserColumn { get; set; }
+
+    [ObservableProperty]
+    public partial int NewsRow { get; set; }
+
+    [ObservableProperty]
+    public partial int NewsColumn { get; set; }
+
+    void ShowUserBind()
+    {
+        UserRow = 0;
+        UserColumn = 0;
+        NewsRow = 1;
+        NewsColumn = 0;
+        GamerDataVisibility = Visibility.Visible;
+    }
+
+    void HideUserBind()
+    {
+        UserRow = 0;
+        UserColumn = 0;
+        NewsRow = 0;
+        NewsColumn = 0;
+        GamerDataVisibility = Visibility.Collapsed;
     }
 
     [RelayCommand]

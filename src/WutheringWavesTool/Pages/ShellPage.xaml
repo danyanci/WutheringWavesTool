@@ -41,7 +41,7 @@
         <ui:ImageEx
             Grid.Row="2"
             Canvas.ZIndex="-1"
-            Source="ms-appx:///Assets/backup.jpg"
+            Source="ms-appx:///Assets/Images/shouanren.png"
             Stretch="UniformToFill"
             Visibility="Visible" />
         <Border

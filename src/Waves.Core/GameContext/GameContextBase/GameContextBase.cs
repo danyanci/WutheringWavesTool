@@ -903,7 +903,7 @@ public abstract partial class GameContextBase : IGameContext
                 StartInfo = new ProcessStartInfo(gameProgram)
                 {
                     WorkingDirectory = folder,
-                    UseShellExecute = false,
+                    UseShellExecute = true,
                     CreateNoWindow = true,
                     Arguments = "Client -dx12",
                     Verb = "runas",
