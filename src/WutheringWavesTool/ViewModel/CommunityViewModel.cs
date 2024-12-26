@@ -29,20 +29,8 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
         AppContext = appContext;
         ViewFactorys = viewFactorys;
         NavigationService = navigationService;
-        NavigationService.Navigated += NavigationService_Navigated;
-        RegisterMessanger();
-    }
 
-    private void NavigationService_Navigated(
-        object sender,
-        Microsoft.UI.Xaml.Navigation.NavigationEventArgs e
-    )
-    {
-        //if (sender is Frame frame)
-        //{
-        //    frame.BackStack.Clear();
-        //    GC.Collect();
-        //}
+        RegisterMessanger();
     }
 
     public IWavesClient WavesClient { get; }

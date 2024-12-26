@@ -42,18 +42,18 @@ public partial class GamerDockViewModel : ViewModelBase, IDisposable
         else
         {
             this.GamerCalabash = calabash;
-            this.GamerPhantoms = FormatData(GamerCalabash);
+            this.GamerPhantoms = FormatData(calabash);
         }
     }
 
     private ObservableCollection<DataCenterPhantomItemWrapper> FormatData(
-        GamerCalabashData gamerCalabash
+        GamerCalabashData calabash
     )
     {
         ObservableCollection<DataCenterPhantomItemWrapper> items = new();
-        foreach (var item in gamerCalabash.PhantomList)
+        foreach (var item in calabash.PhantomList)
         {
-            items.Add(new DataCenterPhantomItemWrapper() { BassData = item });
+            items.Add(new(item));
         }
         return items;
     }
@@ -70,7 +70,10 @@ public partial class GamerDockViewModel : ViewModelBase, IDisposable
             if (disposing)
             {
                 GamerPhantoms.RemoveAll();
+                GamerCalabash = null;
+                GameRoil = null;
                 this.CTS.Cancel();
+                this.Messenger.UnregisterAll(this);
             }
             disposedValue = true;
         }

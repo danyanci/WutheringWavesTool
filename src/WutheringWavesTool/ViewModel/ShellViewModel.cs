@@ -35,7 +35,7 @@ public sealed partial class ShellViewModel : ViewModelBase
         Microsoft.UI.Xaml.Navigation.NavigationEventArgs e
     )
     {
-        HomeNavigationService.ClearHistory();
+        //HomeNavigationService.ClearHistory();
         GC.Collect();
     }
 

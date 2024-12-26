@@ -68,7 +68,7 @@ public sealed partial class GameRoilsViewModel : ViewModelBase, ICommunityViewMo
         else
         {
             this.RoleDatas = this
-                .cacheRoils.Where(x => x.RoleData.AttributeId == value.Id)
+                .cacheRoils.Where(x => x.AttibuteId == value.Id)
                 .ToObservableCollection();
         }
     }
@@ -114,12 +114,8 @@ public sealed partial class GameRoilsViewModel : ViewModelBase, ICommunityViewMo
             if (disposing)
             {
                 RoleDatas.RemoveAll();
-                RoleDatas = null;
-                SelectFilter = null;
                 GamerFilter.RemoveAll();
                 cacheRoils.RemoveAll();
-                GamerFilter = null;
-                cacheRoils = null;
                 this.CTS.Cancel();
             }
             disposedValue = true;

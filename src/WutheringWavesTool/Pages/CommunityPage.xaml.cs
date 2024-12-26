@@ -22,7 +22,13 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
     {
         if (dataSelect != null)
             dataSelect.SelectionChanged -= dataSelect_SelectionChanged;
+        if (this.frame.Content is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
         this.Dispose();
+        GC.Collect();
+        base.OnNavigatedFrom(e);
     }
 
     public Type PageType => typeof(CommunityPage);
@@ -63,10 +69,9 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
         {
             if (disposing)
             {
-                this.ViewModel.NavigationService.UnRegisterView();
                 this.Bindings.StopTracking();
+                this.ViewModel.NavigationService.UnRegisterView();
                 this.ViewModel.Dispose();
-                this.ViewModel = null;
             }
             disposedValue = true;
         }
@@ -75,5 +80,6 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
     public void Dispose()
     {
         Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

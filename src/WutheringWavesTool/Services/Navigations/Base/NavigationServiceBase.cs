@@ -25,6 +25,8 @@ public class NavigationServiceBase : INavigationService
 
     public bool CanGoForward => RootFrame != null ? RootFrame.CanGoForward : false;
 
+    public Frame Frame => RootFrame;
+
     public event NavigatedEventHandler Navigated;
     public event NavigationFailedEventHandler NavigationFailed;
 
@@ -88,6 +90,7 @@ public class NavigationServiceBase : INavigationService
     {
         RootFrame.Navigated -= Navigated;
         RootFrame.NavigationFailed -= NavigationFailed;
+        ClearHistory();
         RootFrame = null;
     }
 

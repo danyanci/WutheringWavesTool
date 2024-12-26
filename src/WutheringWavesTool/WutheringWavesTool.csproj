@@ -30,6 +30,7 @@
     <None Remove="Assets\Images\shouanren2.png" />
     <None Remove="Assets\logo.ico" />
     <None Remove="Assets\mcLogo.png" />
+    <None Remove="Assets\shouanren.mp4" />
     <None Remove="Controls\ImageGroupAnimation.xaml" />
     <None Remove="Controls\PopupMessage.xaml" />
     <None Remove="Controls\Styles\Button.xaml" />
@@ -170,6 +171,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="Assets\GameIcons\global.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\shouanren.mp4">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -9,6 +9,8 @@ public interface INavigationService
 {
     public void RegisterView(Frame frame);
 
+    public Frame Frame { get; }
+
     public void UnRegisterView();
 
     public bool CanGoBack { get; }

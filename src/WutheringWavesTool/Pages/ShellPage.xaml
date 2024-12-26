@@ -38,12 +38,19 @@
                 </MenuFlyout>
             </tb:TaskbarIcon.ContextFlyout>
         </tb:TaskbarIcon>
-        <ui:ImageEx
+        <Image
             Grid.Row="2"
             Canvas.ZIndex="-1"
             Source="ms-appx:///Assets/Images/shouanren.png"
             Stretch="UniformToFill"
             Visibility="Visible" />
+        <!--<MediaPlayerElement
+            x:Name="player"
+            Grid.Row="2"
+            AutoPlay="True"
+            Canvas.ZIndex="-1"
+            Source="ms-appx:///Assets/shouanren.mp4"
+            Stretch="UniformToFill" />-->
         <Border
             Grid.RowSpan="1"
             Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
