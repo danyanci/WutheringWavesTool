@@ -55,6 +55,10 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
                 );
                 break;
             case "DataChallenge":
+                ViewModel.NavigationService.NavigationTo<GamerChallengeViewModel>(
+                    this.ViewModel.SelectRoil,
+                    new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
+                );
                 break;
             case "DataAbyss":
                 break;

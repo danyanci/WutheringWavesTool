@@ -50,6 +50,7 @@ public interface IGameContext
     #region Core Config
     Task<GameContextConfig> ReadContextConfigAsync(CancellationToken token = default);
 
+    Task<bool> SetDx11LauncheAsync(bool value, CancellationToken token = default);
     Task<bool> SetLimitSpeedAsync(int value, CancellationToken token = default);
     #endregion
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Controls;
+using WutheringWavesTool.Common;
 using WutheringWavesTool.Pages;
 using WutheringWavesTool.Pages.Bases;
 using WutheringWavesTool.Pages.Communitys;
@@ -28,6 +29,7 @@ public sealed partial class PageService : IPageService
 
         this.RegisterView<GamerRoilsPage, GameRoilsViewModel>();
         this.RegisterView<GamerDockPage, GamerDockViewModel>();
+        this.RegisterView<GamerChallengePage, GamerChallengeViewModel>();
     }
 
     public Type GetPage(string key)

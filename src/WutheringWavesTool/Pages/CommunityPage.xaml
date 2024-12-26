@@ -4,7 +4,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:converter="using:WutheringWavesTool.Converter"
-    
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:WutheringWavesTool.Pages"
@@ -164,10 +163,7 @@
                         Tag="DataGamer"
                         Text="共鸣者" />
                     <SelectorBarItem Tag="DataDock" Text="数据坞与声骸" />
-                    <SelectorBarItem
-                        IsEnabled="False"
-                        Tag="DataChallenge"
-                        Text="挑战数据" />
+                    <SelectorBarItem Tag="DataChallenge" Text="全息战略-强袭" />
                     <SelectorBarItem
                         IsEnabled="False"
                         Tag="DataAbyss"

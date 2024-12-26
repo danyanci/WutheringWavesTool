@@ -32,6 +32,7 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <ProgressBar
+            Grid.ColumnSpan="2"
             VerticalAlignment="Top"
             Background="Transparent"
             IsIndeterminate="{x:Bind ViewModel.IsLoading, Mode=OneWay}" />
@@ -203,7 +204,10 @@
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
 
-            <CheckBox HorizontalAlignment="Left" Content="DirectX 11 启动" />
+            <CheckBox
+                HorizontalAlignment="Left"
+                Content="DirectX 11 启动"
+                IsChecked="{x:Bind ViewModel.IsDx11, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             <SplitButton
                 Grid.Row="1"
                 Padding="15"
@@ -406,7 +410,6 @@
                                     Command="{x:Bind JumpCommand}"
                                     Style="{ThemeResource TransparentButtonStyle}"
                                     ToolTipService.Placement="Bottom">
-
                                     <i:Interaction.Behaviors>
                                         <sound:ButtonSoundBehavior />
                                     </i:Interaction.Behaviors>
@@ -424,10 +427,10 @@
                             </DataTemplate>
                         </ItemsRepeater>
                         <Border
-                            Width="2"
+                            Width="3"
                             Margin="5,8,0,8"
                             Background="{ThemeResource SystemColorGrayTextBrush}"
-                            CornerRadius="2"
+                            CornerRadius="1"
                             Opacity="0.8" />
                         <Button
                             Margin="5,0,0,0"
@@ -439,7 +442,6 @@
                                 FontFamily="Segoe UI Emoji"
                                 FontSize="15"
                                 Glyph="&#x1F527;" />
-
                         </Button>
                         <Button
                             Margin="0,0,0,0"
@@ -452,7 +454,6 @@
                                 FontSize="15"
                                 Glyph="&#x1FA84;" />
                             <i:Interaction.Behaviors>
-
                                 <sound:ButtonSoundBehavior />
                             </i:Interaction.Behaviors>
                         </Button>

@@ -24,9 +24,7 @@
         </Grid.RowDefinitions>
         <tb:TaskbarIcon
             ContextMenuMode="SecondWindow"
-            IconSource="ms-appx:///Assets/appLogo.ico"
-            MenuActivation="LeftOrRightClick"
-            PopupActivation="DoubleClick"
+            IconSource="/Assets/logo.ico"
             ToolTipText="鸣潮1.0">
             <tb:TaskbarIcon.ContextFlyout>
                 <MenuFlyout>
@@ -65,7 +63,7 @@
                 <StackPanel Orientation="Horizontal">
                     <Button
                         x:Name="appIcon"
-                        Margin="15,5,0,5"
+                        Margin="5,5,0,5"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Canvas.ZIndex="3"
@@ -233,16 +231,8 @@
                             </MenuFlyout>-->
                         </Button.Flyout>
                         <StackPanel Orientation="Horizontal">
-                            <Image
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                Stretch="UniformToFill">
-                                <Image.Source>
-                                    <BitmapImage DecodePixelHeight="45" UriSource="ms-appx:///Assets/logo.ico" />
-                                </Image.Source>
-                            </Image>
                             <TextBlock
-                                Margin="5,0,0,0"
+                                Margin="0,0,0,0"
                                 VerticalAlignment="Center"
                                 FontFamily="{ThemeResource DefaultFont}"
                                 FontSize="15"

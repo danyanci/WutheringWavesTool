@@ -71,6 +71,8 @@ public abstract partial class GameContextBase : IGameContext
     public CdnList? Cdn { get; private set; }
     public string DownloadBaseUrl { get; private set; }
     public List<Resource> Resources { get; private set; }
+    public bool IsDx11Launche { get; private set; }
+
     public bool IsLimitSpeed
     {
         get => isLimtSpeed;
@@ -905,7 +907,7 @@ public abstract partial class GameContextBase : IGameContext
                     WorkingDirectory = folder,
                     UseShellExecute = true,
                     CreateNoWindow = true,
-                    Arguments = "Client -dx12",
+                    Arguments = this.IsDx11Launche ? "Client -dx11" : "Client -dx12",
                     Verb = "runas",
                 },
             };
@@ -968,12 +970,21 @@ public abstract partial class GameContextBase : IGameContext
     {
         GameContextConfig config = new();
         var speed = await this.GameLocalConfig.GetConfigAsync(GameLocalSettingName.LimitSpeed);
+        var dx11 = await this.GameLocalConfig.GetConfigAsync(GameLocalSettingName.IsDx11);
         if (int.TryParse(speed, out var rate))
         {
             config.LimitSpeed = rate;
         }
         else
             config.LimitSpeed = 0;
+        if (string.IsNullOrWhiteSpace(dx11))
+            config.IsDx11 = false;
+        if (bool.TryParse(dx11, out var isDx11))
+        {
+            config.IsDx11 = isDx11;
+        }
+        else
+            config.IsDx11 = false;
         return config;
     }
 
@@ -989,6 +1000,20 @@ public abstract partial class GameContextBase : IGameContext
             this.SpeedValue = value;
             this.IsLimitSpeed = true;
             return true;
+        }
+        return false;
+    }
+
+    public async Task<bool> SetDx11LauncheAsync(bool value, CancellationToken token = default)
+    {
+        if (
+            await this.GameLocalConfig.SaveConfigAsync(
+                GameLocalSettingName.IsDx11,
+                value.ToString()
+            )
+        )
+        {
+            this.IsDx11Launche = value;
         }
         return false;
     }

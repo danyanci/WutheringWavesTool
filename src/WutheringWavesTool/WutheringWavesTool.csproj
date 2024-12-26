@@ -40,6 +40,7 @@
     <None Remove="Controls\Styles\SpiltButtonStyle.xaml" />
     <None Remove="Controls\Styles\TitleBar.xaml" />
     <None Remove="Pages\CommunityPage.xaml" />
+    <None Remove="Pages\Communitys\GamerChallengePage.xaml" />
     <None Remove="Pages\Communitys\GamerDockPage.xaml" />
     <None Remove="Pages\Communitys\GamerSignPage.xaml" />
     <None Remove="Pages\Dialogs\BindGameDataDialog.xaml" />
@@ -65,7 +66,6 @@
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
 
@@ -103,6 +103,9 @@
     <ProjectReference Include="..\Waves.Core\Waves.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="Assets\applogo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="Assets\Font.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -176,6 +179,11 @@
     <Content Update="Assets\shouanren.mp4">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Communitys\GamerChallengePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\Styles\ImageEx.xaml">

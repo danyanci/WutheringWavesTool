@@ -26,7 +26,15 @@ public class GameLocalSettingName
     /// </summary>
     public const string LocalGameVersion = nameof(LocalGameVersion);
 
+    /// <summary>
+    /// 下载速度
+    /// </summary>
     public const string LimitSpeed = nameof(LimitSpeed);
+
+    /// <summary>
+    /// 是否使用DX11启动
+    /// </summary>
+    public const string IsDx11 = nameof(IsDx11);
 }
 
 public class GameLocalConfig
