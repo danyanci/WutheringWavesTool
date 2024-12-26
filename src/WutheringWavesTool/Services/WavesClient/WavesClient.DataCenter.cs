@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading;
@@ -277,5 +278,45 @@ partial class WavesClient
         var jsonData = resultCode.Data;
 
         return JsonSerializer.Deserialize(jsonData, CommunityContext.Default.GamerRoilDetily);
+    }
+
+    public async Task<GamerChallengeDetily?> GetGamerChallengeDetails(
+        GameRoilDataItem roil,
+        int countryCode,
+        CancellationToken token = default
+    )
+    {
+        var header = GetHeader(true);
+        var content = new Dictionary<string, string>()
+        {
+            { "gameId", roil.GameId.ToString() },
+            { "roleId", roil.RoleId.ToString() },
+            { "serverId", roil.ServerId.ToString() },
+            { "channelId", "19" },
+            { "countryCode", countryCode.ToString() },
+        };
+        var request = await BuildRequest(
+            "https://api.kurobbs.com/gamer/roleBox/akiBox/challengeDetails",
+            HttpMethod.Post,
+            header,
+            new MediaTypeHeaderValue("application/x-www-form-urlencoded"),
+            content
+        );
+        var result = await this.HttpClientService.HttpClient.SendAsync(request, token);
+        var jsonStr = await result.Content.ReadAsStringAsync(token);
+        var resultCode = JsonSerializer.Deserialize(
+            jsonStr,
+            CommunityContext.Default.GamerBassString
+        );
+        if (resultCode == null || resultCode.Code != 200)
+        {
+            return null;
+        }
+        var jsonData = resultCode.Data;
+        var result2 = JsonSerializer.Deserialize(
+            jsonData,
+            CommunityContext.Default.GamerChallengeDetily
+        );
+        return result2;
     }
 }

@@ -36,7 +36,7 @@ public sealed partial class GamerChallengeViewModel : ViewModelBase, IDisposable
 
     public GameRoilDataItem RoilItem { get; private set; }
 
-    partial void OnSelectCountryChanged(DataCenterGamerChallengeCountryWrapper value)
+    async partial void OnSelectCountryChanged(DataCenterGamerChallengeCountryWrapper value)
     {
         if (value == null)
             return;
@@ -53,6 +53,11 @@ public sealed partial class GamerChallengeViewModel : ViewModelBase, IDisposable
         {
             Items.Add(new(item));
         }
+        var result = await WavesClient.GetGamerChallengeDetails(
+            this.RoilItem,
+            value.CountryId,
+            this.CTS.Token
+        );
     }
 
     [RelayCommand]

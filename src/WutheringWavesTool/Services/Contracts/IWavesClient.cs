@@ -86,5 +86,11 @@ public interface IWavesClient
         long roleId,
         CancellationToken token = default
     );
+
+    Task<GamerChallengeDetily?> GetGamerChallengeDetails(
+        GameRoilDataItem roil,
+        int countryCode,
+        CancellationToken token = default
+    );
     #endregion
 }
