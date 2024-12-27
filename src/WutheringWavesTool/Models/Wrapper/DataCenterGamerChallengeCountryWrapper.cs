@@ -1,30 +1,74 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Waves.Api.Models.Communitys.DataCenter;
-using WinUICommunity;
 
 namespace WutheringWavesTool.Models.Wrapper;
 
 public sealed partial class DataCenterGamerChallengeIndexListWrapper : ObservableObject
 {
     [ObservableProperty]
-    public partial BitmapImage Cover { get; set; }
+    public partial ObservableCollection<ChallengeRole> Roles { get; set; }
 
     [ObservableProperty]
-    public partial string Name { get; set; }
+    public partial int Time { get; set; }
+
+    [ObservableProperty]
+    public partial int BossLevel { get; set; }
 
     [ObservableProperty]
     public partial int Value { get; set; }
 
-    public int BossId { get; }
+    [ObservableProperty]
+    public partial bool ItemsVisibility { get; set; }
 
-    public DataCenterGamerChallengeIndexListWrapper(IndexList value)
+    public DataCenterGamerChallengeIndexListWrapper(Detilys detily)
     {
-        Cover = new BitmapImage(new(value.BossHeadIcon));
-        Value = value.Difficulty;
-        Name = value.BossName;
-        BossId = value.BossId;
+        if (detily.Roles == null)
+        {
+            this.ItemsVisibility = false;
+        }
+        else
+        {
+            ItemsVisibility = true;
+            this.Roles = new(detily.Roles);
+        }
+        this.Time = detily.PassTime;
+        this.BossLevel = detily.BossLevel;
+        this.Value = detily.Difficulty;
     }
+}
+
+public sealed partial class DataCenterChallengeBossItemWrapper : ObservableObject
+{
+    public DataCenterChallengeBossItemWrapper(
+        List<DataCenterGamerChallengeIndexListWrapper> wrappers,
+        IGrouping<string, Detilys> detilys
+    )
+    {
+        this.IndexWrapper = new(wrappers);
+        this.BossCover = new(new(detilys.First().BossHeadIcon));
+        this.BossName = detilys.First().BossName;
+        this.MaxCount = wrappers.Count;
+        this.Count = wrappers.Count(x => x.Roles != null);
+    }
+
+    [ObservableProperty]
+    public partial BitmapImage BossCover { get; set; }
+
+    [ObservableProperty]
+    public partial int MaxCount { get; set; }
+
+    [ObservableProperty]
+    public partial int Count { get; set; }
+
+    [ObservableProperty]
+    public partial string BossName { get; set; }
+
+    [ObservableProperty]
+    public partial ObservableCollection<DataCenterGamerChallengeIndexListWrapper> IndexWrapper { get; set; }
 }
 
 public sealed partial class DataCenterGamerChallengeCountryWrapper : ObservableObject

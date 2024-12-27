@@ -7,7 +7,9 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:WutheringWavesTool.Pages.Communitys"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:wModel="using:Waves.Api.Models.Communitys.DataCenter"
     xmlns:wrapper="using:WutheringWavesTool.Models.Wrapper"
+    xmlns:wuc="using:WinUICommunity"
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
         <i:EventTriggerBehavior EventName="Loaded">
@@ -33,49 +35,108 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <ItemsRepeater ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}">
-            <ItemsRepeater.ItemTemplate>
-                <DataTemplate x:DataType="wrapper:DataCenterGamerChallengeIndexListWrapper">
-                    <Button Margin="5,0" Padding="0">
-                        <Grid CornerRadius="5">
-                            <Image
-                                Grid.RowSpan="2"
-                                Source="{x:Bind Cover}"
-                                Stretch="Uniform" />
-                            <Border
-                                Padding="3"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Top"
-                                Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}">
-                                <TextBlock>
-                                    <Run Foreground="{ThemeResource AccentFillColorDefaultBrush}" Text="{x:Bind Value}" />
-                                    <Run Foreground="{ThemeResource AccentFillColorTertiaryBrush}" Text="/6" />
-                                </TextBlock>
-                            </Border>
-                            <Border
-                                Margin="4"
-                                Padding="5"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Bottom"
-                                Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
-                                CornerRadius="5">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{x:Bind Name}" />
+        <ScrollView Margin="10">
+            <ItemsControl ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}">
 
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="wrapper:DataCenterChallengeBossItemWrapper">
+                        <wuc:SettingsExpander
+                            Margin="0,5"
+                            Padding="0"
+                            HorizontalAlignment="Stretch"
+                            ItemsSource="{x:Bind IndexWrapper}">
+                            <wuc:SettingsExpander.Transitions>
+                                <TransitionCollection>
+                                    <AddDeleteThemeTransition />
+                                </TransitionCollection>
+                            </wuc:SettingsExpander.Transitions>
+                            <wuc:SettingsExpander.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Height="50" Source="{x:Bind BossCover}" />
+                                    <TextBlock
+                                        Margin="10,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Text="{x:Bind BossName}" />
                                 </StackPanel>
-                            </Border>
-                        </Grid>
-                    </Button>
-                </DataTemplate>
-            </ItemsRepeater.ItemTemplate>
-            <ItemsRepeater.Layout>
-                <UniformGridLayout
-                    ItemsJustification="Start"
-                    ItemsStretch="Uniform"
-                    MinColumnSpacing="2"
-                    MinItemHeight="180"
-                    MinItemWidth="140" />
-            </ItemsRepeater.Layout>
-        </ItemsRepeater>
+                            </wuc:SettingsExpander.Header>
+                            <wuc:SettingsExpander.ItemTemplate>
+                                <DataTemplate x:DataType="wrapper:DataCenterGamerChallengeIndexListWrapper">
+                                    <wuc:SettingsCard>
+                                        <wuc:SettingsCard.Header>
+                                            <Grid>
+                                                <ItemsControl ItemsSource="{x:Bind Roles}" Visibility="{x:Bind ItemsVisibility, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate x:DataType="wModel:ChallengeRole">
+                                                            <Grid
+                                                                Width="130"
+                                                                Margin="5,0"
+                                                                Padding="5"
+                                                                CornerRadius="5">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition />
+                                                                    <ColumnDefinition />
+                                                                </Grid.ColumnDefinitions>
+                                                                <Image
+                                                                    Width="45"
+                                                                    Height="45"
+                                                                    Stretch="Uniform">
+                                                                    <Image.Source>
+                                                                        <BitmapImage
+                                                                            DecodePixelHeight="45"
+                                                                            DecodePixelWidth="45"
+                                                                            UriSource="{x:Bind RoleHeadIcon}" />
+                                                                    </Image.Source>
+                                                                </Image>
+                                                                <StackPanel
+                                                                    Grid.Column="1"
+                                                                    VerticalAlignment="Center"
+                                                                    Orientation="Vertical">
+                                                                    <TextBlock
+                                                                        FontSize="12"
+                                                                        Text="{x:Bind RoleName}"
+                                                                        TextTrimming="CharacterEllipsis" />
+                                                                    <TextBlock FontSize="12" Foreground="{ThemeResource AccentAAFillColorDefaultBrush}">
+                                                                        <Run Text="Lv:" />
+                                                                        <Run Text="{x:Bind RoleLevel}" />
+                                                                    </TextBlock>
+                                                                </StackPanel>
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel Orientation="Horizontal" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                </ItemsControl>
+                                                <TextBlock
+                                                    VerticalAlignment="Center"
+                                                    Text="没有挑战记录~"
+                                                    Visibility="{x:Bind ItemsVisibility, Converter={StaticResource BoolToVisibilityReversalConverter}}" />
+                                            </Grid>
+                                        </wuc:SettingsCard.Header>
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock>
+                                                <Run Text="Boss Lv:" />
+                                                <Run Text="{x:Bind BossLevel}" />
+                                            </TextBlock>
+                                            <TextBlock Visibility="{x:Bind ItemsVisibility, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                <Run Text="通关时长：" />
+                                                <Run Text="{x:Bind Time, Converter={StaticResource IntToSecondTimeConverter}}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </wuc:SettingsCard>
+                                </DataTemplate>
+                            </wuc:SettingsExpander.ItemTemplate>
+                            <TextBlock>
+                                <Run Text="{x:Bind Count}" />
+                                <Run Text="/" />
+                                <Run Text="{x:Bind MaxCount}" />
+                            </TextBlock>
+                        </wuc:SettingsExpander>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollView>
     </Grid>
 </Page>

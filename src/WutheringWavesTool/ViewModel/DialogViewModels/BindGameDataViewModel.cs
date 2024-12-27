@@ -85,6 +85,11 @@ public sealed partial class BindGameDataViewModel : DialogViewModelBase, IDispos
     [RelayCommand]
     async Task Primary()
     {
+        if (SelectRoil == null)
+        {
+            this.Close();
+            return;
+        }
         await GameContext!.GameLocalConfig.SaveConfigAsync(
             GameContextExtension.BindUser,
             this.SelectRoil.RoleId.ToString()

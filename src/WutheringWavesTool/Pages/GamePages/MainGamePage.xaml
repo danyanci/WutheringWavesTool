@@ -442,6 +442,9 @@
                                 FontFamily="Segoe UI Emoji"
                                 FontSize="15"
                                 Glyph="&#x1F527;" />
+                            <i:Interaction.Behaviors>
+                                <sound:ButtonSoundBehavior />
+                            </i:Interaction.Behaviors>
                         </Button>
                         <Button
                             Margin="0,0,0,0"
