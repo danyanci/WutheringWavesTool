@@ -50,6 +50,7 @@ public sealed partial class DataCenterChallengeBossItemWrapper : ObservableObjec
     {
         this.IndexWrapper = new(wrappers);
         this.BossCover = new(new(detilys.First().BossHeadIcon));
+        BossHeader = new(new(detilys.First().BossIconUrl));
         this.BossName = detilys.First().BossName;
         this.MaxCount = wrappers.Count;
         this.Count = wrappers.Count(x => x.Roles != null);
@@ -57,6 +58,9 @@ public sealed partial class DataCenterChallengeBossItemWrapper : ObservableObjec
 
     [ObservableProperty]
     public partial BitmapImage BossCover { get; set; }
+
+    [ObservableProperty]
+    public partial BitmapImage BossHeader { get; set; }
 
     [ObservableProperty]
     public partial int MaxCount { get; set; }

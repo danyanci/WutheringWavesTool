@@ -35,6 +35,14 @@ public class GameLocalSettingName
     /// 是否使用DX11启动
     /// </summary>
     public const string IsDx11 = nameof(IsDx11);
+
+    /// <summary>
+    /// 预下载路径
+    /// </summary>
+    public const string ProdDownloadFolderPath = nameof(ProdDownloadFolderPath);
+    public const string ProdDownloadFolderDone = nameof(ProdDownloadFolderDone);
+
+    public const string ProdDownloadVersion = nameof(ProdDownloadVersion);
 }
 
 public class GameLocalConfig
@@ -107,6 +115,11 @@ public class GameLocalConfig
                 return existingSetting.Value;
             }
         }
+    }
+
+    internal void SaveConfigAsync(object prodDownloadFolderPath)
+    {
+        throw new NotImplementedException();
     }
 }
 

@@ -30,7 +30,6 @@
     <None Remove="Assets\Images\shouanren2.png" />
     <None Remove="Assets\logo.ico" />
     <None Remove="Assets\mcLogo.png" />
-    <None Remove="Assets\shouanren.mp4" />
     <None Remove="Controls\ImageGroupAnimation.xaml" />
     <None Remove="Controls\PopupMessage.xaml" />
     <None Remove="Controls\Styles\Button.xaml" />
@@ -42,7 +41,9 @@
     <None Remove="Pages\CommunityPage.xaml" />
     <None Remove="Pages\Communitys\GamerChallengePage.xaml" />
     <None Remove="Pages\Communitys\GamerDockPage.xaml" />
+    <None Remove="Pages\Communitys\GamerExploreIndexPage.xaml" />
     <None Remove="Pages\Communitys\GamerSignPage.xaml" />
+    <None Remove="Pages\Communitys\GamerTowerPage.xaml" />
     <None Remove="Pages\Dialogs\BindGameDataDialog.xaml" />
     <None Remove="Pages\Dialogs\LoginDialog.xaml" />
     <None Remove="Pages\GamePages\BilibiliGamePage.xaml" />
@@ -176,9 +177,16 @@
     <Content Update="Assets\GameIcons\global.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Update="Assets\shouanren.mp4">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Communitys\GamerTowerPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Communitys\GamerExploreIndexPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Communitys\GamerChallengePage.xaml">

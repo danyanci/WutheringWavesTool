@@ -23,6 +23,7 @@ namespace Waves.Api.Models;
 [JsonSerializable(typeof(RHIOptionList))]
 [JsonSerializable(typeof(WavesIndex))]
 [JsonSerializable(typeof(Text))]
+[JsonSerializable(typeof(Predownload))]
 public partial class WavesIndexContext : JsonSerializerContext { }
 
 // Root myDeserializedClass = JsonSerializer.Deserialize<Root>(myJsonResponse);
@@ -185,6 +186,36 @@ public class RHIOptionList
     public Text Text { get; set; }
 }
 
+public class Predownload
+{
+    [JsonPropertyName("changelog")]
+    public Changelog Changelog { get; set; }
+
+    [JsonPropertyName("resourceChunk")]
+    public ResourceChunk ResourceChunk { get; set; }
+
+    [JsonPropertyName("resources")]
+    public string Resources { get; set; }
+
+    [JsonPropertyName("resourcesBasePath")]
+    public string ResourcesBasePath { get; set; }
+
+    [JsonPropertyName("resourcesDiff")]
+    public ResourcesDiff ResourcesDiff { get; set; }
+
+    [JsonPropertyName("resourcesExcludePath")]
+    public List<object> ResourcesExcludePath { get; set; }
+
+    [JsonPropertyName("resourcesExcludePathNeedUpdate")]
+    public List<object> ResourcesExcludePathNeedUpdate { get; set; }
+
+    [JsonPropertyName("sampleHashSwitch")]
+    public int SampleHashSwitch { get; set; }
+
+    [JsonPropertyName("version")]
+    public string Version { get; set; }
+}
+
 public class WavesIndex
 {
     [JsonPropertyName("hashCacheCheckAccSwitch")]
@@ -195,6 +226,9 @@ public class WavesIndex
 
     [JsonPropertyName("predownloadSwitch")]
     public int PredownloadSwitch { get; set; }
+
+    [JsonPropertyName("predownload")]
+    public Predownload Predownload { get; set; }
 
     [JsonPropertyName("RHIOptionSwitch")]
     public int RHIOptionSwitch { get; set; }

@@ -11,6 +11,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Waves.Api.Models;
+using Waves.Core;
 using Waves.Core.GameContext;
 using Waves.Core.Models;
 using Windows.Devices.WiFi;
@@ -79,6 +80,9 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     [ObservableProperty]
     public partial bool IsOpenConfigPanel { get; set; }
 
+    [ObservableProperty]
+    public partial string PredDownloadString { get; set; }
+
     public IGameContext GameContext { get; }
     public IPickersService PickersService { get; }
     public IAppContext<App> AppContext { get; }
@@ -102,6 +106,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         AppContext = appContext;
         TipShow = tipShow;
         this.GameContext.GameContextOutput += GameContext_GameContextOutput;
+        this.GameContext.GameContextProdOutput += GameContext_GameContextProdOutput;
     }
 
     private async Task GameContext_GameContextOutput(
@@ -194,8 +199,56 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         await RefreshStatus();
         await ReadContextConfig();
         await GetApiDataAsync();
+        await GetProdUpdateAsync();
+        await CheckProdInstall();
         await LoadedAfter();
         IsLoading = false;
+    }
+
+    private async Task GetProdUpdateAsync()
+    {
+        var folder = await this.GameContext.GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.GameLauncherBassFolder
+        );
+        var resourceVersion = await this.GameContext.GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.LocalGameResourceVersion
+        );
+        var localVersion = await this.GameContext.GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.LocalGameVersion
+        );
+        var result = WavesIndex.Predownload;
+        var prodDownload = await this.GameContext.GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.ProdDownloadFolderPath
+        );
+        var prodDownloadDone = await this.GameContext.GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.ProdDownloadFolderDone
+        );
+        this.ProdBthEnable = false;
+        if (localVersion != result.Version)
+        {
+            this.PredDownloadBthVisibility = Visibility.Visible;
+            PredDownloadString = $"({localVersion}->{result.Version})";
+            if (prodDownloadDone == null)
+            {
+                this.ProdBthEnable = true;
+                ProdBthString = "开始预下载";
+                return;
+            }
+            var doneResult = bool.TryParse(prodDownloadDone, out var done);
+            if (Directory.Exists(prodDownload) && done == false)
+            {
+                this.ProdBthEnable = true;
+                ProdBthString = "继续预下载";
+            }
+            else if (done == true)
+            {
+                ProdBthString = "预下载完成";
+                this.ProdBthEnable = false;
+                this.PredStopBthVisibility = Visibility.Collapsed;
+                this.ProdDownloadProgress = 0;
+                this.PredDownloadString = "预下载完成，游戏发布时直接自动安装";
+            }
+        }
     }
 
     async Task RefreshStatus()
@@ -247,6 +300,19 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
             await LoadedAfter();
             IsLoading = false;
             return;
+        }
+        if (status.IsProdDownloading)
+        {
+            PredDownloadBthVisibility = Visibility.Visible;
+            ProdBthString = "预下载中";
+            PredDownloadString = $"检索下载进度";
+            this.ProdDownloadProgress = 0;
+            PredStopBthVisibility = Visibility.Visible;
+            this.ProdBthEnable = false;
+        }
+        else
+        {
+            await GetProdUpdateAsync();
         }
     }
 
@@ -421,6 +487,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
             {
                 this.Messenger.UnregisterAll(this);
                 this.GameContext.GameContextOutput -= GameContext_GameContextOutput;
+                this.GameContext.GameContextProdOutput -= GameContext_GameContextProdOutput;
             }
 
             disposedValue = true;

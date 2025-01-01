@@ -61,8 +61,16 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
                 );
                 break;
             case "DataAbyss":
+                ViewModel.NavigationService.NavigationTo<GamerTowerViewModel>(
+                    this.ViewModel.SelectRoil,
+                    new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
+                );
                 break;
             case "DataWorld":
+                ViewModel.NavigationService.NavigationTo<GamerExploreIndexViewModel>(
+                    this.ViewModel.SelectRoil,
+                    new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
+                );
                 break;
         }
     }

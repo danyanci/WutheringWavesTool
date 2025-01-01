@@ -61,7 +61,7 @@ public interface IWavesClient
         CancellationToken token = default
     );
 
-    Task<GamerTowerIndexData?> GetGamerTowerIndexDataAsync(
+    Task<GamerTowerModel?> GetGamerTowerIndexDataAsync(
         GameRoilDataItem roil,
         CancellationToken token = default
     );

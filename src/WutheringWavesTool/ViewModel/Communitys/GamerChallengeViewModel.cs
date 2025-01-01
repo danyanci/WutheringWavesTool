@@ -78,7 +78,7 @@ public sealed partial class GamerChallengeViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     async Task Loaded()
     {
-        var challData = await WavesClient.GetGamerChallengeIndexDataAsync(RoilItem);
+        var challData = await WavesClient.GetGamerChallengeIndexDataAsync(RoilItem, this.CTS.Token);
         this.orginCountrys = challData.ChallengeList;
         foreach (var item in orginCountrys)
         {

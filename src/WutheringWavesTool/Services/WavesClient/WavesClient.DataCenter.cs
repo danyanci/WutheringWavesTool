@@ -119,7 +119,7 @@ partial class WavesClient
         return JsonSerializer.Deserialize(jsonData, CommunityContext.Default.GamerCalabashData);
     }
 
-    public async Task<GamerTowerIndexData?> GetGamerTowerIndexDataAsync(
+    public async Task<GamerTowerModel?> GetGamerTowerIndexDataAsync(
         GameRoilDataItem roil,
         CancellationToken token = default
     )
@@ -132,7 +132,7 @@ partial class WavesClient
             { "serverId", roil.ServerId },
         };
         var request = await BuildLoginRequest(
-            "https://api.kurobbs.com/gamer/roleBox/akiBox/towerIndex",
+            "https://api.kurobbs.com/gamer/roleBox/akiBox/towerDataDetail",
             header,
             new MediaTypeHeaderValue("application/x-www-form-urlencoded"),
             content
@@ -148,7 +148,7 @@ partial class WavesClient
             return null;
         }
         var jsonData = resultCode.Data;
-        return JsonSerializer.Deserialize(jsonData, CommunityContext.Default.GamerTowerIndexData);
+        return JsonSerializer.Deserialize(jsonData, CommunityContext.Default.GamerTowerModel);
     }
 
     public async Task<GamerExploreIndexData?> GetGamerExploreIndexDataAsync(

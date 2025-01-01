@@ -14,6 +14,7 @@ public interface IGameContext
     public string ContextName { get; }
     public bool IsNext { get; }
     event GameContextOutputDelegate GameContextOutput;
+    event GameContextProdOutputDelegate GameContextProdOutput;
     public string GamerConfigPath { get; internal set; }
     GameLocalConfig GameLocalConfig { get; }
 
@@ -32,6 +33,13 @@ public interface IGameContext
 
     void StartDownloadGame(string folder, WavesIndex waves, GameResource resource, bool isNew);
 
+    void StartPredDownloadGame(
+        string folder,
+        WavesIndex index,
+        List<Resource> resources,
+        string version
+    );
+    Task InstallProdGameResourceAsync(string folder, WavesIndex index, List<Resource> resources);
     Task CancelDownloadAsync();
 
     Task<WavesIndex> GetGameIndexAsync(CancellationToken token = default);
@@ -64,5 +72,6 @@ public interface IGameContext
         bool ishans,
         CancellationToken token = default
     );
+    void StopProdDownload();
     #endregion
 }

@@ -8,6 +8,8 @@ public delegate void GameDownloadDelegate();
 
 public delegate Task GameContextOutputDelegate(object sender, GameContextOutputArgs args);
 
+public delegate Task GameContextProdOutputDelegate(object sender, GameContextOutputArgs args);
+
 partial class GameContextBase
 {
     private GameContextOutputDelegate? gameContextOutputDelegate;
@@ -16,5 +18,12 @@ partial class GameContextBase
     {
         add => gameContextOutputDelegate += value;
         remove => gameContextOutputDelegate -= value;
+    }
+
+    private GameContextProdOutputDelegate? gameContextProdOutputDelegate;
+    public event GameContextProdOutputDelegate GameContextProdOutput
+    {
+        add => gameContextProdOutputDelegate += value;
+        remove => gameContextProdOutputDelegate -= value;
     }
 }

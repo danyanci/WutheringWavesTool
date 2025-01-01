@@ -30,6 +30,8 @@ public sealed partial class PageService : IPageService
         this.RegisterView<GamerRoilsPage, GameRoilsViewModel>();
         this.RegisterView<GamerDockPage, GamerDockViewModel>();
         this.RegisterView<GamerChallengePage, GamerChallengeViewModel>();
+        this.RegisterView<GamerExploreIndexPage, GamerExploreIndexViewModel>();
+        this.RegisterView<GamerTowerPage, GamerTowerViewModel>();
     }
 
     public Type GetPage(string key)

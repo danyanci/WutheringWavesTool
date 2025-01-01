@@ -7,6 +7,7 @@ public enum GameContextActionType
     Clear,
     Error,
     None,
+    ProdDownload,
 }
 
 /// <summary>
@@ -28,4 +29,9 @@ public enum GameDownloadActionSource
     /// 更新游戏
     /// </summary>
     Update,
+
+    /// <summary>
+    /// 预下载游戏
+    /// </summary>
+    ProdDownload,
 }

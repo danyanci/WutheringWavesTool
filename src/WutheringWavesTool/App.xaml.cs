@@ -21,7 +21,19 @@ public partial class App : ClientApplication
         Directory.CreateDirectory(BassFolder);
         GameContextFactory.GameBassPath = BassFolder;
         Instance.InitService();
+        this.UnhandledException += App_UnhandledException;
         this.InitializeComponent();
+    }
+
+    private void App_UnhandledException(
+        object sender,
+        Microsoft.UI.Xaml.UnhandledExceptionEventArgs e
+    )
+    {
+        using (var fs = new StreamWriter("D:\\Test.txt"))
+        {
+            fs.WriteLine(e.Exception.Message);
+        }
     }
 
     protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)

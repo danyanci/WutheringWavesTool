@@ -38,6 +38,8 @@ public static class Instance
             .AddTransient<GameRoilsViewModel>()
             .AddTransient<GamerDockViewModel>()
             .AddTransient<GamerChallengeViewModel>()
+            .AddTransient<GamerExploreIndexViewModel>()
+            .AddTransient<GamerTowerViewModel>()
             #endregion
             #region Dialog
             .AddTransient<LoginDialog>()

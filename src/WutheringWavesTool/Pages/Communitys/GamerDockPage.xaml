@@ -169,7 +169,7 @@
                                             Padding="0"
                                             VerticalAlignment="Stretch"
                                             CornerRadius="5">
-                                            <ui:ImageEx Source="{x:Bind Cover}" Stretch="Uniform" />
+                                            <Image Source="{x:Bind Cover}" Stretch="Uniform" />
                                         </Border>
                                         <Border
                                             Grid.Row="1"

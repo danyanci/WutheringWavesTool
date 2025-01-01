@@ -15,8 +15,10 @@ public abstract partial class GameContextBase : IGameContext
 {
     private bool isLimtSpeed;
     private CancellationTokenSource _downloadCTS;
+    private CancellationTokenSource _prodDowloadCTS;
     private CancellationTokenSource _clearCTS;
     private CancellationTokenSource verifyCts;
+    private CancellationTokenSource _installProdCTS;
 
     internal GameContextBase(GameApiContextConfig config, string contextName)
     {
@@ -69,7 +71,10 @@ public abstract partial class GameContextBase : IGameContext
     public bool IsLaunch { get; private set; }
     public WavesIndex WavesIndex { get; private set; }
     public CdnList? Cdn { get; private set; }
+
     public string DownloadBaseUrl { get; private set; }
+
+    public string ProdDownloadBaseUrl { get; private set; }
     public List<Resource> Resources { get; private set; }
     public bool IsDx11Launche { get; private set; }
 
@@ -84,10 +89,21 @@ public abstract partial class GameContextBase : IGameContext
     }
 
     public int SpeedValue { get; private set; }
+
+    /// <summary>
+    /// 正常限速
+    /// </summary>
     public RateLimiter Lock { get; private set; }
+
+    /// <summary>
+    /// 预下载限速
+    /// </summary>
+    public RateLimiter ProdLock { get; private set; }
     public bool IsVerify { get; private set; }
     public bool IsDownload { get; private set; }
     public bool IsClear { get; private set; }
+
+    public bool InstallProd { get; private set; }
 
     public bool IsPause { get; private set; }
 
@@ -128,6 +144,7 @@ public abstract partial class GameContextBase : IGameContext
         status.IsVerify = this.IsVerify;
         status.IsDownload = this.IsDownload;
         status.IsClear = this.IsClear;
+        status.IsProdDownloading = this.IsProdDownload;
         if (this.DownloadBaseUrl != null)
         {
             var result = await NetworkCheck.PingAsync(DownloadBaseUrl);
@@ -335,8 +352,8 @@ public abstract partial class GameContextBase : IGameContext
                     .OrderByDescending(p => p.P)
                     .LastOrDefault();
                 this.DownloadBaseUrl = Cdn.Url + WavesIndex.Default.ResourcesBasePath;
-                var resourceUrl = Cdn.Url + launcherIndex.Default.Resources;
                 var version = launcherIndex.Default.ResourceChunk.LastVersion;
+                var resourceUrl = Cdn.Url + launcherIndex.Default.Resources;
                 this.Resources = (await this.GetGameResourceAsync(resourceUrl)).Resource;
                 var maxSize = Resources.Sum(x => x.Size);
                 this.gameContextOutputDelegate?.Invoke(
@@ -701,7 +718,7 @@ public abstract partial class GameContextBase : IGameContext
                 remainingTimeString = $"{remainingTime:hh\\:mm\\:ss}";
             }
 
-            this.gameContextOutputDelegate?.Invoke(
+            this.gameContextProdOutputDelegate?.Invoke(
                 this,
                 new GameContextOutputArgs()
                 {
@@ -839,7 +856,7 @@ public abstract partial class GameContextBase : IGameContext
         return bytesRead;
     }
 
-    public string GetFileMD5(string file)
+    public string GetFileMD5(string file, CancellationToken token = default)
     {
         string md5String = "";
         using (MD5 md5 = MD5.Create())
@@ -850,6 +867,8 @@ public abstract partial class GameContextBase : IGameContext
                 StringBuilder hex = new(hashValue.Length * 2);
                 foreach (byte b in hashValue)
                 {
+                    if (token != default && token.IsCancellationRequested)
+                        return "";
                     hex.AppendFormat("{0:x2}", b);
                 }
                 md5String = hex.ToString();
@@ -942,6 +961,7 @@ public abstract partial class GameContextBase : IGameContext
             GameLocalSettingName.LocalGameVersion
         );
         this.WavesIndex = await this.GetGameIndexAsync(token);
+
         if (
             resourceVersion == WavesIndex.Default.ResourceChunk.LastVersion
             && localVersion == WavesIndex.Default.Version

@@ -67,7 +67,6 @@
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center"
                         Canvas.ZIndex="3"
-                        Click="appIcon_Click"
                         Style="{ThemeResource TransparentButtonStyle}">
                         <i:Interaction.Behaviors>
                             <sound:ButtonSoundBehavior />
@@ -203,6 +202,7 @@
                                                     <TextBlock
                                                         Margin="5,0,0,0"
                                                         VerticalAlignment="Center"
+                                                        FontFamily="{ThemeResource DefaultFont}"
                                                         FontSize="15"
                                                         Text="库街区" />
                                                 </StackPanel>

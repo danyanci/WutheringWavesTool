@@ -23,6 +23,4 @@ public sealed partial class ShellPage : Page
         this.ViewModel.AppContext.RegisterRoot(this.XamlRoot);
         //this.player.MediaPlayer.IsLoopingEnabled = true;
     }
-
-    private void appIcon_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e) { }
 }

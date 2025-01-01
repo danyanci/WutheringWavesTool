@@ -71,4 +71,5 @@ namespace Waves.Api.Models;
 [JsonSerializable(typeof(TowerIndexRoleList))]
 [JsonSerializable(typeof(GamerTowerIndexData))]
 [JsonSerializable(typeof(TowerAreaList))]
+[JsonSerializable(typeof(GamerTowerModel))]
 public partial class CommunityContext : JsonSerializerContext { }

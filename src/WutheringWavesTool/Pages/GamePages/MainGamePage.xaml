@@ -399,7 +399,8 @@
                         <ItemsRepeater
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top"
-                            ItemsSource="{x:Bind ViewModel.Socials, Mode=OneWay}">
+                            ItemsSource="{x:Bind ViewModel.Socials, Mode=OneWay}"
+                            Visibility="Collapsed">
                             <ItemsRepeater.Layout>
                                 <StackLayout Orientation="Horizontal" />
                             </ItemsRepeater.Layout>
@@ -439,9 +440,9 @@
                             Style="{ThemeResource TransparentButtonStyle}"
                             ToolTipService.ToolTip="启动核心配置">
                             <FontIcon
-                                FontFamily="Segoe UI Emoji"
-                                FontSize="15"
-                                Glyph="&#x1F527;" />
+                                FontFamily="Segoe Fluent Icons"
+                                FontSize="18"
+                                Glyph="&#xEC7A;" />
                             <i:Interaction.Behaviors>
                                 <sound:ButtonSoundBehavior />
                             </i:Interaction.Behaviors>
@@ -453,9 +454,9 @@
                             Style="{ThemeResource TransparentButtonStyle}"
                             ToolTipService.ToolTip="绑定账户">
                             <FontIcon
-                                FontFamily="Segoe UI Emoji"
-                                FontSize="15"
-                                Glyph="&#x1FA84;" />
+                                FontFamily="Segoe Fluent Icons"
+                                FontSize="18"
+                                Glyph="&#xE7EE;" />
                             <i:Interaction.Behaviors>
                                 <sound:ButtonSoundBehavior />
                             </i:Interaction.Behaviors>
@@ -576,6 +577,54 @@
                     <sound:ButtonSoundBehavior />
                 </i:Interaction.Behaviors>
             </Button>
+        </Grid>
+        <!--  预下载按钮  -->
+        <Grid
+            Grid.Row="0"
+            Grid.ColumnSpan="2"
+            Margin="0,15,15,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Visibility="{x:Bind ViewModel.PredDownloadBthVisibility, Mode=OneWay}">
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <RepositionThemeTransition />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <Button
+                x:Name="prodBth"
+                Command="{x:Bind ViewModel.StartProdDownloadCommand}"
+                IsEnabled="{x:Bind ViewModel.ProdBthEnable, Mode=OneWay}"
+                ToolTipService.ToolTip="{x:Bind ViewModel.PredDownloadString, Mode=OneWay}">
+                <StackPanel VerticalAlignment="Center" Orientation="Horizontal">
+                    <FontIcon
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="15"
+                        Glyph="&#xEBD3;" />
+                    <TextBlock Margin="10,0,0,0" Text="{x:Bind ViewModel.ProdBthString, Mode=OneWay}" />
+                </StackPanel>
+            </Button>
+            <Button
+                Grid.Column="1"
+                Margin="5,0,0,0"
+                Command="{x:Bind ViewModel.StopProdDownloadCommand}"
+                Style="{ThemeResource TransparentButtonStyle}"
+                ToolTipService.ToolTip="{x:Bind ViewModel.PredDownloadString, Mode=OneWay}"
+                Visibility="{x:Bind ViewModel.PredStopBthVisibility, Mode=OneWay}">
+                <FontIcon
+                    FontFamily="Segoe Fluent Icons"
+                    FontSize="15"
+                    Glyph="&#xEE95;" />
+            </Button>
+            <ProgressBar
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                Maximum="100"
+                Value="{x:Bind ViewModel.ProdDownloadProgress, Mode=OneWay}" />
         </Grid>
     </Grid>
 </bases:GamePageBase>

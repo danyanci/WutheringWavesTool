@@ -25,4 +25,6 @@ public class GameContextStatus
     public bool IsDownloadComplete { get; internal set; }
     public double DownloadProcess { get; internal set; }
     public bool ConnectNetwork { get; internal set; }
+
+    public bool IsProdDownloading { get; internal set; }
 }
