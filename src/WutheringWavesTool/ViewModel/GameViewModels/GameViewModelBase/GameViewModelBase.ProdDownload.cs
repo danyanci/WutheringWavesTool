@@ -82,6 +82,14 @@ partial class GameViewModelBase
         );
         if (prodVersion == null)
             return;
+        if (Directory.Exists(prodFolder) == false)
+        {
+            TipShow.ShowMessage(
+                "预下载已经开启，请点击右上角预下载检查下载更新",
+                Microsoft.UI.Xaml.Controls.Symbol.Accept
+            );
+            return;
+        }
         if (bool.Parse(prodDone) == false)
         {
             return;
