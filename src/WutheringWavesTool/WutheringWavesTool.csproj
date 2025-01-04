@@ -20,6 +20,10 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\appLogo.ico" />
+    <None Remove="Assets\Background\background.png" />
+    <None Remove="Assets\Background\background2.png" />
+    <None Remove="Assets\Background\kelaita.png" />
+    <None Remove="Assets\Background\kelaita2.png" />
     <None Remove="Assets\backup.jpg" />
     <None Remove="Assets\clickSound.wav" />
     <None Remove="Assets\Font.ttf" />
@@ -175,6 +179,20 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="Assets\GameIcons\global.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="Assets\Background\background.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Background\background2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Background\kelaita.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\Background\kelaita2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

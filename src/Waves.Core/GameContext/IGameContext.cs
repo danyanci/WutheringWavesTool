@@ -39,7 +39,7 @@ public interface IGameContext
         List<Resource> resources,
         string version
     );
-    Task InstallProdGameResourceAsync(string folder, WavesIndex index, List<Resource> resources);
+    Task InstallProdGameResourceAsync(string folder, WavesIndex index);
     Task CancelDownloadAsync();
 
     Task<WavesIndex> GetGameIndexAsync(CancellationToken token = default);

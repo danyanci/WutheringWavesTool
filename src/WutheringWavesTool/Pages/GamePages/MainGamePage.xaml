@@ -241,7 +241,7 @@
                                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEC7A;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Text="清理本地游戏资源">
+                        <MenuFlyoutItem Command="{x:Bind ViewModel.DeleteGameCommand}" Text="清理本地游戏资源">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon
                                     FontFamily="Segoe Fluent Icons"

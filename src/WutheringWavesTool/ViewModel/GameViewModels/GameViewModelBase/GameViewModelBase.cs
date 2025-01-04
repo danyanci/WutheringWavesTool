@@ -121,10 +121,11 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
                 ShowDownload();
                 this.Progress = args.Progress;
                 this.SurplusValue = args.RemainingTime;
-                this.SpeedString = "0MB";
+                this.SpeedString = $"{args.CurrentFile.ToString()}个文件";
                 this.WorkType = "校验";
-                this.Maxnum = 100;
-                this.LastTime = "0GB";
+                this.Maxnum = args.MaxSize;
+                this.LastTime = $"{args.MaxFile}个文件";
+                this.SurplusValue = "不可计算";
                 DownloadGameEnable = false;
                 DownloadText = "校验中";
                 this.IsProgressRingActive = false;
@@ -200,7 +201,6 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         await ReadContextConfig();
         await GetApiDataAsync();
         await GetProdUpdateAsync();
-        await CheckProdInstall();
         await LoadedAfter();
         IsLoading = false;
     }
@@ -210,6 +210,8 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         var folder = await this.GameContext.GameLocalConfig.GetConfigAsync(
             GameLocalSettingName.GameLauncherBassFolder
         );
+        if (folder == null)
+            return;
         var resourceVersion = await this.GameContext.GameLocalConfig.GetConfigAsync(
             GameLocalSettingName.LocalGameResourceVersion
         );
@@ -223,8 +225,14 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         var prodDownloadDone = await this.GameContext.GameLocalConfig.GetConfigAsync(
             GameLocalSettingName.ProdDownloadFolderDone
         );
+        var prodVersion = await this.GameContext.GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.ProdDownloadVersion
+        );
+        var prodDone = await this.GameContext.GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.ProdDownloadFolderDone
+        );
         this.ProdBthEnable = false;
-        if (localVersion != result.Version)
+        if (result != null && localVersion != result.Version)
         {
             this.PredDownloadBthVisibility = Visibility.Visible;
             PredDownloadString = $"({localVersion}->{result.Version})";
@@ -247,6 +255,42 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
                 this.PredStopBthVisibility = Visibility.Collapsed;
                 this.ProdDownloadProgress = 0;
                 this.PredDownloadString = "预下载完成，游戏发布时直接自动安装";
+
+                if (prodVersion == null)
+                    return;
+                if (Directory.Exists(prodDownload) == false)
+                {
+                    TipShow.ShowMessage(
+                        "预下载已经开启，请点击右上角预下载检查下载更新",
+                        Microsoft.UI.Xaml.Controls.Symbol.Accept
+                    );
+                    return;
+                }
+                if (bool.Parse(prodDone) == false)
+                {
+                    return;
+                }
+            }
+        }
+        else
+        {
+            if (prodVersion != localVersion && Directory.Exists(prodDownload))
+            {
+                var prodS = await this.GetProdSessionAsync();
+                if (
+                    prodS.Item1.Default.Version != localVersion
+                    && prodS.Item1.Default.Version == prodVersion
+                )
+                {
+                    TipShow.ShowMessage(
+                        "检测到游戏预发布更新，已开始安装最新版本",
+                        Microsoft.UI.Xaml.Controls.Symbol.Accept
+                    );
+                    Task.Run(async () =>
+                    {
+                        this.GameContext.InstallProdGameResourceAsync(folder, prodS.Item1);
+                    });
+                }
             }
         }
     }
@@ -378,17 +422,20 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     async Task DeleteGameResource()
     {
         var status = await this.GameContext.GetGameStatusAsync();
-        if (status.IsDownload)
+        if (status.IsSelectDownloadFolder && !status.IsDownloadComplete)
         {
             await this.GameContext.ClearGameResourceAsync();
+            return;
+        }
+        else if (status.IsDownload)
+        {
+            await this.GameContext.ClearGameResourceAsync();
+            return;
         }
         else if (status.IsVerify)
         {
             await this.GameContext.StopGameVerify();
-        }
-        else if (status.IsSelectDownloadFolder && !status.IsDownloadComplete)
-        {
-            await this.GameContext.ClearGameResourceAsync();
+            return;
         }
     }
 

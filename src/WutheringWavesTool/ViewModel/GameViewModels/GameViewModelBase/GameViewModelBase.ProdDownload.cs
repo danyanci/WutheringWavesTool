@@ -56,66 +56,11 @@ partial class GameViewModelBase
             .LastOrDefault();
         if (cdnUrl == null)
             return new(null, null);
+        if (waves.Predownload == null)
+            return new(waves, null);
         var resourceUrl = cdnUrl.Url + waves.Predownload.Resources;
         var resource = (await GameContext.GetGameResourceAsync(resourceUrl)).Resource;
         return new(waves, resource);
-    }
-
-    private async Task CheckProdInstall()
-    {
-        var gameFolder = await this.GameContext.GameLocalConfig.GetConfigAsync(
-            GameLocalSettingName.GameLauncherBassFolder
-        );
-        if (gameFolder == null)
-            return;
-        var prodFolder = await this.GameContext.GameLocalConfig.GetConfigAsync(
-            GameLocalSettingName.ProdDownloadFolderPath
-        );
-        var prodVersion = await this.GameContext.GameLocalConfig.GetConfigAsync(
-            GameLocalSettingName.ProdDownloadVersion
-        );
-        var localVersion = await this.GameContext.GameLocalConfig.GetConfigAsync(
-            GameLocalSettingName.LocalGameVersion
-        );
-        var prodDone = await this.GameContext.GameLocalConfig.GetConfigAsync(
-            GameLocalSettingName.ProdDownloadFolderDone
-        );
-        if (prodVersion == null)
-            return;
-        if (Directory.Exists(prodFolder) == false)
-        {
-            TipShow.ShowMessage(
-                "预下载已经开启，请点击右上角预下载检查下载更新",
-                Microsoft.UI.Xaml.Controls.Symbol.Accept
-            );
-            return;
-        }
-        if (bool.Parse(prodDone) == false)
-        {
-            return;
-        }
-        if (prodVersion != localVersion && Directory.Exists(prodFolder))
-        {
-            var prodS = await this.GetProdSessionAsync();
-            if (
-                prodS.Item1.Default.Version != localVersion
-                && prodS.Item1.Default.Version == prodVersion
-            )
-            {
-                TipShow.ShowMessage(
-                    "检测到游戏预发布更新，已开始安装最新版本",
-                    Microsoft.UI.Xaml.Controls.Symbol.Accept
-                );
-                Task.Run(async () =>
-                {
-                    this.GameContext.InstallProdGameResourceAsync(
-                        gameFolder,
-                        prodS.Item1,
-                        prodS.Item2
-                    );
-                });
-            }
-        }
     }
 
     [RelayCommand]

@@ -342,57 +342,41 @@ partial class GameContextBase
         }
     }
 
-    public async Task InstallProdGameResourceAsync(
-        string folder,
-        WavesIndex index,
-        List<Resource> resources
-    )
+    public static void MoveDirectory(string sourceDirName, string destDirName, bool overwrite)
+    {
+        if (!Directory.Exists(destDirName))
+        {
+            Directory.CreateDirectory(destDirName);
+        }
+
+        string[] files = Directory.GetFiles(sourceDirName);
+        string[] dirs = Directory.GetDirectories(sourceDirName);
+
+        foreach (string file in files)
+        {
+            string fileName = Path.GetFileName(file);
+            string destFile = Path.Combine(destDirName, fileName);
+
+            File.Move(file, destFile, overwrite);
+        }
+
+        foreach (string dir in dirs)
+        {
+            string dirName = Path.GetFileName(dir);
+            string subdir = Path.Combine(destDirName, dirName);
+            MoveDirectory(dir, subdir, overwrite);
+        }
+
+        Directory.Delete(sourceDirName, true);
+    }
+
+    public async Task InstallProdGameResourceAsync(string folder, WavesIndex index)
     {
         try
         {
             this.InstallProd = true;
             this._installProdCTS = new CancellationTokenSource();
-            List<Resource> clearResource = new();
-            this.gameContextOutputDelegate?.Invoke(
-                this,
-                new()
-                {
-                    Type = Models.Enums.GameContextActionType.Clear,
-                    CurrentFile = 0,
-                    MaxFile = resources.Count,
-                    Progress = 0,
-                    Speed = 0.0,
-                    CurrentSize = 0.0,
-                    MaxSize = 0.0,
-                    SpeedString = "",
-                }
-            );
-            for (int i = 0; i < resources.Count; i++)
-            {
-                if (_installProdCTS.IsCancellationRequested)
-                    return;
-                var cachefile = folder + "\\ProdDownload" + resources[i].Dest.Replace('/', '\\');
-                var file = folder + resources[i].Dest.Replace('/', '\\');
-                if (File.Exists(file))
-                    File.Delete(file);
-                Directory.CreateDirectory(Path.GetDirectoryName(file)!);
-                File.Move(cachefile, file);
-                var progress = Math.Round(Convert.ToDouble((double)i / resources.Count) * 100, 2);
-                this.gameContextOutputDelegate?.Invoke(
-                    this,
-                    new()
-                    {
-                        Type = Models.Enums.GameContextActionType.Clear,
-                        CurrentFile = i + 1,
-                        MaxFile = resources.Count,
-                        Progress = progress,
-                        Speed = 0.0,
-                        CurrentSize = 0.0,
-                        MaxSize = 0.0,
-                        SpeedString = "",
-                    }
-                );
-            }
+            MoveDirectory(folder + "\\ProdDownload", folder, true);
             await GameLocalConfig.SaveConfigAsync(
                 GameLocalSettingName.GameLauncherBassProgram,
                 $"{folder}\\Wuthering Waves.exe"
@@ -405,20 +389,7 @@ partial class GameContextBase
                 GameLocalSettingName.LocalGameVersion,
                 index.Default.Version
             );
-            this.gameContextOutputDelegate?.Invoke(
-                this,
-                new()
-                {
-                    Type = Models.Enums.GameContextActionType.None,
-                    CurrentFile = 0,
-                    MaxFile = resources.Count,
-                    Progress = 0.0,
-                    Speed = 0.0,
-                    CurrentSize = 0.0,
-                    MaxSize = 0.0,
-                    SpeedString = "",
-                }
-            );
+
             this.InstallProd = false;
         }
         catch (Exception)

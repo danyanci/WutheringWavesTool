@@ -8,7 +8,7 @@ public class GameContextOutputArgs
 
     public double Progress { get; internal set; }
 
-    public int MaxFile { get; internal set; }
+    public long MaxFile { get; internal set; }
 
     public int CurrentFile { get; internal set; }
 

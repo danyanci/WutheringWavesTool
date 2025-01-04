@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using SqlSugar;
 using Waves.Api.Models;
 using Waves.Core.Common;
@@ -718,7 +718,7 @@ public abstract partial class GameContextBase : IGameContext
                 remainingTimeString = $"{remainingTime:hh\\:mm\\:ss}";
             }
 
-            this.gameContextProdOutputDelegate?.Invoke(
+            this.gameContextOutputDelegate?.Invoke(
                 this,
                 new GameContextOutputArgs()
                 {
