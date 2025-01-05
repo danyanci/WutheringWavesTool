@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Waves.Api.Models.Communitys.DataCenter;
 using Windows.Graphics.Imaging;
@@ -14,6 +15,7 @@ using Windows.Storage.Streams;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Controls;
 using WutheringWavesTool.Helpers;
+using WutheringWavesTool.Models.Messanger;
 
 namespace WutheringWavesTool.Models.Wrapper;
 
@@ -30,6 +32,7 @@ public partial class DataCenterRoilItemWrapper : ObservableObject
 {
     [ObservableProperty]
     public partial int StarLevel { get; set; }
+    public long RoilId { get; }
 
     [ObservableProperty]
     public partial BitmapImage RoleIconUrl { get; set; }
@@ -49,6 +52,7 @@ public partial class DataCenterRoilItemWrapper : ObservableObject
     public DataCenterRoilItemWrapper(RoleList roleData)
     {
         this.StarLevel = roleData.StarLevel;
+        this.RoilId = roleData.RoleId;
         this.AttributeName = roleData.AttributeName;
         this.RoleName = roleData.RoleName;
         this.AttibuteId = roleData.AttributeId;
@@ -86,6 +90,6 @@ public partial class DataCenterRoilItemWrapper : ObservableObject
     [RelayCommand]
     void ClickShow()
     {
-        //WeakReferenceMessenger.Default.Send<ShowRoleData>(new ShowRoleData(RoleData.RoleId));
+        WeakReferenceMessenger.Default.Send<ShowRoleData>(new ShowRoleData(RoilId));
     }
 }

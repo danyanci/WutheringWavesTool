@@ -11,4 +11,6 @@ public interface IViewFactorys
     public GetGeetWindow CreateGeetWindow();
 
     public WindowModelBase ShowSignWindow(GameRoilDataItem role);
+
+    public WindowModelBase ShowRoleDataWindow(GamerRoilDetily detily);
 }

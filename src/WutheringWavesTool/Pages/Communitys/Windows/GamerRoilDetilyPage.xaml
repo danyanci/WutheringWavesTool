@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="WutheringWavesTool.Pages.Communitys.Windows.GamerRoilDetilyPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:WutheringWavesTool.Pages.Communitys.Windows"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:WutheringWavesTool.Controls"
+    mc:Ignorable="d">
+    <i:Interaction.Behaviors>
+        <i:EventTriggerBehavior EventName="Loaded">
+            <i:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
+        </i:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <ui:TitleBar
+            x:Name="titlebar"
+            IsExtendsContentIntoTitleBar="True"
+            TitleHorizontalAlignment="Left"
+            TitleMode="Standard"
+            TitleVerticalAlignment="Center">
+            <ui:TitleBar.Title>
+                <TextBlock Margin="8,0,0,0" Text="角色信息" />
+            </ui:TitleBar.Title>
+        </ui:TitleBar>
+        <ScrollView Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="6*" />
+                    <RowDefinition Height="4*" />
+                </Grid.RowDefinitions>
+                <Grid Margin="8" CornerRadius="5">
+                    <Grid.Background>
+                        <AcrylicBrush
+                            FallbackColor="Transparent"
+                            TintColor="Transparent"
+                            TintLuminosityOpacity="0"
+                            TintOpacity="0" />
+                    </Grid.Background>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image
+                        Grid.ColumnSpan="2"
+                        Canvas.ZIndex="0"
+                        Source="{x:Bind ViewModel.RoleData.RolePicUrl, Mode=OneWay}"
+                        Stretch="UniformToFill" />
+                    <Border
+                        Grid.ColumnSpan="2"
+                        Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        Canvas.ZIndex="1"
+                        CornerRadius="5" />
+                    <Image
+                        Grid.ColumnSpan="2"
+                        Width="300"
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Canvas.ZIndex="2"
+                        Source="{x:Bind ViewModel.RoleData.RolePicUrl, Mode=OneWay}"
+                        Stretch="Uniform" />
+                    <StackPanel
+                        Grid.Column="0"
+                        Margin="20,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Canvas.ZIndex="2"
+                        Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock
+                                FontFamily="{ThemeResource DefaultFont}"
+                                FontSize="25"
+                                Text="{x:Bind ViewModel.RoleData.RoleName, Mode=OneWay}" />
+                            <Image
+                                Height="35"
+                                VerticalAlignment="Center"
+                                Source="{x:Bind ViewModel.TypeImage, Mode=OneWay}" />
+                        </StackPanel>
+                        <TextBlock
+                            Margin="0,0,0,0"
+                            FontFamily="{ThemeResource DefaultFont}"
+                            FontSize="20">
+                            <Run Text="Lv" />
+                            <Run Text="{x:Bind ViewModel.RoleData.Level, Mode=OneWay}" />
+                        </TextBlock>
+                        <StackPanel Margin="0,10,0,0" Orientation="Vertical">
+                            <TextBlock FontFamily="{ThemeResource DefaultFont}" Text="共鸣者星级" />
+                            <RatingControl
+                                HorizontalAlignment="Left"
+                                IsReadOnly="True"
+                                MaxRating="5"
+                                Value="{x:Bind ViewModel.RoleData.StarLevel, Mode=OneWay}" />
+                        </StackPanel>
+                        <StackPanel Margin="0,0,0,0" Orientation="Vertical">
+                            <TextBlock FontFamily="{ThemeResource DefaultFont}" Text="突破等级" />
+                            <RatingControl
+                                HorizontalAlignment="Left"
+                                IsReadOnly="True"
+                                MaxRating="5"
+                                Value="{x:Bind ViewModel.RoleData.Breach, Mode=OneWay}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+                <Grid
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="8,0,8,8"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                    BorderThickness="1"
+                    CornerRadius="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image
+                        Grid.RowSpan="2"
+                        Grid.ColumnSpan="2"
+                        Width="100"
+                        Canvas.ZIndex="0"
+                        Source="{x:Bind ViewModel.RoleData.RolePicUrl, Mode=OneWay}"
+                        Stretch="UniformToFill" />
+                    <Border
+                        Grid.RowSpan="2"
+                        Grid.ColumnSpan="2"
+                        Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
+                        BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                        BorderThickness="1"
+                        Canvas.ZIndex="1"
+                        CornerRadius="5" />
+                    <Image
+                        Width="80"
+                        Margin="20,20,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Canvas.ZIndex="2"
+                        Source="{x:Bind ViewModel.WeaponData.Weapon.WeaponIcon, Mode=OneWay}"
+                        Stretch="Uniform" />
+                    <Grid Grid.Column="1" Canvas.ZIndex="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel
+                            Grid.Column="1"
+                            Margin="20,10,0,0"
+                            HorizontalAlignment="Left">
+                            <TextBlock FontFamily="{ThemeResource DefaultFont}" FontSize="20">
+                                <Run Text="{x:Bind ViewModel.WeaponData.Weapon.WeaponEffectName, Mode=OneWay}" />
+                                <Run Text="·" />
+                                <Run Text="{x:Bind ViewModel.WeaponData.Weapon.WeaponName, Mode=OneWay}" />
+                            </TextBlock>
+                            <TextBlock
+                                Margin="0,0,0,0"
+                                FontFamily="{ThemeResource DefaultFont}"
+                                FontSize="15">
+                                <Run Text="Lv" />
+                                <Run Text="{x:Bind ViewModel.WeaponData.Level, Mode=OneWay}" />
+                            </TextBlock>
+                            <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
+                                <TextBlock FontFamily="{ThemeResource DefaultFont}" Text="武器星级" />
+                                <Viewbox
+                                    Height="20"
+                                    Margin="5,0,0,0"
+                                    HorizontalAlignment="Left">
+                                    <RatingControl
+                                        IsReadOnly="True"
+                                        MaxRating="{x:Bind ViewModel.WeaponData.Weapon.WeaponStarLevel, Mode=OneWay}"
+                                        Value="{x:Bind ViewModel.WeaponData.Weapon.WeaponStarLevel, Mode=OneWay}" />
+                                </Viewbox>
+                            </StackPanel>
+                            <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
+                                <TextBlock FontFamily="{ThemeResource DefaultFont}" Text="突破星级" />
+                                <Viewbox
+                                    Height="20"
+                                    Margin="5,0,0,0"
+                                    HorizontalAlignment="Left">
+                                    <RatingControl
+                                        IsReadOnly="True"
+                                        MaxRating="5"
+                                        Value="{x:Bind ViewModel.WeaponData.Breach, Mode=OneWay}" />
+                                </Viewbox>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                    <TextBlock
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Margin="15,25,5,15"
+                        Canvas.ZIndex="2"
+                        FontSize="12"
+                        MaxLines="3"
+                        Text="{x:Bind ViewModel.WeaponData.Weapon.EffectDescription, Mode=OneWay}"
+                        TextTrimming="CharacterEllipsis"
+                        TextWrapping="Wrap" />
+                </Grid>
+            </Grid>
+        </ScrollView>
+    </Grid>
+</Page>

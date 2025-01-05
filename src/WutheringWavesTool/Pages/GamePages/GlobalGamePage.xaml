@@ -169,7 +169,7 @@
                 Command="{x:Bind ViewModel.OpenSelectGameFolderCommand}"
                 Style="{ThemeResource AccentButtonStyle}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE896;" />
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF89A;" />
                     <TextBlock Text="选择本地游戏" />
                 </StackPanel>
             </Button>

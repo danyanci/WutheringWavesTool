@@ -6,8 +6,10 @@ using Waves.Api.Models.Communitys;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Common.Bases;
 using WutheringWavesTool.Pages.Communitys;
+using WutheringWavesTool.Pages.Communitys.Windows;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.WindowModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WutheringWavesTool.Services;
 
@@ -45,5 +47,13 @@ public class ViewFactorys : IViewFactorys
             fs.RequestedTheme = ElementTheme.Dark;
         }
         return win;
+    }
+
+    public WindowModelBase ShowRoleDataWindow(GamerRoilDetily detily)
+    {
+        var window = this.ShowWindowBase<GamerRoilDetilyPage>(detily);
+        window.MaxHeight = 530;
+        window.MaxWidth = 750;
+        return window;
     }
 }

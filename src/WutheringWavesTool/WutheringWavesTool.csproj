@@ -48,6 +48,7 @@
     <None Remove="Pages\Communitys\GamerExploreIndexPage.xaml" />
     <None Remove="Pages\Communitys\GamerSignPage.xaml" />
     <None Remove="Pages\Communitys\GamerTowerPage.xaml" />
+    <None Remove="Pages\Communitys\Windows\GamerRoilDetilyPage.xaml" />
     <None Remove="Pages\Dialogs\BindGameDataDialog.xaml" />
     <None Remove="Pages\Dialogs\LoginDialog.xaml" />
     <None Remove="Pages\GamePages\BilibiliGamePage.xaml" />
@@ -308,6 +309,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Communitys\GamerSignPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Communitys\Windows\GamerRoilDetilyPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

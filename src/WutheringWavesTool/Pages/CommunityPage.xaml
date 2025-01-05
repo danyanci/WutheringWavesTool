@@ -179,6 +179,7 @@
                         FontFamily="{ThemeResource DefaultFont}"
                         Tag="DataWorld"
                         Text="世界探索" />
+                    <SelectorBarItem FontFamily="{ThemeResource DefaultFont}" Text="图鉴收集" />
                 </wuc:SelectorBarSegmented>
                 <Frame
                     x:Name="frame"

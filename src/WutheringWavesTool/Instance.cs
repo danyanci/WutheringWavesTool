@@ -5,12 +5,14 @@ using Waves.Core;
 using WavesLauncher.Core.Contracts;
 using WutheringWavesTool.Pages;
 using WutheringWavesTool.Pages.Communitys;
+using WutheringWavesTool.Pages.Communitys.Windows;
 using WutheringWavesTool.Pages.Dialogs;
 using WutheringWavesTool.Services;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.Services.Navigations;
 using WutheringWavesTool.ViewModel;
 using WutheringWavesTool.ViewModel.Communitys;
+using WutheringWavesTool.ViewModel.Communitys.WinViewModel;
 using WutheringWavesTool.ViewModel.DialogViewModels;
 using WutheringWavesTool.ViewModel.GameViewModels;
 
@@ -35,6 +37,8 @@ public static class Instance
             #region Community
             .AddTransient<GamerSignPage>()
             .AddTransient<GamerSignViewModel>()
+            .AddSingleton<GamerRoilDetilyPage>()
+            .AddSingleton<GamerRoilDetilyViewModel>()
             .AddTransient<GameRoilsViewModel>()
             .AddTransient<GamerDockViewModel>()
             .AddTransient<GamerChallengeViewModel>()

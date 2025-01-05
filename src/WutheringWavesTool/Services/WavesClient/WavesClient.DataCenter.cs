@@ -263,7 +263,7 @@ partial class WavesClient
             { "id", $"{roleId}" },
         };
         var request = await BuildLoginRequest(
-            "https://api.kurobbs.com/gamer/roleBox/akiBox/getRoleDetail",
+            "https://api.kurobbs.com/aki/roleBox/akiBox/getRoleDetail",
             header,
             new MediaTypeHeaderValue("application/x-www-form-urlencoded"),
             content

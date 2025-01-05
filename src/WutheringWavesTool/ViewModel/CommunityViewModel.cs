@@ -11,6 +11,7 @@ using Waves.Api.Models.Communitys;
 using Waves.Api.Models.Messanger;
 using WavesLauncher.Core.Contracts;
 using WutheringWavesTool.Common;
+using WutheringWavesTool.Models.Messanger;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.Services.Navigations;
 
@@ -53,6 +54,19 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     private void RegisterMessanger()
     {
         this.Messenger.Register<LoginMessanger>(this, LoginMessangerMethod);
+        this.Messenger.Register<ShowRoleData>(this, ShowRoleMethod);
+    }
+
+    private async void ShowRoleMethod(object recipient, ShowRoleData message)
+    {
+        var Roles = await WavesClient.GetGamerRoilDetily(
+            this.SelectRoil,
+            message.Id,
+            this.CTS.Token
+        );
+        if (Roles == null)
+            return;
+        ViewFactorys.ShowRoleDataWindow(Roles).AppWindow.Show();
     }
 
     private async void LoginMessangerMethod(object recipient, LoginMessanger message)

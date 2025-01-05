@@ -40,6 +40,8 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
         SelectorBarSelectionChangedEventArgs args
     )
     {
+        if (sender.SelectedItem.Tag == null)
+            return;
         switch (sender.SelectedItem.Tag.ToString())
         {
             case "DataGamer":

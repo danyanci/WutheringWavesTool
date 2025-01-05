@@ -11,7 +11,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:sound="using:WutheringWavesTool.Controls.Behaviors"
     mc:Ignorable="d">
-
     <i:Interaction.Behaviors>
         <i:EventTriggerBehavior EventName="Loaded">
             <i:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
@@ -170,8 +169,11 @@
                 Command="{x:Bind ViewModel.OpenSelectGameDownloadFolderCommand}"
                 Style="{ThemeResource AccentButtonStyle}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE896;" />
-                    <TextBlock>
+                    <FontIcon
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="15"
+                        Glyph="&#xE896;" />
+                    <TextBlock FontSize="13">
                         <Run Text="下载最新" />
                         <Run Text="(" />
                         <Run Text="{x:Bind ViewModel.LastVerision, Mode=OneWay}" />
@@ -187,8 +189,14 @@
                 Command="{x:Bind ViewModel.OpenSelectGameFolderCommand}"
                 Style="{ThemeResource AccentButtonStyle}">
                 <StackPanel Orientation="Horizontal">
-                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE896;" />
-                    <TextBlock Text="选择本地游戏" />
+                    <FontIcon
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="15"
+                        Glyph="&#xF89A;" />
+                    <TextBlock
+                        Margin="5,0,0,0"
+                        FontSize="13"
+                        Text="选择本地游戏" />
                 </StackPanel>
             </Button>
         </Grid>
