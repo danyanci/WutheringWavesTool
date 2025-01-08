@@ -86,9 +86,12 @@ public sealed partial class DataCenterGamerChallengeCountryWrapper : ObservableO
     [ObservableProperty]
     public partial BitmapImage Cover { get; set; }
 
+    public List<int> BossIds { get; private set; } = new();
+
     public DataCenterGamerChallengeCountryWrapper(ChallengeList country)
     {
         this.CountryName = country.Country.CountryName;
+        this.BossIds = country.IndexList.Select(x => x.BossId).ToList();
         this.CountryId = country.Country.CountryId;
         this.Cover = new BitmapImage(new(country.Country.HomePageIcon));
     }

@@ -65,7 +65,7 @@ partial class WavesClient
             { "countryCode", "1" },
         };
         var request = await BuildLoginRequest(
-            "https://api.kurobbs.com/gamer/roleBox/akiBox/roleData",
+            "https://api.kurobbs.com/aki/roleBox/akiBox/roleData",
             header,
             new MediaTypeHeaderValue("application/x-www-form-urlencoded"),
             content
@@ -132,7 +132,7 @@ partial class WavesClient
             { "serverId", roil.ServerId },
         };
         var request = await BuildLoginRequest(
-            "https://api.kurobbs.com/gamer/roleBox/akiBox/towerDataDetail",
+            "https://api.kurobbs.com/aki/roleBox/akiBox/towerDataDetail",
             header,
             new MediaTypeHeaderValue("application/x-www-form-urlencoded"),
             content
@@ -164,7 +164,7 @@ partial class WavesClient
             { "serverId", roil.ServerId },
         };
         var request = await BuildLoginRequest(
-            "https://api.kurobbs.com/gamer/roleBox/akiBox/exploreIndex",
+            "https://api.kurobbs.com/aki/roleBox/akiBox/exploreIndex",
             header,
             new MediaTypeHeaderValue("application/x-www-form-urlencoded"),
             content
@@ -197,7 +197,7 @@ partial class WavesClient
             { "serverId", roil.ServerId },
         };
         var request = await BuildLoginRequest(
-            "https://api.kurobbs.com/gamer/roleBox/akiBox/challengeIndex",
+            "https://api.kurobbs.com/aki/roleBox/akiBox/challengeIndex",
             header,
             new MediaTypeHeaderValue("application/x-www-form-urlencoded"),
             content
@@ -234,7 +234,7 @@ partial class WavesClient
             { "countryCode", "1" },
         };
         var request = await BuildLoginRequest(
-            "https://api.kurobbs.com/gamer/roleBox/akiBox/refreshData",
+            "https://api.kurobbs.com/aki/roleBox/akiBox/refreshData",
             header,
             new MediaTypeHeaderValue("application/x-www-form-urlencoded"),
             content
@@ -251,7 +251,7 @@ partial class WavesClient
         CancellationToken token = default
     )
     {
-        //https://api.kurobbs.com/gamer/roleBox/akiBox/getRoleDetail
+        //https://api.kurobbs.com/aki/roleBox/akiBox/getRoleDetail
         var header = GetHeader(true);
         var content = new Dictionary<string, string>()
         {
@@ -296,7 +296,7 @@ partial class WavesClient
             { "countryCode", countryCode.ToString() },
         };
         var request = await BuildRequest(
-            "https://api.kurobbs.com/gamer/roleBox/akiBox/challengeDetails",
+            "https://api.kurobbs.com/aki/roleBox/akiBox/challengeDetails",
             HttpMethod.Post,
             header,
             new MediaTypeHeaderValue("application/x-www-form-urlencoded"),

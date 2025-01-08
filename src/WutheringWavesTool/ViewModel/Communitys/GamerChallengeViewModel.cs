@@ -61,17 +61,21 @@ public sealed partial class GamerChallengeViewModel : ViewModelBase, IDisposable
         var value2 = result!.ChallengeInfo.Detilys.GroupBy(x => x.BossId);
         foreach (var item in value2)
         {
-            List<DataCenterGamerChallengeIndexListWrapper> indexList =
-                new List<DataCenterGamerChallengeIndexListWrapper>();
-            foreach (var index in item)
+            foreach (var com in value.BossIds)
             {
-                indexList.Add(new(index));
+                if (int.Parse(item.Key) == com)
+                {
+                    List<DataCenterGamerChallengeIndexListWrapper> indexList =
+                        new List<DataCenterGamerChallengeIndexListWrapper>();
+                    foreach (var index in item)
+                    {
+                        indexList.Add(new(index));
+                    }
+                    DataCenterChallengeBossItemWrapper listItem =
+                        new DataCenterChallengeBossItemWrapper(indexList, item);
+                    this.Items.Add(listItem);
+                }
             }
-            DataCenterChallengeBossItemWrapper listItem = new DataCenterChallengeBossItemWrapper(
-                indexList,
-                item
-            );
-            this.Items.Add(listItem);
         }
     }
 
