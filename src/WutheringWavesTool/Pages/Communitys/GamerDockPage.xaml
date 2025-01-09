@@ -151,11 +151,10 @@
                             <DataTemplate x:DataType="wrapper:DataCenterPhantomItemWrapper">
                                 <Border
                                     Margin="2,2"
-                                    Padding="5"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
                                     Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultSolid}"
                                     BorderThickness="1"
                                     CornerRadius="5">
 
@@ -171,11 +170,7 @@
                                             CornerRadius="5">
                                             <Image Source="{x:Bind Cover}" Stretch="Uniform" />
                                         </Border>
-                                        <Border
-                                            Grid.Row="1"
-                                            Padding="4"
-                                            Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
-                                            CornerRadius="5">
+                                        <Border Grid.Row="1" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}">
                                             <StackPanel VerticalAlignment="Center" Orientation="Vertical">
                                                 <TextBlock
                                                     Grid.Row="1 "

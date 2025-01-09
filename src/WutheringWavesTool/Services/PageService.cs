@@ -32,6 +32,7 @@ public sealed partial class PageService : IPageService
         this.RegisterView<GamerChallengePage, GamerChallengeViewModel>();
         this.RegisterView<GamerExploreIndexPage, GamerExploreIndexViewModel>();
         this.RegisterView<GamerTowerPage, GamerTowerViewModel>();
+        this.RegisterView<GamerSkinPage, GamerSkinViewModel>();
     }
 
     public Type GetPage(string key)

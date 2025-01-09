@@ -99,6 +99,7 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
             SelectRoil = Roils[0];
             this.DataLoad = true;
         }
+        var skin = WavesClient.GetGamerSkinAsync(this.SelectRoil, this.CTS.Token);
     }
 
     [RelayCommand]

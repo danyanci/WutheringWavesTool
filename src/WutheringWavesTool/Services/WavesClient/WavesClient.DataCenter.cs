@@ -27,7 +27,7 @@ partial class WavesClient
             { "countryCode", "1" },
         };
         var request = await BuildLoginRequest(
-            "https://api.kurobbs.com/gamer/roleBox/akiBox/baseData",
+            "https://api.kurobbs.com/aki/roleBox/akiBox/baseData",
             header,
             new MediaTypeHeaderValue("application/x-www-form-urlencoded"),
             content
@@ -99,7 +99,7 @@ partial class WavesClient
             { "countryCode", "1" },
         };
         var request = await BuildLoginRequest(
-            "https://api.kurobbs.com/gamer/roleBox/akiBox/calabashData",
+            "https://api.kurobbs.com/aki/roleBox/akiBox/calabashData",
             header,
             new MediaTypeHeaderValue("application/x-www-form-urlencoded"),
             content
@@ -318,5 +318,38 @@ partial class WavesClient
             CommunityContext.Default.GamerChallengeDetily
         );
         return result2;
+    }
+
+    public async Task<GamerSkin?> GetGamerSkinAsync(
+        GameRoilDataItem roil,
+        CancellationToken token = default
+    )
+    {
+        var header = GetHeader(true);
+        var content = new Dictionary<string, string>()
+        {
+            { "gameId", roil.GameId.ToString() },
+            { "roleId", roil.RoleId.ToString() },
+            { "serverId", roil.ServerId.ToString() },
+        };
+        var request = await BuildRequest(
+            "https://api.kurobbs.com/aki/roleBox/akiBox/skinData",
+            HttpMethod.Post,
+            header,
+            new MediaTypeHeaderValue("application/x-www-form-urlencoded"),
+            content
+        );
+        var result = await this.HttpClientService.HttpClient.SendAsync(request, token);
+        var jsonStr = await result.Content.ReadAsStringAsync(token);
+        var resultCode = JsonSerializer.Deserialize(
+            jsonStr,
+            CommunityContext.Default.GamerBassString
+        );
+        if (resultCode == null || resultCode.Code != 200)
+        {
+            return null;
+        }
+        var jsonData = resultCode.Data;
+        return JsonSerializer.Deserialize(jsonData, CommunityContext.Default.GamerSkin);
     }
 }

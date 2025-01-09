@@ -74,6 +74,12 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
                     new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
                 );
                 break;
+            case "Skin":
+                ViewModel.NavigationService.NavigationTo<GamerSkinViewModel>(
+                    this.ViewModel.SelectRoil,
+                    new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
+                );
+                break;
         }
     }
 

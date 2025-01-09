@@ -47,6 +47,7 @@
     <None Remove="Pages\Communitys\GamerDockPage.xaml" />
     <None Remove="Pages\Communitys\GamerExploreIndexPage.xaml" />
     <None Remove="Pages\Communitys\GamerSignPage.xaml" />
+    <None Remove="Pages\Communitys\GamerSkinPage.xaml" />
     <None Remove="Pages\Communitys\GamerTowerPage.xaml" />
     <None Remove="Pages\Communitys\Windows\GamerRoilDetilyPage.xaml" />
     <None Remove="Pages\Dialogs\BindGameDataDialog.xaml" />
@@ -196,6 +197,11 @@
     <Content Update="Assets\Background\kelaita2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Communitys\GamerSkinPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Communitys\GamerTowerPage.xaml">

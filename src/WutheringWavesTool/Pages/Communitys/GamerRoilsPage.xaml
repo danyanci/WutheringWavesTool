@@ -47,13 +47,13 @@
                     <DataTemplate x:DataType="uModel:DataCenterRoilItemWrapper">
                         <Button
                             Margin="2,2"
-                            Padding="5"
+                            Padding="0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
                             HorizontalContentAlignment="Stretch"
                             VerticalContentAlignment="Stretch"
                             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                            BorderBrush="{ThemeResource CardStrokeColorDefaultSolid}"
                             BorderThickness="1"
                             Command="{x:Bind ClickShowCommand}"
                             CornerRadius="5">
@@ -64,7 +64,7 @@
                                     <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
                                 <Border
-                                    Margin="0,3,0,0"
+                                    Margin="0,3,3,0"
                                     Padding="5,2"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
@@ -95,16 +95,15 @@
                                 </Border>
                                 <Border
                                     Grid.RowSpan="3"
-                                    Margin="0,10,0,0"
+                                    Margin="0,8,0,0"
                                     VerticalAlignment="Stretch"
                                     CornerRadius="5">
                                     <Image Source="{x:Bind RoleIconUrl}" Stretch="Uniform" />
                                 </Border>
                                 <Border
                                     Grid.Row="1"
-                                    Padding="4"
-                                    Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
-                                    CornerRadius="5">
+                                    Padding="5"
+                                    Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}">
                                     <StackPanel VerticalAlignment="Center" Orientation="Vertical">
                                         <TextBlock
                                             Grid.Row="1 "

@@ -92,5 +92,7 @@ public interface IWavesClient
         int countryCode,
         CancellationToken token = default
     );
+
+    Task<GamerSkin?> GetGamerSkinAsync(GameRoilDataItem roil, CancellationToken token = default);
     #endregion
 }
