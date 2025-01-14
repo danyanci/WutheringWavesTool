@@ -6,7 +6,6 @@ using Waves.Api.Models;
 using Waves.Api.Models.Communitys;
 using Waves.Api.Models.Communitys.DataCenter;
 using Waves.Core.Contracts;
-using WavesLauncher.Core.Models;
 
 namespace WavesLauncher.Core.Contracts;
 

@@ -27,3 +27,9 @@ Windows系统版本：Windows 11
 SourceForge地址：[WutheringWavesTool download | SourceForge.net](https://sourceforge.net/projects/wutheringwavestool/)
 
 
+
+##### 其他引用
+
+[漂泊着工坊](#小程序://漂泊者工坊/NKZHnoa5GuFY4Uz)
+
+[鸣潮助手](https://mc.appfeng.com/)

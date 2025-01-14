@@ -10,7 +10,6 @@ using Waves.Api.Models;
 using Waves.Api.Models.Communitys;
 using Waves.Core.Contracts;
 using WavesLauncher.Core.Contracts;
-using WavesLauncher.Core.Models;
 
 namespace WutheringWavesTool.Services;
 

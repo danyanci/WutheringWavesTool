@@ -51,10 +51,12 @@
     <None Remove="Pages\Communitys\GamerTowerPage.xaml" />
     <None Remove="Pages\Communitys\Windows\GamerRoilDetilyPage.xaml" />
     <None Remove="Pages\Dialogs\BindGameDataDialog.xaml" />
+    <None Remove="Pages\Dialogs\InputRecordCardDialog.xaml" />
     <None Remove="Pages\Dialogs\LoginDialog.xaml" />
     <None Remove="Pages\GamePages\BilibiliGamePage.xaml" />
     <None Remove="Pages\GamePages\GlobalGamePage.xaml" />
     <None Remove="Pages\GamePages\MainGamePage.xaml" />
+    <None Remove="Pages\Record\PlayerRecordPage.xaml" />
     <None Remove="Pages\SettingPage.xaml" />
     <None Remove="Pages\ShellPage.xaml" />
     <None Remove="WindowModels\GetgeetWindow.xaml" />
@@ -199,6 +201,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="Pages\Dialogs\InputRecordCardDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Pages\Communitys\GamerSkinPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -323,6 +330,11 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Record\PlayerRecordPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
 
   <!--
     Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
@@ -344,7 +356,7 @@
     <PackageCertificateKeyFile>WutheringWavesTool_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+    <AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundle>Always</AppxBundle>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>

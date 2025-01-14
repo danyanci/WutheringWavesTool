@@ -111,7 +111,15 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
         (win.AppWindow.Presenter as OverlappedPresenter)!.IsMaximizable = false;
         (win.AppWindow.Presenter as OverlappedPresenter)!.IsMinimizable = false;
         win.AppWindowApp.Show();
-        win.Activate();
+    }
+
+    [RelayCommand]
+    void OpenPlayerRecordWindow()
+    {
+        var win = ViewFactorys.ShowPlayerRecordWindow();
+        (win.AppWindow.Presenter as OverlappedPresenter)!.IsMaximizable = false;
+        (win.AppWindow.Presenter as OverlappedPresenter)!.IsMinimizable = false;
+        win.AppWindowApp.Show();
     }
 
     [RelayCommand]

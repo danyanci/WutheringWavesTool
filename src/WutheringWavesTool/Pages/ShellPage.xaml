@@ -39,7 +39,7 @@
         <Image
             Grid.Row="2"
             Canvas.ZIndex="-1"
-            Source="ms-appx:///Assets/Background/background2.png"
+            Source="ms-appx:///Assets/Images/changli.png"
             Stretch="UniformToFill"
             Visibility="Visible" />
         <!--<MediaPlayerElement

@@ -7,6 +7,7 @@ using WutheringWavesTool.Pages;
 using WutheringWavesTool.Pages.Communitys;
 using WutheringWavesTool.Pages.Communitys.Windows;
 using WutheringWavesTool.Pages.Dialogs;
+using WutheringWavesTool.Pages.Record;
 using WutheringWavesTool.Services;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.Services.Navigations;
@@ -29,6 +30,8 @@ public static class Instance
             .AddSingleton<ShellPage>()
             .AddTransient<IViewFactorys, ViewFactorys>()
             .AddSingleton<ShellViewModel>()
+            .AddTransient<PlayerRecordPage>()
+            .AddTransient<PlayerRecordViewModel>()
             .AddTransient<MainGameViewModel>()
             .AddTransient<BilibiliGameViewModel>()
             .AddTransient<GlobalGameViewModel>()
@@ -69,6 +72,11 @@ public static class Instance
             .AddKeyedTransient<INavigationService, CommunityNavigationService>(
                 nameof(CommunityNavigationService)
             )
+            #endregion
+            #region Scope
+            .AddScoped<IDialogManager, DialogManager>()
+            .AddScoped<ITipShow, TipShow>()
+            .AddKeyedScoped<IPlayerRecordContext, PlayerRecordContext>("PlayerRecord")
             #endregion
             .AddGameContext()
             .BuildServiceProvider();

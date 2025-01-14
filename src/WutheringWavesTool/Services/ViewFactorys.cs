@@ -3,10 +3,12 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
 using Waves.Api.Models.Communitys;
+using Waves.Api.Models.Communitys.DataCenter;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Common.Bases;
 using WutheringWavesTool.Pages.Communitys;
 using WutheringWavesTool.Pages.Communitys.Windows;
+using WutheringWavesTool.Pages.Record;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.WindowModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -54,6 +56,14 @@ public class ViewFactorys : IViewFactorys
         var window = this.ShowWindowBase<GamerRoilDetilyPage>(detily);
         window.MaxHeight = 530;
         window.MaxWidth = 750;
+        return window;
+    }
+
+    public WindowModelBase ShowPlayerRecordWindow()
+    {
+        var window = this.ShowWindowBase<PlayerRecordPage>(null);
+        window.MaxHeight = 530;
+        window.MaxWidth = 900;
         return window;
     }
 }

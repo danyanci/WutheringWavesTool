@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace WavesLauncher.Core.Models;
+namespace Waves.Api.Models.Communitys;
 
 public class PlayerCard
 {
