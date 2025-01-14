@@ -7,10 +7,12 @@ using WutheringWavesTool.Pages;
 using WutheringWavesTool.Pages.Bases;
 using WutheringWavesTool.Pages.Communitys;
 using WutheringWavesTool.Pages.GamePages;
+using WutheringWavesTool.Pages.Record;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.ViewModel;
 using WutheringWavesTool.ViewModel.Communitys;
 using WutheringWavesTool.ViewModel.GameViewModels;
+using WutheringWavesTool.ViewModel.Record;
 
 namespace WutheringWavesTool.Services;
 
@@ -33,6 +35,8 @@ public sealed partial class PageService : IPageService
         this.RegisterView<GamerExploreIndexPage, GamerExploreIndexViewModel>();
         this.RegisterView<GamerTowerPage, GamerTowerViewModel>();
         this.RegisterView<GamerSkinPage, GamerSkinViewModel>();
+
+        this.RegisterView<RecordItemPage, RecordItemViewModel>();
     }
 
     public Type GetPage(string key)

@@ -5,22 +5,31 @@ using Microsoft.UI.Xaml.Controls;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Pages.Dialogs;
 using WutheringWavesTool.Services.Contracts;
+using WutheringWavesTool.Services.Navigations;
 using WutheringWavesTool.ViewModel.DialogViewModels;
 
 namespace WutheringWavesTool.Services;
 
 public class PlayerRecordContext : Contracts.IPlayerRecordContext
 {
+    private bool disposedValue;
+
     public IDialogManager DialogManager { get; }
 
     public IServiceScope Scope { get; private set; }
 
     public ITipShow TipShow { get; private set; }
+    public INavigationService NavigationService { get; }
 
-    public PlayerRecordContext(IDialogManager dialogManager, ITipShow tipShow)
+    public PlayerRecordContext(
+        IDialogManager dialogManager,
+        ITipShow tipShow,
+        [FromKeyedServices(nameof(RecordNavigationService))] INavigationService navigationService
+    )
     {
         DialogManager = dialogManager;
         TipShow = tipShow;
+        NavigationService = navigationService;
     }
 
     public void SetScope(IServiceScope scope)
@@ -37,5 +46,35 @@ public class PlayerRecordContext : Contracts.IPlayerRecordContext
         DialogManager.SetDialog(dialog);
         await dialog.ShowAsync();
         return dialog.ViewModel.Link;
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                this.NavigationService.UnRegisterView();
+                this.TipShow.Owner = null;
+                this.Scope.Dispose();
+                this.DialogManager.SetDialog(null);
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    // // TODO: 仅当“Dispose(bool disposing)”拥有用于释放未托管资源的代码时才替代终结器
+    // ~PlayerRecordContext()
+    // {
+    //     // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
+    //     Dispose(disposing: false);
+    // }
+
+    public void Dispose()
+    {
+        // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

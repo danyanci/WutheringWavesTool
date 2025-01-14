@@ -16,6 +16,7 @@ using WutheringWavesTool.ViewModel.Communitys;
 using WutheringWavesTool.ViewModel.Communitys.WinViewModel;
 using WutheringWavesTool.ViewModel.DialogViewModels;
 using WutheringWavesTool.ViewModel.GameViewModels;
+using WutheringWavesTool.ViewModel.Record;
 
 namespace WutheringWavesTool;
 
@@ -49,6 +50,9 @@ public static class Instance
             .AddTransient<GamerTowerViewModel>()
             .AddTransient<GamerSkinViewModel>()
             #endregion
+            #region Record
+            .AddTransient<RecordItemViewModel>()
+            #endregion
             #region Dialog
             .AddTransient<LoginDialog>()
             .AddTransient<LoginViewModel>()
@@ -77,6 +81,9 @@ public static class Instance
             .AddScoped<IDialogManager, DialogManager>()
             .AddScoped<ITipShow, TipShow>()
             .AddKeyedScoped<IPlayerRecordContext, PlayerRecordContext>("PlayerRecord")
+            .AddKeyedScoped<INavigationService, RecordNavigationService>(
+                nameof(RecordNavigationService)
+            )
             #endregion
             .AddGameContext()
             .BuildServiceProvider();

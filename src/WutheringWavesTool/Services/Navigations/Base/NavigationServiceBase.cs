@@ -88,6 +88,8 @@ public class NavigationServiceBase : INavigationService
 
     public void UnRegisterView()
     {
+        if (RootFrame == null)
+            return;
         RootFrame.Navigated -= Navigated;
         RootFrame.NavigationFailed -= NavigationFailed;
         ClearHistory();

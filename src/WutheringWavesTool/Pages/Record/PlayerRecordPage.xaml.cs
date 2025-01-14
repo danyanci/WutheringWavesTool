@@ -2,9 +2,14 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Navigation;
+using Waves.Api.Models.Enums;
 using WutheringWavesTool.Common;
+using WutheringWavesTool.Models.Args;
 using WutheringWavesTool.ViewModel;
+using WutheringWavesTool.ViewModel.Record;
 
 namespace WutheringWavesTool.Pages.Record;
 
@@ -15,12 +20,15 @@ public sealed partial class PlayerRecordPage : Page, IWindowPage
         this.InitializeComponent();
         this.ViewModel = Instance.Service.GetRequiredService<PlayerRecordViewModel>();
         this.Loaded += PlayerRecordPage_Loaded;
+        this.ViewModel.PlayerRecordContext.TipShow.Owner = this.grid;
     }
 
-    private void PlayerRecordPage_Loaded(object sender, RoutedEventArgs e)
+    int previousSelectedIndex = 0;
+
+    private async void PlayerRecordPage_Loaded(object sender, RoutedEventArgs e)
     {
         this.ViewModel.PlayerRecordContext.DialogManager.SetRoot(this.XamlRoot);
-        this.ViewModel.PlayerRecordContext.TipShow.Owner = this.grid;
+        await this.ViewModel.Loaded();
     }
 
     protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -50,4 +58,11 @@ public sealed partial class PlayerRecordPage : Page, IWindowPage
         this.Loaded -= PlayerRecordPage_Loaded;
         ViewModel.Dispose();
     }
+
+    private void frame_Loaded(object sender, RoutedEventArgs e)
+    {
+        this.ViewModel.PlayerRecordContext.NavigationService.RegisterView(this.frame);
+    }
+
+    private void selectBar_Loaded(object sender, RoutedEventArgs e) { }
 }
