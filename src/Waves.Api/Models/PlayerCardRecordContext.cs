@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
-using Waves.Api.Models.Communitys;
 using Waves.Api.Models.Record;
+using Waves.Api.Models.Wrappers;
 
 namespace Waves.Api.Models;
 
@@ -19,4 +19,6 @@ namespace Waves.Api.Models;
 [JsonSerializable(typeof(List<CommunityRoleData>))]
 [JsonSerializable(typeof(Prop))]
 [JsonSerializable(typeof(Tag))]
+[JsonSerializable(typeof(RecordCacheDetily))]
+[JsonSerializable(typeof(RecordCardItemWrapper))]
 public partial class PlayerCardRecordContext : JsonSerializerContext { }

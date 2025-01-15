@@ -29,7 +29,6 @@ public static class Instance
         Service = new ServiceCollection()
             #region View and ViewModel
             .AddSingleton<ShellPage>()
-            .AddTransient<IViewFactorys, ViewFactorys>()
             .AddSingleton<ShellViewModel>()
             .AddTransient<PlayerRecordPage>()
             .AddTransient<PlayerRecordViewModel>()
@@ -68,6 +67,7 @@ public static class Instance
             #region Base
             .AddSingleton<IAppContext<App>, AppContext<App>>()
             .AddSingleton<IWavesClient, WavesClient>()
+            .AddTransient<IViewFactorys, ViewFactorys>()
             #endregion
             #region Navigation
             .AddKeyedSingleton<INavigationService, HomeNavigationService>(
@@ -77,13 +77,14 @@ public static class Instance
                 nameof(CommunityNavigationService)
             )
             #endregion
-            #region Scope
+            #region Record
             .AddScoped<IDialogManager, DialogManager>()
             .AddScoped<ITipShow, TipShow>()
             .AddKeyedScoped<IPlayerRecordContext, PlayerRecordContext>("PlayerRecord")
             .AddKeyedScoped<INavigationService, RecordNavigationService>(
                 nameof(RecordNavigationService)
             )
+            .AddScoped<IRecordCacheService, RecordCacheService>()
             #endregion
             .AddGameContext()
             .BuildServiceProvider();

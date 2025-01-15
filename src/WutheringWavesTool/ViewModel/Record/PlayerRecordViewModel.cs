@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml.Media.Animation;
 using Waves.Api.Helper;
 using Waves.Api.Models.Enums;
 using Waves.Api.Models.Record;
+using Waves.Api.Models.Wrappers;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Models.Args;
 using WutheringWavesTool.Services.Contracts;
@@ -76,6 +77,7 @@ public sealed partial class PlayerRecordViewModel : ViewModelBase, IDisposable
             this.IsLoadRecord = false;
             return;
         }
+        await WriteCacheAsync();
         this.FiveGroup = await RecordHelper.GetFiveGroupAsync();
         var allRole = await RecordHelper.GetAllRoleAsync();
         this.StartRole = RecordHelper.FormatFiveRoleStar(FiveGroup);
@@ -84,13 +86,70 @@ public sealed partial class PlayerRecordViewModel : ViewModelBase, IDisposable
         SelectType = CardPoolType.RoleActivity;
     }
 
+    private async Task WriteCacheAsync()
+    {
+        RoleActivity = await RecordHelper.GetRecordAsync(this.Request, CardPoolType.RoleActivity);
+        WeaponsActivity = await RecordHelper.GetRecordAsync(
+            this.Request,
+            CardPoolType.WeaponsActivity
+        );
+        RoleResident = await RecordHelper.GetRecordAsync(this.Request, CardPoolType.RoleResident);
+        WeaponsResident = await RecordHelper.GetRecordAsync(
+            this.Request,
+            CardPoolType.WeaponsResident
+        );
+        Beginner = await RecordHelper.GetRecordAsync(this.Request, CardPoolType.Beginner);
+        BeginnerChoice = await RecordHelper.GetRecordAsync(
+            this.Request,
+            CardPoolType.BeginnerChoice
+        );
+        GratitudeOrientation = await RecordHelper.GetRecordAsync(
+            this.Request,
+            CardPoolType.GratitudeOrientation
+        );
+        if (
+            RoleActivity == null
+            || WeaponsActivity == null
+            || RoleResident == null
+            || WeaponsResident == null
+            || Beginner == null
+            || BeginnerChoice == null
+            || GratitudeOrientation == null
+        )
+        {
+            this.PlayerRecordContext.TipShow.ShowMessage("数据拉取失败!", Symbol.Clear);
+            return;
+        }
+        await this.PlayerRecordContext.RecordCacheService.CreateRecordAsync(
+            new RecordCacheDetily(
+                Guid.NewGuid(),
+                $"{DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss FFFF")}",
+                RoleActivity,
+                WeaponsActivity,
+                RoleResident,
+                WeaponsResident,
+                Beginner,
+                BeginnerChoice,
+                GratitudeOrientation
+            )
+        );
+    }
+
     private bool disposedValue;
 
     partial void OnSelectTypeChanged(CardPoolType? value)
     {
         if (value == null)
             return;
-        var arg = new RecordArgs()
+        var arg = new RecordArgs(
+            RoleActivity,
+            WeaponsActivity,
+            RoleResident,
+            WeaponsResident,
+            Beginner,
+            BeginnerChoice,
+            GratitudeOrientation
+        )
         {
             Request = this.Request,
             Roles = this.StartRole,
@@ -114,6 +173,13 @@ public sealed partial class PlayerRecordViewModel : ViewModelBase, IDisposable
     public FiveGroupModel? FiveGroup { get; private set; }
     public List<int> StartRole { get; private set; }
     public List<int> StartWeapons { get; private set; }
+    public IEnumerable<RecordCardItemWrapper>? RoleActivity { get; private set; }
+    public IEnumerable<RecordCardItemWrapper>? WeaponsActivity { get; private set; }
+    public IEnumerable<RecordCardItemWrapper>? RoleResident { get; private set; }
+    public IEnumerable<RecordCardItemWrapper>? WeaponsResident { get; private set; }
+    public IEnumerable<RecordCardItemWrapper>? Beginner { get; private set; }
+    public IEnumerable<RecordCardItemWrapper>? BeginnerChoice { get; private set; }
+    public IEnumerable<RecordCardItemWrapper>? GratitudeOrientation { get; private set; }
 
     private void Dispose(bool disposing)
     {

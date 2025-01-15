@@ -21,15 +21,19 @@ public class PlayerRecordContext : Contracts.IPlayerRecordContext
     public ITipShow TipShow { get; private set; }
     public INavigationService NavigationService { get; }
 
+    public IRecordCacheService RecordCacheService { get; }
+
     public PlayerRecordContext(
         IDialogManager dialogManager,
         ITipShow tipShow,
-        [FromKeyedServices(nameof(RecordNavigationService))] INavigationService navigationService
+        [FromKeyedServices(nameof(RecordNavigationService))] INavigationService navigationService,
+        IRecordCacheService recordCacheService
     )
     {
         DialogManager = dialogManager;
         TipShow = tipShow;
         NavigationService = navigationService;
+        RecordCacheService = recordCacheService;
     }
 
     public void SetScope(IServiceScope scope)

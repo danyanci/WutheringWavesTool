@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Waves.Api.Models.Communitys;
+using Waves.Api.Models.Record;
 
 namespace Waves.Api.Models.Wrappers;
 

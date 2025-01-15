@@ -10,6 +10,7 @@ public interface IPlayerRecordContext : IDisposable
 
     public ITipShow TipShow { get; }
 
+    public IRecordCacheService RecordCacheService { get; }
     public IServiceScope Scope { get; }
     public INavigationService NavigationService { get; }
 

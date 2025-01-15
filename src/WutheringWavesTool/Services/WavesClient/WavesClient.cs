@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Waves.Api.Models;
 using Waves.Api.Models.Communitys;
+using Waves.Api.Models.Record;
 using Waves.Core.Contracts;
 using WavesLauncher.Core.Contracts;
 

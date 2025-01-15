@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Waves.Api.Models.Communitys;
 using Waves.Api.Models.Communitys.DataCenter;
+using Waves.Api.Models.Record;
 
 namespace Waves.Api.Models;
 
@@ -35,7 +36,7 @@ namespace Waves.Api.Models;
 [JsonSerializable(typeof(SubProp))]
 [JsonSerializable(typeof(Weapon))]
 [JsonSerializable(typeof(WeaponData))]
-[JsonSerializable(typeof(Waves.Api.Models.Communitys.PlayerCard))]
+[JsonSerializable(typeof(PlayerCard))]
 [JsonSerializable(typeof(PlayerReponse))]
 [JsonSerializable(typeof(Datum))]
 [JsonSerializable(typeof(SignIn))]

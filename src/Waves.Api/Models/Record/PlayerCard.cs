@@ -1,7 +1,6 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace Waves.Api.Models.Communitys;
+namespace Waves.Api.Models.Record;
 
 public class PlayerCard
 {

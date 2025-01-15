@@ -12,13 +12,16 @@ namespace WutheringWavesTool;
 
 public partial class App : ClientApplication
 {
-    public string BassFolder =>
+    public static string BassFolder =>
         Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Waves";
+
+    public static string RecordFolder => BassFolder + "\\RecordCache";
 
     public App()
     {
         StaticConfig.EnableAot = true;
         Directory.CreateDirectory(BassFolder);
+        Directory.CreateDirectory(RecordFolder);
         GameContextFactory.GameBassPath = BassFolder;
         Instance.InitService();
         this.UnhandledException += App_UnhandledException;
