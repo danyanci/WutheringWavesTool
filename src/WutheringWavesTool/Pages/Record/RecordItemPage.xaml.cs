@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using Waves.Api.Models.Communitys;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Models.Args;
 using WutheringWavesTool.ViewModel.Record;
@@ -24,6 +23,12 @@ public sealed partial class RecordItemPage : Page, IPage
             this.ViewModel.SetData(item);
         }
         base.OnNavigatedTo(e);
+    }
+
+    protected override void OnNavigatedFrom(NavigationEventArgs e)
+    {
+        this.ViewModel.Dispose();
+        base.OnNavigatedFrom(e);
     }
 
     public Type PageType => typeof(RecordItemPage);

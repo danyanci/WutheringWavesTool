@@ -21,4 +21,7 @@ namespace Waves.Api.Models;
 [JsonSerializable(typeof(Tag))]
 [JsonSerializable(typeof(RecordCacheDetily))]
 [JsonSerializable(typeof(RecordCardItemWrapper))]
+[JsonSerializable(typeof(List<RecordCardItemWrapper>))]
+[JsonSerializable(typeof(CommunityWeaponData))]
+[JsonSerializable(typeof(List<CommunityWeaponData>))]
 public partial class PlayerCardRecordContext : JsonSerializerContext { }

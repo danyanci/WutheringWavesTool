@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Waves.Api.Models;
@@ -19,7 +20,7 @@ public sealed partial class RecordCacheService : IRecordCacheService
         }
         using (var fs = new FileStream(filePath, FileMode.CreateNew, FileAccess.ReadWrite))
         {
-            using (var writer = new StreamWriter(fs))
+            using (var writer = new StreamWriter(fs, Encoding.UTF8))
             {
                 try
                 {
@@ -49,7 +50,7 @@ public sealed partial class RecordCacheService : IRecordCacheService
         {
             using (var fs = new FileStream(filePath.FullName, FileMode.Open, FileAccess.Read))
             {
-                using (var reader = new StreamReader(fs))
+                using (var reader = new StreamReader(fs, System.Text.Encoding.UTF8))
                 {
                     var str = await reader.ReadToEndAsync();
                     try
@@ -60,7 +61,7 @@ public sealed partial class RecordCacheService : IRecordCacheService
                         );
                         list.Add(json);
                     }
-                    catch (System.Exception)
+                    catch (System.Exception ex)
                     {
                         reader.Close();
                         continue;

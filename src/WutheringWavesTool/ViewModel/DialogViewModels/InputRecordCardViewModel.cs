@@ -1,6 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using Waves.Api.Models.Record;
+using WutheringWavesTool.Common;
 using WutheringWavesTool.Services;
 using WutheringWavesTool.Services.Contracts;
 using static System.Formats.Asn1.AsnWriter;
@@ -13,6 +18,7 @@ public partial class InputRecordCardViewModel : ObservableObject
     {
         DialogManager = scope.ServiceProvider.GetRequiredService<IDialogManager>();
         TipShow = scope.ServiceProvider.GetRequiredService<ITipShow>();
+        RecordCacheService = scope.ServiceProvider.GetRequiredService<IRecordCacheService>();
     }
 
     [ObservableProperty]
@@ -23,7 +29,18 @@ public partial class InputRecordCardViewModel : ObservableObject
         this.InvokeCommand.NotifyCanExecuteChanged();
     }
 
-    public bool GetIsInvoke() => !string.IsNullOrWhiteSpace(Link);
+    [RelayCommand]
+    async Task Loaded()
+    {
+        this.CacheItem = (
+            await RecordCacheService.GetRecordCacheDetilyAsync()
+        ).ToObservableCollection();
+    }
+
+    [ObservableProperty]
+    public partial ObservableCollection<RecordCacheDetily?> CacheItem { get; private set; }
+
+    public bool GetIsInvoke() => !string.IsNullOrWhiteSpace(Link) || !(SelectItem == null);
 
     [RelayCommand]
     public void Close()
@@ -42,4 +59,6 @@ public partial class InputRecordCardViewModel : ObservableObject
     public IServiceScope Scope { get; }
     public IDialogManager DialogManager { get; }
     public ITipShow TipShow { get; }
+    public IRecordCacheService RecordCacheService { get; }
+    public RecordCacheDetily SelectItem { get; internal set; }
 }

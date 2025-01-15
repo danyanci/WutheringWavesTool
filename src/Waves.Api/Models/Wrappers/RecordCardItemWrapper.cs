@@ -1,10 +1,14 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Text.Json.Serialization;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Waves.Api.Models.Record;
 
 namespace Waves.Api.Models.Wrappers;
 
 public partial class RecordCardItemWrapper : ObservableObject
 {
+    [JsonConstructor]
+    public RecordCardItemWrapper() { }
+
     public RecordCardItemWrapper(Datum datum)
     {
         CardPoolType = datum.CardPoolType;

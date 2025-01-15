@@ -44,7 +44,7 @@ public static class RecordHelper
         }
     }
 
-    public static async Task<IEnumerable<RecordCardItemWrapper>?> GetRecordAsync(
+    public static async Task<List<RecordCardItemWrapper>?> GetRecordAsync(
         RecordRequest recordRequest,
         CardPoolType type
     )
@@ -76,15 +76,15 @@ public static class RecordHelper
         }
     }
 
-    public static async Task<List<Tuple<RecordCardItemWrapper, int, bool?>>>? FormatStartFiveAsync(
+    public static List<Tuple<RecordCardItemWrapper, int, bool?>>? FormatStartFive(
         IEnumerable<RecordCardItemWrapper> source,
-        FiveGroupModel? fiveGroup
+        List<int> ids = null
     )
     {
         List<Tuple<RecordCardItemWrapper, int, bool?>> result = new();
         int count = 1;
         var items = source.Reverse();
-        if (fiveGroup == null)
+        if (ids == null)
         {
             //无法判断歪不歪
             foreach (var item in items)
@@ -101,13 +101,11 @@ public static class RecordHelper
             }
             return result;
         }
-        var fileGroup = FormatFiveRoleStar(fiveGroup);
-
         foreach (var item in items)
         {
             if (item.QualityLevel == 5)
             {
-                if (fileGroup.Where(x => x == item.ResourceId).Any())
+                if (ids.Where(x => x == item.ResourceId).Any())
                 {
                     result.Add(new(item, count, false));
                 }
@@ -175,5 +173,69 @@ public static class RecordHelper
                 return null;
             }
         }
+    }
+
+    public static async Task<List<CommunityWeaponData>?> GetAllWeaponAsync()
+    {
+        using (HttpClient client = new HttpClient())
+        {
+            try
+            {
+                var response = await client.GetAsync("https://mc.appfeng.com/json/weapon.json?");
+                response.EnsureSuccessStatusCode();
+                var model = JsonSerializer.Deserialize(
+                    await response.Content.ReadAsStringAsync(),
+                    PlayerCardRecordContext.Default.ListCommunityWeaponData
+                );
+                if (model != null)
+                    return model;
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+    }
+
+    /// <summary>
+    /// 计算小保底歪率
+    /// </summary>
+    /// <param name="itemWrapper"></param>
+    /// <returns></returns>
+    public static double GetGuaranteedRange(
+        this List<Tuple<RecordCardItemWrapper, int, bool?>> itemWrapper
+    )
+    {
+        if (itemWrapper == null || itemWrapper.Count == 0)
+        {
+            return 0; // 无数据时返回0
+        }
+
+        // 统计小保底次数和歪的次数
+        int totalSmallGuarantees = 0;
+        int totalSmallGuaranteeFails = 0;
+
+        foreach (var item in itemWrapper)
+        {
+            var isOffBanner = item.Item3; // 获取是否歪的标志
+            if (isOffBanner.HasValue) // 仅统计非null的项
+            {
+                totalSmallGuarantees++;
+                if (isOffBanner.Value) // 记录歪的次数
+                {
+                    totalSmallGuaranteeFails++;
+                }
+            }
+        }
+
+        // 如果没有有效的小保底记录，歪率为0
+        if (totalSmallGuarantees == 0)
+        {
+            return 0;
+        }
+
+        // 计算小保底歪率并返回
+        return (double)totalSmallGuaranteeFails / totalSmallGuarantees * 100;
     }
 }

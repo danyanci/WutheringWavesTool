@@ -21,6 +21,7 @@
 
             <converter:BoolReversalConvert x:Key="BoolReversalConvert" />
             <converter:CardPoolTypeConverter x:Key="CardPoolTypeConverter" />
+            <converter:RecordStarConverter x:Key="RecordStarConverter" />
             <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityReversalConverter" Reversal="True" />
             <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" Reversal="False" />
             <converter:IntToSecondTimeConverter x:Key="IntToSecondTimeConverter" />

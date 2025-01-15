@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Waves.Api.Models.Record;
 
 namespace WutheringWavesTool.Services.Contracts;
 
@@ -16,5 +18,9 @@ public interface IPlayerRecordContext : IDisposable
 
     public void SetScope(IServiceScope scope);
 
-    public Task<string> ShowInputRecordAsync(object data);
+    public FiveGroupModel FiveGroupModel { get; set; }
+
+    public List<CommunityRoleData> CommunityRoleDatas { get; set; }
+
+    public Task<(string, RecordCacheDetily)> ShowInputRecordAsync(object data);
 }

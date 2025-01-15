@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
+using Waves.Api.Models.Record;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.ViewModel.DialogViewModels;
 
@@ -15,4 +16,15 @@ public sealed partial class InputRecordCardDialog : ContentDialog, IDialog
     public InputRecordCardViewModel ViewModel { get; internal set; }
 
     public void SetData(object data) { }
+
+    private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.AddedItems == null)
+            return;
+        if (e.AddedItems[0] is RecordCacheDetily detily)
+        {
+            ViewModel.SelectItem = detily;
+            this.ViewModel.InvokeCommand.NotifyCanExecuteChanged();
+        }
+    }
 }

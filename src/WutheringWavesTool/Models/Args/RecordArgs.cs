@@ -40,4 +40,8 @@ public class RecordArgs
     public IEnumerable<RecordCardItemWrapper>? Beginner { get; }
     public IEnumerable<RecordCardItemWrapper>? BeginnerChoice { get; }
     public IEnumerable<RecordCardItemWrapper>? GratitudeOrientation { get; }
+    public FiveGroupModel? FiveGroup { get; internal set; }
+    public List<CommunityRoleData>? AllRole { get; internal set; }
+
+    public List<CommunityWeaponData>? AllWeapon { get; internal set; }
 }
