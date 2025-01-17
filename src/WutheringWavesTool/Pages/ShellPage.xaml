@@ -41,7 +41,7 @@
             Canvas.ZIndex="-1"
             Source="ms-appx:///Assets/Images/keaita.jpg"
             Stretch="UniformToFill"
-            Visibility="Visible" />
+            Visibility="Collapsed" />
         <!--<MediaPlayerElement
             x:Name="player"
             Grid.Row="2"

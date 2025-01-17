@@ -83,4 +83,56 @@ public static partial class WrapperCollectionExtension
         }
         return item;
     }
+
+    public static IEnumerable<RecordActivityFiveStarItemWrapper> Format(
+        this IEnumerable<Tuple<RecordCardItemWrapper, int>> values,
+        IEnumerable<CommunityWeaponData>? roles
+    )
+    {
+        List<RecordActivityFiveStarItemWrapper> item = new();
+        foreach (var value in values)
+        {
+            var resource = roles.Where(x => x.Id == value.Item1.ResourceId).First();
+            if (resource == null)
+            {
+                continue;
+            }
+            item.Add(
+                new RecordActivityFiveStarItemWrapper()
+                {
+                    Count = value.Item2,
+                    Name = value.Item1.Name,
+                    Icon = new(new($"https://mc.appfeng.com/ui/weapon/{resource.Icon}.png")),
+                    Flage = null,
+                }
+            );
+        }
+        return item;
+    }
+
+    public static IEnumerable<RecordActivityFiveStarItemWrapper> Format(
+        this IEnumerable<Tuple<RecordCardItemWrapper, int>> values,
+        IEnumerable<CommunityRoleData>? roles
+    )
+    {
+        List<RecordActivityFiveStarItemWrapper> item = new();
+        foreach (var value in values)
+        {
+            var resource = roles.Where(x => x.Id == value.Item1.ResourceId).First();
+            if (resource == null)
+            {
+                continue;
+            }
+            item.Add(
+                new RecordActivityFiveStarItemWrapper()
+                {
+                    Count = value.Item2,
+                    Name = value.Item1.Name,
+                    Icon = new(new($"https://mc.appfeng.com/ui/avatar/{resource.Icon}.png")),
+                    Flage = null,
+                }
+            );
+        }
+        return item;
+    }
 }

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.UI.Xaml;
 using Waves.Api.Helper;
 using Waves.Api.Models.Enums;
 using Waves.Api.Models.Record;
@@ -14,10 +16,8 @@ using WutheringWavesTool.Models.Wrapper;
 
 namespace WutheringWavesTool.ViewModel.Record;
 
-public sealed partial class RecordItemViewModel : ViewModelBase, IDisposable
+public sealed partial class RecordItemViewModel : ViewModelBase
 {
-    private bool disposedValue;
-
     public CardPoolType Type { get; private set; }
     public RecordRequest Request { get; private set; }
     public IList<RecordCardItemWrapper> Items { get; set; }
@@ -25,7 +25,10 @@ public sealed partial class RecordItemViewModel : ViewModelBase, IDisposable
     public RecordArgs DataItem { get; private set; }
 
     [ObservableProperty]
-    public partial CardItemObservableCollection<RecordActivityFiveStarItemWrapper> StarItems { get; set; }
+    public partial double MakeCount { get; set; } = 0.0;
+
+    [ObservableProperty]
+    public partial ObservableCollection<RecordActivityFiveStarItemWrapper> StarItems { get; set; }
 
     internal void SetData(RecordArgs item)
     {
@@ -39,7 +42,7 @@ public sealed partial class RecordItemViewModel : ViewModelBase, IDisposable
                 this.Items = item.WeaponsActivity.ToList();
                 break;
             case Waves.Api.Models.Enums.CardPoolType.RoleResident:
-                this.Items = item.RoleActivity.ToList();
+                this.Items = item.RoleResident.ToList();
                 break;
             case Waves.Api.Models.Enums.CardPoolType.WeaponsResident:
                 this.Items = item.WeaponsResident.ToList();
@@ -57,8 +60,9 @@ public sealed partial class RecordItemViewModel : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
-    void Loaded()
+    async Task Loaded()
     {
+        await Task.Delay(100);
         if (DataItem.Type == CardPoolType.RoleActivity)
         {
             StarItems = RecordHelper
@@ -81,37 +85,28 @@ public sealed partial class RecordItemViewModel : ViewModelBase, IDisposable
                 .Reverse()
                 .ToCardItemObservableCollection();
         }
-    }
-
-    private void Dispose(bool disposing)
-    {
-        if (!disposedValue)
+        if (DataItem.Type == CardPoolType.WeaponsResident)
         {
-            if (disposing)
-            {
-                this.Items.Clear();
-                this.StarItems.RemoveAllItem();
-                Request = null;
-                DataItem = null;
-                this.StarItems = null;
-                this.Items = null;
-            }
-
-            disposedValue = true;
+            StarItems = RecordHelper
+                .FormatRecordFive(this.Items)!
+                .Format(this.DataItem.AllWeapon)
+                .Reverse()
+                .ToCardItemObservableCollection();
         }
-    }
-
-    // // TODO: 仅当“Dispose(bool disposing)”拥有用于释放未托管资源的代码时才替代终结器
-    // ~RecordItemViewModel()
-    // {
-    //     // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
-    //     Dispose(disposing: false);
-    // }
-
-    public void Dispose()
-    {
-        // 不要更改此代码。请将清理代码放入“Dispose(bool disposing)”方法中
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
+        if (
+            DataItem.Type == CardPoolType.RoleResident
+            || DataItem.Type == CardPoolType.GratitudeOrientation
+            || DataItem.Type == CardPoolType.Beginner
+            || DataItem.Type == CardPoolType.BeginnerChoice
+        )
+        {
+            StarItems = RecordHelper
+                .FormatRecordFive(this.Items)!
+                .Format(this.DataItem.AllRole)
+                .Reverse()
+                .ToCardItemObservableCollection();
+        }
+        var result = RecordHelper.GetAdvanceData(Items);
+        MakeCount = result.Item2;
     }
 }

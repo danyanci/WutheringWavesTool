@@ -8,73 +8,108 @@
     xmlns:itemWrapper="using:WutheringWavesTool.Models.Wrapper"
     xmlns:local="using:WutheringWavesTool.Pages.Record"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:wuc="using:WinUICommunity"
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
         <i:EventTriggerBehavior EventName="Loaded">
             <i:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
         </i:EventTriggerBehavior>
     </i:Interaction.Behaviors>
-    <Grid Padding="20">
-        <ScrollView Grid.Row="1" Margin="0,0,0,0">
-            <ItemsRepeater ItemsSource="{x:Bind ViewModel.StarItems, Mode=OneWay}">
-                <ItemsRepeater.ItemTemplate>
-                    <DataTemplate x:DataType="itemWrapper:RecordActivityFiveStarItemWrapper">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="auto" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <Image
-                                Grid.RowSpan="2"
-                                Width="30"
-                                Height="30"
-                                Source="{x:Bind Icon}"
-                                Stretch="UniformToFill" />
-                            <TextBlock
-                                Grid.Row="0"
-                                Grid.Column="1"
-                                Margin="5,0,0,0"
-                                Text="{x:Bind Name}" />
-                            <Grid
-                                Grid.Row="1"
-                                Grid.Column="1"
-                                Margin="5,0,0,0">
-                                <ProgressBar
-                                    MinHeight="18"
-                                    Background="Transparent"
-                                    Foreground="{x:Bind Count, Converter={StaticResource RecordColorConverter}}"
-                                    Maximum="80"
-                                    Style="{ThemeResource FillHeightProgressBar}"
-                                    Value="{x:Bind Count}" />
+
+    <ScrollViewer>
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid Padding="20" Style="{ThemeResource GridPanel}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <TextBlock>
+                    <Run Text="已经垫了" />
+                    <Run Text="{x:Bind ViewModel.MakeCount, Mode=OneWay}" />
+                    <Run Text="发" />
+                </TextBlock>
+                <ProgressBar
+                    Grid.Row="1"
+                    MinHeight="20"
+                    Margin="0,5,0,0"
+                    Maximum="80"
+                    Style="{ThemeResource FillHeightProgressBar}"
+                    Value="{x:Bind ViewModel.MakeCount, Mode=OneWay}" />
+            </Grid>
+            <Grid
+                Grid.Row="1"
+                Margin="0,0,0,0"
+                Padding="20"
+                Style="{ThemeResource GridPanel}">
+                <ItemsRepeater ItemsSource="{x:Bind ViewModel.StarItems, Mode=OneWay}">
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate x:DataType="itemWrapper:RecordActivityFiveStarItemWrapper">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto" />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="auto" />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Image
+                                    Grid.RowSpan="2"
+                                    Width="30"
+                                    Height="30"
+                                    Source="{x:Bind Icon}"
+                                    Stretch="UniformToFill" />
                                 <TextBlock
-                                    Margin="0,0,5,0"
-                                    HorizontalAlignment="Right"
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    Margin="5,0,0,0"
+                                    Text="{x:Bind Name}" />
+                                <Grid
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    Margin="5,0,0,0">
+                                    <ProgressBar
+                                        MinHeight="18"
+                                        Background="Transparent"
+                                        Foreground="{x:Bind Count, Converter={StaticResource RecordColorConverter}}"
+                                        Maximum="80"
+                                        Style="{ThemeResource FillHeightProgressBar}"
+                                        Value="{x:Bind Count}" />
+                                    <TextBlock
+                                        Margin="0,0,5,0"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Text="{x:Bind Count}" />
+                                </Grid>
+                                <Border
+                                    Grid.RowSpan="2"
+                                    Grid.Column="2"
+                                    Margin="5,10,0,0"
+                                    Padding="10,6"
+                                    HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
-                                    Text="{x:Bind Count}" />
+                                    Background="{ThemeResource AccentAAFillColorDefaultBrush}"
+                                    CornerRadius="5"
+                                    Visibility="{x:Bind Flage, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <TextBlock
+                                        Margin="0,-5,0,0"
+                                        Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
+                                        Text="{x:Bind Flage, Converter={StaticResource RecordStarConverter}}" />
+                                </Border>
                             </Grid>
-                            <Border
-                                Grid.RowSpan="2"
-                                Grid.Column="2"
-                                Margin="5,10,0,0"
-                                Padding="6,4"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Background="{ThemeResource AccentAAFillColorDefaultBrush}"
-                                CornerRadius="5">
-                                <TextBlock Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" Text="{x:Bind Flage, Converter={StaticResource RecordStarConverter}}" />
-                            </Border>
-                        </Grid>
-                    </DataTemplate>
-                </ItemsRepeater.ItemTemplate>
-                <ItemsRepeater.Layout>
-                    <StackLayout Orientation="Vertical" Spacing="5" />
-                </ItemsRepeater.Layout>
-            </ItemsRepeater>
-        </ScrollView>
-    </Grid>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                    <ItemsRepeater.Layout>
+                        <StackLayout Orientation="Vertical" Spacing="5" />
+                    </ItemsRepeater.Layout>
+                </ItemsRepeater>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
 </Page>

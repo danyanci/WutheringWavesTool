@@ -302,4 +302,30 @@ public static class RecordHelper
             (weightedScore1 + weightedScore2 + weightedScore3 + weightedScore4) * 100;
         return totalScore;
     }
+
+    /// <summary>
+    /// 获得垫了几发,以及最近获得的5星
+    /// </summary>
+    /// <param name="recordCardItems"></param>
+    /// <returns></returns>
+    public static Tuple<RecordCardItemWrapper, int> GetAdvanceData(
+        IEnumerable<RecordCardItemWrapper> recordCardItems
+    )
+    {
+        RecordCardItemWrapper wrapper = null;
+        int count = 0;
+        foreach (var item in recordCardItems)
+        {
+            if (item.QualityLevel == 5)
+            {
+                wrapper = item;
+                break;
+            }
+            else
+            {
+                count++;
+            }
+        }
+        return new(wrapper, count);
+    }
 }

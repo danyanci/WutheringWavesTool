@@ -27,7 +27,6 @@ public sealed partial class RecordItemPage : Page, IPage
 
     protected override void OnNavigatedFrom(NavigationEventArgs e)
     {
-        this.ViewModel.Dispose();
         base.OnNavigatedFrom(e);
     }
 
