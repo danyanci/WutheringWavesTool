@@ -11,6 +11,13 @@ public static class Extentions
         return new ObservableCollection<T>(ts);
     }
 
+    public static CardItemObservableCollection<T> ToCardItemObservableCollection<T>(
+        this IEnumerable<T> ts
+    )
+    {
+        return new CardItemObservableCollection<T>(ts);
+    }
+
     public static void RemoveAll<T>(this ObservableCollection<T> ts)
     {
         if (ts == null || ts.Count == 0)

@@ -63,6 +63,4 @@ public sealed partial class PlayerRecordPage : Page, IWindowPage
     {
         this.ViewModel.PlayerRecordContext.NavigationService.RegisterView(this.frame);
     }
-
-    private void selectBar_Loaded(object sender, RoutedEventArgs e) { }
 }

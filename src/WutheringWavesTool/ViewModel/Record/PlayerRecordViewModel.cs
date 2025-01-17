@@ -23,6 +23,48 @@ public sealed partial class PlayerRecordViewModel : ViewModelBase, IDisposable
 {
     public IPlayerRecordContext PlayerRecordContext { get; }
 
+    public IServiceScopeFactory ServiceScopeFactory { get; }
+    public IServiceScope Scope { get; }
+    public RecordRequest Request { get; private set; }
+    public FiveGroupModel? FiveGroup { get; private set; }
+    public List<CommunityRoleData>? AllRole { get; private set; }
+    public List<CommunityWeaponData>? AllWeapon { get; private set; }
+    public List<int> StartRole { get; private set; }
+    public List<int> StartWeapons { get; private set; }
+    public List<RecordCardItemWrapper>? RoleActivity { get; private set; }
+    public List<RecordCardItemWrapper>? WeaponsActivity { get; private set; }
+    public List<RecordCardItemWrapper>? RoleResident { get; private set; }
+    public List<RecordCardItemWrapper>? WeaponsResident { get; private set; }
+    public List<RecordCardItemWrapper>? Beginner { get; private set; }
+    public List<RecordCardItemWrapper>? BeginnerChoice { get; private set; }
+    public List<RecordCardItemWrapper>? GratitudeOrientation { get; private set; }
+
+    [ObservableProperty]
+    public partial bool IsLoadRecord { get; set; } = false;
+
+    [ObservableProperty]
+    public partial CardPoolType? SelectType { get; set; } = null;
+
+    #region 抽卡数据
+    [ObservableProperty]
+    public partial int AllCount { get; set; }
+
+    [ObservableProperty]
+    public partial double ActivityAvg { get; set; }
+
+    [ObservableProperty]
+    public partial double ResidentAvg { get; set; }
+
+    [ObservableProperty]
+    public partial double Guaranteed { get; set; }
+
+    [ObservableProperty]
+    public partial double ScoreValue { get; set; }
+
+    [ObservableProperty]
+    public partial double StarAvg { get; set; }
+    #endregion
+
     public PlayerRecordViewModel(IServiceScopeFactory serviceScopeFactory)
     {
         ServiceScopeFactory = serviceScopeFactory;
@@ -31,12 +73,6 @@ public sealed partial class PlayerRecordViewModel : ViewModelBase, IDisposable
             Scope.ServiceProvider.GetRequiredKeyedService<IPlayerRecordContext>("PlayerRecord");
         this.PlayerRecordContext.SetScope(this.Scope);
     }
-
-    [ObservableProperty]
-    public partial bool IsLoadRecord { get; set; } = false;
-
-    [ObservableProperty]
-    public partial CardPoolType? SelectType { get; set; } = null;
 
     [ObservableProperty]
     public partial ObservableCollection<CardPoolType> CardPools { get; set; } =
@@ -93,6 +129,7 @@ public sealed partial class PlayerRecordViewModel : ViewModelBase, IDisposable
                 this.AllWeapon = await RecordHelper.GetAllWeaponAsync();
                 this.StartRole = RecordHelper.FormatFiveRoleStar(FiveGroup);
                 this.StartWeapons = RecordHelper.FormatFiveWeaponeRoleStar(FiveGroup);
+                CalculateRange();
                 this.IsLoadRecord = true;
                 SelectType = CardPoolType.RoleActivity;
             }
@@ -120,9 +157,59 @@ public sealed partial class PlayerRecordViewModel : ViewModelBase, IDisposable
             Beginner = link.Item2.RoleActivityItems.ToList();
             BeginnerChoice = link.Item2.BeginnerChoiceItems.ToList();
             GratitudeOrientation = link.Item2.GratitudeOrientationItems.ToList();
+            CalculateRange();
             this.IsLoadRecord = true;
             SelectType = CardPoolType.RoleActivity;
         }
+    }
+
+    private void CalculateRange()
+    {
+        if (RoleActivity == null || FiveGroup == null)
+            return;
+        this.ActivityAvg = Math.Round(
+            RecordHelper
+                .FormatRecordFive(this.RoleActivity)
+                .Concat(RecordHelper.FormatRecordFive(this.WeaponsActivity))
+                .CalculateAvg(),
+            2
+        );
+        this.ResidentAvg = Math.Round(
+            RecordHelper
+                .FormatRecordFive(this.RoleResident)
+                .Concat(RecordHelper.FormatRecordFive(this.WeaponsResident))
+                .CalculateAvg(),
+            2
+        );
+        var roleAAvg = RecordHelper.FormatRecordFive(this.RoleActivity).CalculateAvg();
+        var weaponAAvg = RecordHelper.FormatRecordFive(this.WeaponsActivity!).CalculateAvg();
+        var resident = RecordHelper
+            .FormatRecordFive(this.RoleResident!.Concat(this.WeaponsResident!))
+            .CalculateAvg();
+        var range = RecordHelper
+            .FormatStartFive(RoleActivity, RecordHelper.FormatFiveRoleStar(FiveGroup!))!
+            .GetGuaranteedRange();
+        var value = Math.Round(RecordHelper.Score(range, roleAAvg, weaponAAvg, resident), 2);
+        this.Guaranteed = range;
+        this.ScoreValue = value;
+        this.StarAvg = Math.Round(
+            RecordHelper
+                .FormatRecordFive(this.RoleActivity)
+                .Concat(RecordHelper.FormatRecordFive(this.RoleResident))
+                .Concat(RecordHelper.FormatRecordFive(this.WeaponsActivity))
+                .Concat(RecordHelper.FormatRecordFive(this.WeaponsResident))
+                .Concat(RecordHelper.FormatRecordFive(this.WeaponsActivity))
+                .CalculateAvg(),
+            2
+        );
+        this.AllCount =
+            RoleActivity.Count
+            + WeaponsActivity.Count
+            + RoleResident.Count
+            + WeaponsResident.Count
+            + Beginner.Count
+            + BeginnerChoice.Count
+            + GratitudeOrientation.Count;
     }
 
     private async Task<bool> WriteCacheAsync()
@@ -211,22 +298,6 @@ public sealed partial class PlayerRecordViewModel : ViewModelBase, IDisposable
     {
         await this.ShowInputRecordAsync();
     }
-
-    public IServiceScopeFactory ServiceScopeFactory { get; }
-    public IServiceScope Scope { get; }
-    public RecordRequest Request { get; private set; }
-    public FiveGroupModel? FiveGroup { get; private set; }
-    public List<CommunityRoleData>? AllRole { get; private set; }
-    public List<CommunityWeaponData>? AllWeapon { get; private set; }
-    public List<int> StartRole { get; private set; }
-    public List<int> StartWeapons { get; private set; }
-    public List<RecordCardItemWrapper>? RoleActivity { get; private set; }
-    public List<RecordCardItemWrapper>? WeaponsActivity { get; private set; }
-    public List<RecordCardItemWrapper>? RoleResident { get; private set; }
-    public List<RecordCardItemWrapper>? WeaponsResident { get; private set; }
-    public List<RecordCardItemWrapper>? Beginner { get; private set; }
-    public List<RecordCardItemWrapper>? BeginnerChoice { get; private set; }
-    public List<RecordCardItemWrapper>? GratitudeOrientation { get; private set; }
 
     private void Dispose(bool disposing)
     {

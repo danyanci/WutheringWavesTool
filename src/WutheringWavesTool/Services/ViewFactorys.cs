@@ -62,8 +62,10 @@ public class ViewFactorys : IViewFactorys
     public WindowModelBase ShowPlayerRecordWindow()
     {
         var window = this.ShowWindowBase<PlayerRecordPage>(null);
-        window.MaxHeight = 530;
-        window.MaxWidth = 900;
+        window.MaxHeight = 700;
+        window.MinHeight = 700;
+        window.MaxWidth = 500;
+        window.MinWidth = 500;
         return window;
     }
 }

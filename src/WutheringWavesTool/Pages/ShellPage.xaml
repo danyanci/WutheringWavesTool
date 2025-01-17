@@ -36,10 +36,10 @@
                 </MenuFlyout>
             </tb:TaskbarIcon.ContextFlyout>
         </tb:TaskbarIcon>
-        <Image
+        <ui:ImageEx
             Grid.Row="2"
             Canvas.ZIndex="-1"
-            Source="ms-appx:///Assets/Images/changli.png"
+            Source="ms-appx:///Assets/Images/keaita.jpg"
             Stretch="UniformToFill"
             Visibility="Visible" />
         <!--<MediaPlayerElement

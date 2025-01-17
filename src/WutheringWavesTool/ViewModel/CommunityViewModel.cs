@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using Waves.Api.Models.Communitys;
 using Waves.Api.Models.Messanger;
 using WavesLauncher.Core.Contracts;
@@ -119,6 +120,7 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
         var win = ViewFactorys.ShowPlayerRecordWindow();
         (win.AppWindow.Presenter as OverlappedPresenter)!.IsMaximizable = false;
         (win.AppWindow.Presenter as OverlappedPresenter)!.IsMinimizable = false;
+        win.SystemBackdrop = new MicaBackdrop();
         win.AppWindowApp.Show();
     }
 

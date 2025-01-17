@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -19,12 +20,12 @@ public sealed partial class RecordItemViewModel : ViewModelBase, IDisposable
 
     public CardPoolType Type { get; private set; }
     public RecordRequest Request { get; private set; }
-    public ObservableCollection<RecordCardItemWrapper> Items { get; set; }
+    public IList<RecordCardItemWrapper> Items { get; set; }
 
     public RecordArgs DataItem { get; private set; }
 
     [ObservableProperty]
-    public partial ObservableCollection<RecordActivityFiveStarItemWrapper> StarItems { get; set; }
+    public partial CardItemObservableCollection<RecordActivityFiveStarItemWrapper> StarItems { get; set; }
 
     internal void SetData(RecordArgs item)
     {
@@ -32,25 +33,25 @@ public sealed partial class RecordItemViewModel : ViewModelBase, IDisposable
         switch (item.Type)
         {
             case Waves.Api.Models.Enums.CardPoolType.RoleActivity:
-                this.Items = item.RoleActivity.ToObservableCollection();
+                this.Items = item.RoleActivity.ToList();
                 break;
             case Waves.Api.Models.Enums.CardPoolType.WeaponsActivity:
-                this.Items = item.WeaponsActivity.ToObservableCollection();
+                this.Items = item.WeaponsActivity.ToList();
                 break;
             case Waves.Api.Models.Enums.CardPoolType.RoleResident:
-                this.Items = item.RoleActivity.ToObservableCollection();
+                this.Items = item.RoleActivity.ToList();
                 break;
             case Waves.Api.Models.Enums.CardPoolType.WeaponsResident:
-                this.Items = item.WeaponsResident.ToObservableCollection();
+                this.Items = item.WeaponsResident.ToList();
                 break;
             case Waves.Api.Models.Enums.CardPoolType.Beginner:
-                this.Items = item.Beginner.ToObservableCollection();
+                this.Items = item.Beginner.ToList();
                 break;
             case Waves.Api.Models.Enums.CardPoolType.BeginnerChoice:
-                this.Items = item.BeginnerChoice.ToObservableCollection();
+                this.Items = item.BeginnerChoice.ToList();
                 break;
             case Waves.Api.Models.Enums.CardPoolType.GratitudeOrientation:
-                this.Items = item.GratitudeOrientation.ToObservableCollection();
+                this.Items = item.GratitudeOrientation.ToList();
                 break;
         }
     }
@@ -67,13 +68,7 @@ public sealed partial class RecordItemViewModel : ViewModelBase, IDisposable
                 )!
                 .Format(this.DataItem.AllRole)
                 .Reverse()
-                .ToObservableCollection();
-            var range = RecordHelper
-                .FormatStartFive(
-                    this.Items,
-                    RecordHelper.FormatFiveRoleStar(this.DataItem.FiveGroup!)
-                )!
-                .GetGuaranteedRange();
+                .ToCardItemObservableCollection();
         }
         if (DataItem.Type == CardPoolType.WeaponsActivity)
         {
@@ -84,13 +79,7 @@ public sealed partial class RecordItemViewModel : ViewModelBase, IDisposable
                 )!
                 .Format(this.DataItem.AllWeapon)
                 .Reverse()
-                .ToObservableCollection();
-            var range = RecordHelper
-                .FormatStartFive(
-                    this.Items,
-                    RecordHelper.FormatFiveWeaponeRoleStar(this.DataItem.FiveGroup!)
-                )!
-                .GetGuaranteedRange();
+                .ToCardItemObservableCollection();
         }
     }
 
@@ -98,7 +87,15 @@ public sealed partial class RecordItemViewModel : ViewModelBase, IDisposable
     {
         if (!disposedValue)
         {
-            if (disposing) { }
+            if (disposing)
+            {
+                this.Items.Clear();
+                this.StarItems.RemoveAllItem();
+                Request = null;
+                DataItem = null;
+                this.StarItems = null;
+                this.Items = null;
+            }
 
             disposedValue = true;
         }

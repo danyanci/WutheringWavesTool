@@ -22,7 +22,7 @@ namespace WutheringWavesTool;
 
 public static class Instance
 {
-    public static IServiceProvider? Service { get; private set; }
+    public static IServiceProvider Service { get; private set; }
 
     public static void InitService()
     {

@@ -5,6 +5,7 @@ using Waves.Api.Models.Communitys;
 using Waves.Api.Models.Enums;
 using Waves.Api.Models.Record;
 using Waves.Api.Models.Wrappers;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace Waves.Api.Helper;
 
@@ -123,6 +124,28 @@ public static class RecordHelper
         return result;
     }
 
+    public static List<Tuple<RecordCardItemWrapper, int>> FormatRecordFive(
+        IEnumerable<RecordCardItemWrapper> source
+    )
+    {
+        List<Tuple<RecordCardItemWrapper, int>> result = new();
+        int count = 1;
+        //无法判断歪不歪
+        foreach (var item in source.Reverse())
+        {
+            if (item.QualityLevel == 5)
+            {
+                result.Add(new(item, count));
+                count = 1;
+            }
+            else
+            {
+                count++;
+            }
+        }
+        return result;
+    }
+
     public static List<int> FormatFiveRoleStar(FiveGroupModel model) =>
         model.Data.VersionPools.SelectMany(x => x.UpFiveRoleIds).ToList();
 
@@ -204,10 +227,10 @@ public static class RecordHelper
     /// <param name="itemWrapper"></param>
     /// <returns></returns>
     public static double GetGuaranteedRange(
-        this List<Tuple<RecordCardItemWrapper, int, bool?>> itemWrapper
+        this IEnumerable<Tuple<RecordCardItemWrapper, int, bool?>> itemWrapper
     )
     {
-        if (itemWrapper == null || itemWrapper.Count == 0)
+        if (itemWrapper == null || itemWrapper.Count() == 0)
         {
             return 0; // 无数据时返回0
         }
@@ -237,5 +260,46 @@ public static class RecordHelper
 
         // 计算小保底歪率并返回
         return (double)totalSmallGuaranteeFails / totalSmallGuarantees * 100;
+    }
+
+    public static double CalculateAvg(this IEnumerable<Tuple<RecordCardItemWrapper, int>> value) =>
+        value.Average(x => x.Item2);
+
+    /// <summary>
+    /// 计算此样本的分数
+    /// </summary>
+    /// <param name="guaranteedRange">小保底歪率</param>
+    /// <param name="roleAAvg">活动角色平均抽数</param>
+    /// <param name="weaponAAvg">活动武器平均抽数</param>
+    /// <param name="roleIAvg">常驻角色平均抽数</param>
+    /// <param name="weaponIAvg">常驻武器平均抽数</param>
+    /// <returns></returns>
+    public static double Score(
+        double guaranteedRange,
+        double roleAAvg,
+        double weaponAAvg,
+        double resident
+    )
+    {
+        double weight1 = 0.40;
+        double weight2 = 0.2;
+        double weight3 = 0.2;
+        double weight4 = 0.2;
+        double minScore1 = 0;
+        double maxScore1 = 100;
+        double minScore2 = 0;
+        double maxScore2 = 80;
+        double minScore3 = 0;
+        double maxScore3 = 80;
+        double minScore4 = 0;
+        double maxScore4 = 80;
+        double weightedScore1 =
+            (1 - (guaranteedRange - minScore1) / (maxScore1 - minScore1)) * weight1;
+        double weightedScore2 = (1 - (roleAAvg - minScore2) / (maxScore2 - minScore2)) * weight2;
+        double weightedScore3 = (1 - (weaponAAvg - minScore3) / (maxScore3 - minScore3)) * weight3;
+        double weightedScore4 = (1 - (resident - minScore4) / (maxScore4 - minScore4)) * weight4;
+        double totalScore =
+            (weightedScore1 + weightedScore2 + weightedScore3 + weightedScore4) * 100;
+        return totalScore;
     }
 }

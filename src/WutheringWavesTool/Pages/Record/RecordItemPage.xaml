@@ -15,7 +15,7 @@
         </i:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Grid Padding="20">
-        <ScrollView>
+        <ScrollView Grid.Row="1" Margin="0,0,0,0">
             <ItemsRepeater ItemsSource="{x:Bind ViewModel.StarItems, Mode=OneWay}">
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="itemWrapper:RecordActivityFiveStarItemWrapper">
@@ -25,15 +25,29 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
                             <Image
+                                Grid.RowSpan="2"
                                 Width="30"
                                 Height="30"
                                 Source="{x:Bind Icon}"
                                 Stretch="UniformToFill" />
-                            <Grid Grid.Column="1" Margin="5,0,0,0">
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="5,0,0,0"
+                                Text="{x:Bind Name}" />
+                            <Grid
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="5,0,0,0">
                                 <ProgressBar
-                                    MinHeight="25"
+                                    MinHeight="18"
                                     Background="Transparent"
+                                    Foreground="{x:Bind Count, Converter={StaticResource RecordColorConverter}}"
                                     Maximum="80"
                                     Style="{ThemeResource FillHeightProgressBar}"
                                     Value="{x:Bind Count}" />
@@ -44,8 +58,9 @@
                                     Text="{x:Bind Count}" />
                             </Grid>
                             <Border
+                                Grid.RowSpan="2"
                                 Grid.Column="2"
-                                Margin="5,0,0,0"
+                                Margin="5,10,0,0"
                                 Padding="6,4"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
