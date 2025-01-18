@@ -24,18 +24,12 @@
         <Border Grid.RowSpan="2" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" />
         <ui:TitleBar
             x:Name="titleBar"
+            HeadHorizontalAlignment="Left"
+            HeadVerticalAlignment="Center"
             IsExtendsContentIntoTitleBar="True"
             TitleMode="Tall">
             <ui:TitleBar.Header>
-                <MenuBar>
-                    <MenuBarItem Title="菜单">
-                        <MenuFlyoutItem Command="{x:Bind ViewModel.ShowInputRecordCommand}" Text="导入抽卡">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B5;" />
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                    </MenuBarItem>
-                </MenuBar>
+                <TextBlock Margin="10,0,0,0" Text="抽卡分析" />
             </ui:TitleBar.Header>
             <ui:TitleBar.Footer>
                 <Border
@@ -78,11 +72,34 @@
                         Margin="0,0,2.5,0"
                         CornerRadius="5"
                         Style="{ThemeResource GridPanel}">
-                        <StackPanel Margin="10" Orientation="Vertical">
-                            <TextBlock Text="UID:" />
-                            <TextBlock Margin="0,5,0,0" Text="样本创建日期:" />
-                            <TextBlock Margin="0,5,0,0" Text="数据量：" />
-                        </StackPanel>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Margin="5,5,0,0" FontSize="12">
+                            <Run Text="UID" />
+                        </TextBlock>
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontWeight="Bold"
+                            Text="{x:Bind ViewModel.Id, Mode=OneWay}" />
+                        <wuc:Divider
+                            Grid.Column="1"
+                            LineStrokeThickness="2"
+                            Orientation="Vertical" />
+                        <TextBlock
+                            Grid.Column="2"
+                            Margin="0,5,0,0"
+                            FontSize="12">
+                            <Run Text="距离上一次修改:" />
+                        </TextBlock>
+                        <TextBlock
+                            Grid.Column="2"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="{x:Bind ViewModel.CreateTime, Mode=OneWay}" />
                     </Grid>
                     <Grid
                         Grid.Column="1"

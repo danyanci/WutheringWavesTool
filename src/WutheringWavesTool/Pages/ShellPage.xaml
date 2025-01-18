@@ -22,6 +22,12 @@
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
+
+        <Border
+            x:Name="backControl"
+            Grid.RowSpan="2"
+            Background="{ThemeResource AppBarBackgroundThemeBrush}"
+            Opacity="0.0" />
         <tb:TaskbarIcon
             ContextMenuMode="SecondWindow"
             IconSource="/Assets/logo.ico"
@@ -37,11 +43,12 @@
             </tb:TaskbarIcon.ContextFlyout>
         </tb:TaskbarIcon>
         <ui:ImageEx
+            x:Name="image"
             Grid.Row="2"
             Canvas.ZIndex="-1"
             Source="ms-appx:///Assets/Images/keaita.jpg"
             Stretch="UniformToFill"
-            Visibility="Collapsed" />
+            Visibility="Visible" />
         <!--<MediaPlayerElement
             x:Name="player"
             Grid.Row="2"

@@ -59,6 +59,7 @@
     <None Remove="Pages\Record\PlayerRecordPage.xaml" />
     <None Remove="Pages\Record\RecordItemPage.xaml" />
     <None Remove="Pages\SettingPage.xaml" />
+    <None Remove="Pages\SettingsPage.xaml" />
     <None Remove="Pages\ShellPage.xaml" />
     <None Remove="WindowModels\GetgeetWindow.xaml" />
   </ItemGroup>
@@ -200,6 +201,11 @@
     <Content Update="Assets\Background\kelaita2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\Styles\TileGallery.xaml">

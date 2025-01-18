@@ -2,8 +2,15 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
+using WinUICommunity;
 using WutheringWavesTool.Common;
+using WutheringWavesTool.Controls;
+using WutheringWavesTool.Controls.Animation;
+using WutheringWavesTool.Pages.Bases;
+using WutheringWavesTool.Pages.GamePages;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.ViewModel.GameViewModels;
 
@@ -17,6 +24,8 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     [ObservableProperty]
     public partial string ServerName { get; set; }
+    public ImageEx Image { get; set; }
+    public Border BackControl { get; internal set; }
 
     public ShellViewModel(
         [FromKeyedServices(nameof(HomeNavigationService))] INavigationService homeNavigationService,
@@ -35,7 +44,20 @@ public sealed partial class ShellViewModel : ViewModelBase
         Microsoft.UI.Xaml.Navigation.NavigationEventArgs e
     )
     {
-        //HomeNavigationService.ClearHistory();
+        if (
+            e.SourcePageType == typeof(MainGamePage)
+            || e.SourcePageType == typeof(GlobalGamePage)
+            || e.SourcePageType == typeof(BilibiliGamePage)
+        )
+        {
+            BlurAnimationHelper.StartBlurAnimation(this.Image, 10, 0, TimeSpan.FromSeconds(0.3));
+            OpacityAnimationHelper.StartAnimationHelper(this.BackControl, 0);
+        }
+        else
+        {
+            BlurAnimationHelper.StartBlurAnimation(this.Image, 0, 10, TimeSpan.FromSeconds(0.3));
+            OpacityAnimationHelper.StartAnimationHelper(this.BackControl, 0.6);
+        }
         GC.Collect();
     }
 

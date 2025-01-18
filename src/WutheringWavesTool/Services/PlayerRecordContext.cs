@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Waves.Api.Models.Record;
 using WutheringWavesTool.Common;
+using WutheringWavesTool.Models.Args;
 using WutheringWavesTool.Pages.Dialogs;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.Services.Navigations;
@@ -47,7 +48,7 @@ public class PlayerRecordContext : Contracts.IPlayerRecordContext
         this.Scope = scope;
     }
 
-    public async Task<(string, RecordCacheDetily)> ShowInputRecordAsync(object data)
+    public async Task<CreateRecordArgs?> ShowInputRecordAsync(object data)
     {
         var dialog = new InputRecordCardDialog();
         dialog.ViewModel = new InputRecordCardViewModel(Scope);
@@ -55,9 +56,7 @@ public class PlayerRecordContext : Contracts.IPlayerRecordContext
         dialog.XamlRoot = DialogManager.Root;
         DialogManager.SetDialog(dialog);
         await dialog.ShowAsync();
-        var link = dialog.ViewModel.Link;
-        var item = dialog.ViewModel.SelectItem;
-        return (link, item);
+        return dialog.ViewModel.Args;
     }
 
     protected virtual void Dispose(bool disposing)

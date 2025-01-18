@@ -11,8 +11,10 @@ namespace WutheringWavesTool.Services;
 
 public sealed partial class RecordCacheService : IRecordCacheService
 {
-    public async Task<bool> CreateRecordAsync(RecordCacheDetily recordCacheDetily)
+    public async Task<bool> CreateRecordAsync(RecordCacheDetily? recordCacheDetily)
     {
+        if (recordCacheDetily == null)
+            return false;
         var filePath = $"{App.RecordFolder}\\{recordCacheDetily.Guid}.json";
         if (File.Exists($"{App.RecordFolder}"))
         {
@@ -62,6 +64,36 @@ public sealed partial class RecordCacheService : IRecordCacheService
                         list.Add(json);
                     }
                     catch (System.Exception ex)
+                    {
+                        reader.Close();
+                        continue;
+                    }
+                }
+            }
+        }
+        return list;
+    }
+
+    public async Task<IEnumerable<(RecordCacheDetily?, string?)>> GetRecordCacheDetilyAndPathAsync()
+    {
+        List<(RecordCacheDetily?, string?)> list = new List<(RecordCacheDetily?, string?)>();
+        var dirinfo = new DirectoryInfo(App.RecordFolder);
+        foreach (var filePath in dirinfo.EnumerateFiles("*.json"))
+        {
+            using (var fs = new FileStream(filePath.FullName, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = new StreamReader(fs, System.Text.Encoding.UTF8))
+                {
+                    var str = await reader.ReadToEndAsync();
+                    try
+                    {
+                        var json = JsonSerializer.Deserialize<RecordCacheDetily>(
+                            str,
+                            PlayerCardRecordContext.Default.RecordCacheDetily
+                        );
+                        list.Add((json, filePath.FullName));
+                    }
+                    catch (System.Exception)
                     {
                         reader.Close();
                         continue;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -12,8 +13,11 @@ using Waves.Api.Helper;
 using Waves.Api.Models.Enums;
 using Waves.Api.Models.Record;
 using Waves.Api.Models.Wrappers;
+using Windows.ApplicationModel.Appointments;
+using WinUICommunity;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Models.Args;
+using WutheringWavesTool.Services;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.ViewModel.Record;
 
@@ -63,6 +67,12 @@ public sealed partial class PlayerRecordViewModel : ViewModelBase, IDisposable
 
     [ObservableProperty]
     public partial double StarAvg { get; set; }
+
+    [ObservableProperty]
+    public partial string Id { get; set; }
+
+    [ObservableProperty]
+    public partial string CreateTime { get; set; }
     #endregion
 
     public PlayerRecordViewModel(IServiceScopeFactory serviceScopeFactory)
@@ -91,125 +101,191 @@ public sealed partial class PlayerRecordViewModel : ViewModelBase, IDisposable
     async Task ShowInputRecordAsync()
     {
         var link = await PlayerRecordContext.ShowInputRecordAsync(null);
-        if (string.IsNullOrWhiteSpace(link.Item1) && link.Item2 == null)
+        if (link == null)
         {
-            this.SelectType = null;
-            this.IsLoadRecord = false;
             return;
         }
-        if (!string.IsNullOrWhiteSpace(link.Item1))
+        switch (link.Type)
         {
-            var request = RecordHelper.GetRecorRequest(link.Item1);
-            if (request == null)
-            {
-                this.PlayerRecordContext.TipShow.ShowMessage(
-                    "抽卡链接无效",
-                    Microsoft.UI.Xaml.Controls.Symbol.Clear
-                );
-                this.SelectType = null;
-                this.IsLoadRecord = false;
-                return;
-            }
-            this.Request = request;
-            var items = await RecordHelper.GetRecordAsync(Request, CardPoolType.RoleActivity);
-            if (items == null)
-            {
-                this.PlayerRecordContext.TipShow.ShowMessage(
-                    "抽卡链接过期",
-                    Microsoft.UI.Xaml.Controls.Symbol.Clear
-                );
-                this.SelectType = null;
-                this.IsLoadRecord = false;
-                return;
-            }
-            if (await WriteCacheAsync())
-            {
+            case CreateRecordType.None:
+                break;
+            case CreateRecordType.Create:
+            case CreateRecordType.Update:
+                if (string.IsNullOrWhiteSpace(link.Link))
+                {
+                    this.PlayerRecordContext.TipShow.ShowMessage(
+                        "抽卡链接无效",
+                        Microsoft.UI.Xaml.Controls.Symbol.Clear
+                    );
+                    this.SelectType = null;
+                    this.IsLoadRecord = false;
+                    return;
+                }
+                var request = RecordHelper.GetRecorRequest(link.Link);
+                if (request == null)
+                {
+                    this.PlayerRecordContext.TipShow.ShowMessage(
+                        "抽卡链接无效",
+                        Microsoft.UI.Xaml.Controls.Symbol.Clear
+                    );
+                    this.SelectType = null;
+                    this.IsLoadRecord = false;
+                    return;
+                }
+                this.Request = request;
+                var items = await RecordHelper.GetRecordAsync(Request, CardPoolType.RoleActivity);
+                if (items == null)
+                {
+                    this.PlayerRecordContext.TipShow.ShowMessage(
+                        "抽卡链接过期",
+                        Microsoft.UI.Xaml.Controls.Symbol.Clear
+                    );
+                    this.SelectType = null;
+                    this.IsLoadRecord = false;
+                    return;
+                }
+                var localRecord = (
+                    await PlayerRecordContext.RecordCacheService.GetRecordCacheDetilyAndPathAsync()
+                )
+                    .Where(x => x.Item1?.Id == Request.PlayerId)
+                    .FirstOrDefault();
+                if (localRecord.Item1 == null)
+                {
+                    if (await WriteCacheAsync())
+                    {
+                        this.FiveGroup = await RecordHelper.GetFiveGroupAsync();
+                        this.AllRole = await RecordHelper.GetAllRoleAsync();
+                        this.AllWeapon = await RecordHelper.GetAllWeaponAsync();
+                        this.StartRole = RecordHelper.FormatFiveRoleStar(FiveGroup);
+                        this.StartWeapons = RecordHelper.FormatFiveWeaponeRoleStar(FiveGroup);
+                        CalculateRange();
+                        this.IsLoadRecord = true;
+                        SelectType = CardPoolType.RoleActivity;
+                    }
+                    else
+                    {
+                        this.PlayerRecordContext.TipShow.ShowMessage(
+                            "写入抽卡缓存失败",
+                            Microsoft.UI.Xaml.Controls.Symbol.Clear
+                        );
+                        this.SelectType = null;
+                        this.IsLoadRecord = false;
+                    }
+                }
+                else
+                {
+                    this.FiveGroup = await RecordHelper.GetFiveGroupAsync();
+                    this.AllRole = await RecordHelper.GetAllRoleAsync();
+                    this.AllWeapon = await RecordHelper.GetAllWeaponAsync();
+                    this.StartRole = RecordHelper.FormatFiveRoleStar(FiveGroup);
+                    this.StartWeapons = RecordHelper.FormatFiveWeaponeRoleStar(FiveGroup);
+                    if (await MergeRecordAsync(localRecord))
+                    {
+                        CalculateRange();
+                        this.IsLoadRecord = true;
+                        SelectType = CardPoolType.RoleActivity;
+                    }
+                }
+                break;
+            case CreateRecordType.SelectItemOpen:
+                if (link.Cache == null)
+                {
+                    this.IsLoadRecord = false;
+                    SelectType = null;
+                    return;
+                }
                 this.FiveGroup = await RecordHelper.GetFiveGroupAsync();
                 this.AllRole = await RecordHelper.GetAllRoleAsync();
                 this.AllWeapon = await RecordHelper.GetAllWeaponAsync();
                 this.StartRole = RecordHelper.FormatFiveRoleStar(FiveGroup);
                 this.StartWeapons = RecordHelper.FormatFiveWeaponeRoleStar(FiveGroup);
+                RoleActivity = link.Cache.RoleActivityItems.ToList();
+                WeaponsActivity = link.Cache.WeaponsActivityItems.ToList();
+                WeaponsResident = link.Cache.WeaponsResidentItems.ToList();
+                RoleResident = link.Cache.RoleResidentItems.ToList();
+                Beginner = link.Cache.RoleActivityItems.ToList();
+                BeginnerChoice = link.Cache.BeginnerChoiceItems.ToList();
+                GratitudeOrientation = link.Cache.GratitudeOrientationItems.ToList();
                 CalculateRange();
                 this.IsLoadRecord = true;
                 SelectType = CardPoolType.RoleActivity;
-            }
-            else
-            {
-                this.PlayerRecordContext.TipShow.ShowMessage(
-                    "写入抽卡缓存失败",
-                    Microsoft.UI.Xaml.Controls.Symbol.Clear
-                );
-                this.SelectType = null;
-                this.IsLoadRecord = false;
-            }
-        }
-        else
-        {
-            this.FiveGroup = await RecordHelper.GetFiveGroupAsync();
-            this.AllRole = await RecordHelper.GetAllRoleAsync();
-            this.AllWeapon = await RecordHelper.GetAllWeaponAsync();
-            this.StartRole = RecordHelper.FormatFiveRoleStar(FiveGroup);
-            this.StartWeapons = RecordHelper.FormatFiveWeaponeRoleStar(FiveGroup);
-            RoleActivity = link.Item2.RoleActivityItems.ToList();
-            WeaponsActivity = link.Item2.WeaponsActivityItems.ToList();
-            WeaponsResident = link.Item2.WeaponsResidentItems.ToList();
-            RoleResident = link.Item2.RoleResidentItems.ToList();
-            Beginner = link.Item2.RoleActivityItems.ToList();
-            BeginnerChoice = link.Item2.BeginnerChoiceItems.ToList();
-            GratitudeOrientation = link.Item2.GratitudeOrientationItems.ToList();
-            CalculateRange();
-            this.IsLoadRecord = true;
-            SelectType = CardPoolType.RoleActivity;
+                this.CreateTime = (DateTime.Now - link.Cache.Time).ToString("hh\\:mm\\:ss");
+                this.Id = link.Cache.Id;
+                break;
         }
     }
 
-    private void CalculateRange()
+    private async Task<bool> MergeRecordAsync((RecordCacheDetily?, string?) localRecord)
     {
-        if (RoleActivity == null || FiveGroup == null)
-            return;
-        this.ActivityAvg = Math.Round(
-            RecordHelper
-                .FormatRecordFive(this.RoleActivity)
-                .Concat(RecordHelper.FormatRecordFive(this.WeaponsActivity))
-                .CalculateAvg(),
-            2
+        RoleActivity = await RecordHelper.GetRecordAsync(this.Request, CardPoolType.RoleActivity);
+        WeaponsActivity = await RecordHelper.GetRecordAsync(
+            this.Request,
+            CardPoolType.WeaponsActivity
         );
-        this.ResidentAvg = Math.Round(
-            RecordHelper
-                .FormatRecordFive(this.RoleResident)
-                .Concat(RecordHelper.FormatRecordFive(this.WeaponsResident))
-                .CalculateAvg(),
-            2
+        RoleResident = await RecordHelper.GetRecordAsync(this.Request, CardPoolType.RoleResident);
+        WeaponsResident = await RecordHelper.GetRecordAsync(
+            this.Request,
+            CardPoolType.WeaponsResident
         );
-        var roleAAvg = RecordHelper.FormatRecordFive(this.RoleActivity).CalculateAvg();
-        var weaponAAvg = RecordHelper.FormatRecordFive(this.WeaponsActivity!).CalculateAvg();
-        var resident = RecordHelper
-            .FormatRecordFive(this.RoleResident!.Concat(this.WeaponsResident!))
-            .CalculateAvg();
-        var range = RecordHelper
-            .FormatStartFive(RoleActivity, RecordHelper.FormatFiveRoleStar(FiveGroup!))!
-            .GetGuaranteedRange();
-        var value = Math.Round(RecordHelper.Score(range, roleAAvg, weaponAAvg, resident), 2);
-        this.Guaranteed = range;
-        this.ScoreValue = value;
-        this.StarAvg = Math.Round(
-            RecordHelper
-                .FormatRecordFive(this.RoleActivity)
-                .Concat(RecordHelper.FormatRecordFive(this.RoleResident))
-                .Concat(RecordHelper.FormatRecordFive(this.WeaponsActivity))
-                .Concat(RecordHelper.FormatRecordFive(this.WeaponsResident))
-                .Concat(RecordHelper.FormatRecordFive(this.WeaponsActivity))
-                .CalculateAvg(),
-            2
+        Beginner = await RecordHelper.GetRecordAsync(this.Request, CardPoolType.Beginner);
+        BeginnerChoice = await RecordHelper.GetRecordAsync(
+            this.Request,
+            CardPoolType.BeginnerChoice
         );
-        this.AllCount =
-            RoleActivity.Count
-            + WeaponsActivity.Count
-            + RoleResident.Count
-            + WeaponsResident.Count
-            + Beginner.Count
-            + BeginnerChoice.Count
-            + GratitudeOrientation.Count;
+        GratitudeOrientation = await RecordHelper.GetRecordAsync(
+            this.Request,
+            CardPoolType.GratitudeOrientation
+        );
+        if (
+            RoleActivity == null
+            || WeaponsActivity == null
+            || RoleResident == null
+            || WeaponsResident == null
+            || Beginner == null
+            || BeginnerChoice == null
+            || GratitudeOrientation == null
+        )
+        {
+            this.PlayerRecordContext.TipShow.ShowMessage("数据拉取失败!", Symbol.Clear);
+            return false;
+        }
+        var guid = Guid.NewGuid();
+        var cache = new RecordCacheDetily()
+        {
+            Guid = guid.ToString(),
+            Name = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:FFFF")}",
+            Time = DateTime.Now,
+            Id = this.Request.PlayerId,
+            RoleActivityItems = RoleActivity,
+            RoleResidentItems = RoleResident,
+            WeaponsActivityItems = WeaponsActivity,
+            WeaponsResidentItems = WeaponsResident,
+            BeginnerItems = Beginner,
+            BeginnerChoiceItems = BeginnerChoice,
+            GratitudeOrientationItems = GratitudeOrientation,
+        };
+        var newCache = RecordHelper.MargeRecord(cache, localRecord);
+        if (newCache == null)
+        {
+            this.PlayerRecordContext.TipShow.ShowMessage("去重失败", Symbol.Clear);
+            return false;
+        }
+        else
+        {
+            RoleActivity = newCache.Item1!.RoleActivityItems.ToList();
+            WeaponsActivity = newCache.Item1!.WeaponsActivityItems.ToList();
+            RoleResident = newCache.Item1!.RoleResidentItems.ToList();
+            WeaponsResident = newCache.Item1!.WeaponsResidentItems.ToList();
+            Beginner = newCache.Item1!.BeginnerItems.ToList();
+            BeginnerChoice = newCache.Item1!.BeginnerChoiceItems.ToList();
+            GratitudeOrientation = newCache.Item1!.GratitudeOrientationItems.ToList();
+            File.Delete(newCache.Item2);
+            await this.PlayerRecordContext.RecordCacheService.CreateRecordAsync(newCache.Item1);
+            this.CreateTime = (DateTime.Now - newCache.Item1.Time).ToString("hh\\:mm\\:ss");
+            this.Id = newCache.Item1.Id;
+            this.PlayerRecordContext.TipShow.ShowMessage("合并抽卡成功", Symbol.Accept);
+        }
+        return true;
     }
 
     private async Task<bool> WriteCacheAsync()
@@ -247,21 +323,74 @@ public sealed partial class PlayerRecordViewModel : ViewModelBase, IDisposable
             return false;
         }
         var guid = Guid.NewGuid();
-        await this.PlayerRecordContext.RecordCacheService.CreateRecordAsync(
-            new RecordCacheDetily()
-            {
-                Guid = guid.ToString(),
-                Name = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:FFFF")}",
-                RoleActivityItems = RoleActivity,
-                RoleResidentItems = RoleResident,
-                WeaponsActivityItems = WeaponsActivity,
-                WeaponsResidentItems = WeaponsResident,
-                BeginnerItems = Beginner,
-                BeginnerChoiceItems = BeginnerChoice,
-                GratitudeOrientationItems = GratitudeOrientation,
-            }
-        );
+        var cache = new RecordCacheDetily()
+        {
+            Guid = guid.ToString(),
+            Name = $"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:FFFF")}",
+            Time = DateTime.Now,
+            Id = this.Request.PlayerId,
+            RoleActivityItems = RoleActivity,
+            RoleResidentItems = RoleResident,
+            WeaponsActivityItems = WeaponsActivity,
+            WeaponsResidentItems = WeaponsResident,
+            BeginnerItems = Beginner,
+            BeginnerChoiceItems = BeginnerChoice,
+            GratitudeOrientationItems = GratitudeOrientation,
+        };
+        await this.PlayerRecordContext.RecordCacheService.CreateRecordAsync(cache);
+
+        this.CreateTime = (DateTime.Now - cache.Time).ToString("hh\\:mm\\:ss");
+        this.Id = cache.Id;
         return true;
+    }
+
+    private void CalculateRange()
+    {
+        if (FiveGroup == null)
+            return;
+        this.ActivityAvg = Math.Round(
+            RecordHelper
+                .FormatRecordFive(this.RoleActivity)
+                .Concat(RecordHelper.FormatRecordFive(this.WeaponsActivity))
+                .CalculateAvg(),
+            2
+        );
+        this.ResidentAvg = Math.Round(
+            RecordHelper
+                .FormatRecordFive(this.RoleResident)
+                .Concat(RecordHelper.FormatRecordFive(this.WeaponsResident))
+                .CalculateAvg(),
+            2
+        );
+        var roleAAvg = RecordHelper.FormatRecordFive(this.RoleActivity).CalculateAvg();
+        var weaponAAvg = RecordHelper.FormatRecordFive(this.WeaponsActivity!).CalculateAvg();
+        var resident = RecordHelper
+            .FormatRecordFive(this.RoleResident!.Concat(this.WeaponsResident!))
+            .CalculateAvg();
+        var range = RecordHelper
+            .FormatStartFive(RoleActivity, RecordHelper.FormatFiveRoleStar(FiveGroup!))!
+            .GetGuaranteedRange();
+        var value = Math.Round(RecordHelper.Score(range, roleAAvg, weaponAAvg, resident), 2);
+        this.Guaranteed = Math.Round(range, 2);
+        this.ScoreValue = value;
+        this.StarAvg = Math.Round(
+            RecordHelper
+                .FormatRecordFive(this.RoleActivity)
+                .Concat(RecordHelper.FormatRecordFive(this.RoleResident))
+                .Concat(RecordHelper.FormatRecordFive(this.WeaponsActivity))
+                .Concat(RecordHelper.FormatRecordFive(this.WeaponsResident))
+                .Concat(RecordHelper.FormatRecordFive(this.WeaponsActivity))
+                .CalculateAvg(),
+            2
+        );
+        this.AllCount =
+            RoleActivity.Count
+            + WeaponsActivity.Count
+            + RoleResident.Count
+            + WeaponsResident.Count
+            + Beginner.Count
+            + BeginnerChoice.Count
+            + GratitudeOrientation.Count;
     }
 
     private bool disposedValue;

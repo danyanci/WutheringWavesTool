@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Waves.Api.Models.Record;
 using WutheringWavesTool.Common;
+using WutheringWavesTool.Models.Args;
 using WutheringWavesTool.ViewModel.DialogViewModels;
 
 namespace WutheringWavesTool.Pages.Dialogs;
@@ -17,14 +18,13 @@ public sealed partial class InputRecordCardDialog : ContentDialog, IDialog
 
     public void SetData(object data) { }
 
-    private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void ListView_ItemClick(object sender, ItemClickEventArgs e)
     {
-        if (e.AddedItems == null)
-            return;
-        if (e.AddedItems[0] is RecordCacheDetily detily)
+        this.ViewModel.Args = new(CreateRecordType.SelectItemOpen)
         {
-            ViewModel.SelectItem = detily;
-            this.ViewModel.InvokeCommand.NotifyCanExecuteChanged();
-        }
+            Link = null,
+            Cache = e.ClickedItem as RecordCacheDetily,
+        };
+        this.ViewModel.DialogManager.Close();
     }
 }

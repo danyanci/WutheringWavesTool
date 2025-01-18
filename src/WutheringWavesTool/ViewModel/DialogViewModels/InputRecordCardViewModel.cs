@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Waves.Api.Models.Record;
 using WutheringWavesTool.Common;
+using WutheringWavesTool.Models.Args;
 using WutheringWavesTool.Services;
 using WutheringWavesTool.Services.Contracts;
 using static System.Formats.Asn1.AsnWriter;
@@ -45,7 +46,7 @@ public partial class InputRecordCardViewModel : ObservableObject
     [RelayCommand]
     public void Close()
     {
-        this.Link = "";
+        this.Args = null;
         TipShow.ShowMessage("抽卡链接为空", Microsoft.UI.Xaml.Controls.Symbol.Clear);
         this.DialogManager.Close();
     }
@@ -53,6 +54,33 @@ public partial class InputRecordCardViewModel : ObservableObject
     [RelayCommand(CanExecute = nameof(GetIsInvoke))]
     public void Invoke()
     {
+        if (!string.IsNullOrWhiteSpace(Link))
+        {
+            this.Args = new CreateRecordArgs(CreateRecordType.Create)
+            {
+                Link = this.Link,
+                Cache = null,
+            };
+        }
+        else if (this.SelectItem != null)
+        {
+            this.Args = new CreateRecordArgs(CreateRecordType.Create)
+            {
+                Link = this.Link,
+                Cache = this.SelectItem,
+            };
+        }
+        this.DialogManager.Close();
+    }
+
+    [RelayCommand(CanExecute = nameof(GetIsInvoke))]
+    public void Update()
+    {
+        this.Args = new CreateRecordArgs(CreateRecordType.Update)
+        {
+            Link = this.Link,
+            Cache = null,
+        };
         this.DialogManager.Close();
     }
 
@@ -61,4 +89,6 @@ public partial class InputRecordCardViewModel : ObservableObject
     public ITipShow TipShow { get; }
     public IRecordCacheService RecordCacheService { get; }
     public RecordCacheDetily SelectItem { get; internal set; }
+
+    public CreateRecordArgs? Args { get; internal set; }
 }

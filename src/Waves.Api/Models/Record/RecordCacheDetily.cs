@@ -11,8 +11,14 @@ public class RecordCacheDetily
     [JsonPropertyName(nameof(Name))]
     public string Name { get; set; }
 
+    [JsonPropertyName(nameof(Time))]
+    public DateTime Time { get; set; }
+
+    [JsonPropertyName(nameof(Id))]
+    public string Id { get; set; }
+
     [JsonPropertyName(nameof(RoleActivityItems))]
-    public IReadOnlyList<RecordCardItemWrapper> RoleActivityItems { get; set; }
+    public List<RecordCardItemWrapper> RoleActivityItems { get; set; }
 
     [JsonPropertyName(nameof(WeaponsActivityItems))]
     public List<RecordCardItemWrapper> WeaponsActivityItems { get; set; }

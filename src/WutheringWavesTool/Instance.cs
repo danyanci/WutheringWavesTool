@@ -68,6 +68,7 @@ public static class Instance
             .AddSingleton<IAppContext<App>, AppContext<App>>()
             .AddSingleton<IWavesClient, WavesClient>()
             .AddTransient<IViewFactorys, ViewFactorys>()
+            .AddSingleton<IWrallpaperService, WrallpaperService>()
             #endregion
             #region Navigation
             .AddKeyedSingleton<INavigationService, HomeNavigationService>(

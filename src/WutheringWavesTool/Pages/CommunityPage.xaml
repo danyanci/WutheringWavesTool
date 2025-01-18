@@ -14,8 +14,10 @@
     xmlns:uvm="using:WutheringWavesTool.ViewModel.Communitys"
     xmlns:wModel="using:Waves.Api.Models.Communitys"
     xmlns:wuc="using:WinUICommunity"
-    Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
     mc:Ignorable="d">
+    <!--
+        Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+    -->
     <i:Interaction.Behaviors>
         <i:EventTriggerBehavior EventName="Loaded">
             <i:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" CommandParameter="{x:Bind frame}" />

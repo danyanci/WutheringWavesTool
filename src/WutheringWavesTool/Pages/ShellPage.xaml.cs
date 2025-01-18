@@ -13,6 +13,8 @@ public sealed partial class ShellPage : Page
         this.Loaded += ShellPage_Loaded;
         this.ViewModel.HomeNavigationService.RegisterView(this.frame);
         this.ViewModel.TipShow.Owner = this.panel;
+        this.ViewModel.Image = this.image;
+        this.ViewModel.BackControl = this.backControl;
     }
 
     public ShellViewModel ViewModel { get; }
