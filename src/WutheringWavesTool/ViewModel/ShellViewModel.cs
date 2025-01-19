@@ -2,14 +2,12 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Animation;
 using WinUICommunity;
 using WutheringWavesTool.Common;
 using WutheringWavesTool.Controls;
 using WutheringWavesTool.Controls.Animation;
-using WutheringWavesTool.Pages.Bases;
 using WutheringWavesTool.Pages.GamePages;
 using WutheringWavesTool.Services.Contracts;
 using WutheringWavesTool.ViewModel.GameViewModels;
@@ -21,6 +19,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     public INavigationService HomeNavigationService { get; }
     public ITipShow TipShow { get; }
     public IAppContext<App> AppContext { get; }
+    public IWallpaperService WallpaperService { get; }
 
     [ObservableProperty]
     public partial string ServerName { get; set; }
@@ -30,12 +29,14 @@ public sealed partial class ShellViewModel : ViewModelBase
     public ShellViewModel(
         [FromKeyedServices(nameof(HomeNavigationService))] INavigationService homeNavigationService,
         ITipShow tipShow,
-        IAppContext<App> appContext
+        IAppContext<App> appContext,
+        IWallpaperService wallpaperService
     )
     {
         HomeNavigationService = homeNavigationService;
         TipShow = tipShow;
         AppContext = appContext;
+        WallpaperService = wallpaperService;
         HomeNavigationService.Navigated += HomeNavigationService_Navigated;
     }
 
@@ -56,7 +57,7 @@ public sealed partial class ShellViewModel : ViewModelBase
         else
         {
             BlurAnimationHelper.StartBlurAnimation(this.Image, 0, 10, TimeSpan.FromSeconds(0.3));
-            OpacityAnimationHelper.StartAnimationHelper(this.BackControl, 0.6);
+            OpacityAnimationHelper.StartAnimationHelper(this.BackControl, 0.5);
         }
         GC.Collect();
     }

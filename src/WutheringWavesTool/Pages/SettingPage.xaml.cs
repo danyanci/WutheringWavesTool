@@ -1,34 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Microsoft.UI.Xaml;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using WutheringWavesTool.Common;
+using WutheringWavesTool.Models;
+using WutheringWavesTool.ViewModel;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+namespace WutheringWavesTool.Pages;
 
-namespace WutheringWavesTool.Pages
+public sealed partial class SettingPage : Page, IPage
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class SettingPage : Page, IPage
+    public SettingPage()
     {
-        public SettingPage()
-        {
-            this.InitializeComponent();
-        }
+        this.InitializeComponent();
+        this.ViewModel = Instance.Service.GetRequiredService<SettingViewModel>();
+    }
 
-        public Type PageType => typeof(SettingPage);
+    public Type PageType => typeof(SettingPage);
+
+    public SettingViewModel ViewModel { get; }
+
+    private void ItemsView_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
+    {
+        this.ViewModel.WallpaperService.SetWrallpaper(
+            (args.InvokedItem as WallpaperModel)!.FilePath
+        );
     }
 }

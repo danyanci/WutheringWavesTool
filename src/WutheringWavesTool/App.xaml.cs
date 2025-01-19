@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using SqlSugar;
 using Waves.Core.GameContext;
 using WutheringWavesTool.Common;
@@ -17,13 +15,17 @@ public partial class App : ClientApplication
 
     public static string RecordFolder => BassFolder + "\\RecordCache";
 
+    public static string WrallpaperFolder => BassFolder + "\\WallpaperImages";
+
     public App()
     {
         StaticConfig.EnableAot = true;
         Directory.CreateDirectory(BassFolder);
         Directory.CreateDirectory(RecordFolder);
+        Directory.CreateDirectory(WrallpaperFolder);
         GameContextFactory.GameBassPath = BassFolder;
         Instance.InitService();
+
         this.UnhandledException += App_UnhandledException;
         this.InitializeComponent();
     }

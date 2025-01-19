@@ -45,19 +45,20 @@
             <ItemsRepeater ItemsSource="{x:Bind ViewModel.RoleDatas, Mode=OneWay}">
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="uModel:DataCenterRoilItemWrapper">
-                        <Button
+                        <Border
                             Margin="2,2"
                             Padding="0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            HorizontalContentAlignment="Stretch"
-                            VerticalContentAlignment="Stretch"
                             Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                             BorderBrush="{ThemeResource CardStrokeColorDefaultSolid}"
                             BorderThickness="1"
-                            Command="{x:Bind ClickShowCommand}"
                             CornerRadius="5">
-
+                            <Border.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Command="{x:Bind ClickShowCommand}" Text="打开详情" />
+                                </MenuFlyout>
+                            </Border.ContextFlyout>
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -117,7 +118,7 @@
                                     </StackPanel>
                                 </Border>
                             </Grid>
-                        </Button>
+                        </Border>
                     </DataTemplate>
                 </ItemsRepeater.ItemTemplate>
                 <ItemsRepeater.Layout>
@@ -126,7 +127,7 @@
                         ItemsStretch="Uniform"
                         MinColumnSpacing="2"
                         MinItemHeight="150"
-                        MinItemWidth="120" />
+                        MinItemWidth="110" />
                 </ItemsRepeater.Layout>
             </ItemsRepeater>
         </ScrollView>

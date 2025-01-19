@@ -22,7 +22,6 @@
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-
         <Border
             x:Name="backControl"
             Grid.RowSpan="2"
@@ -46,7 +45,7 @@
             x:Name="image"
             Grid.Row="2"
             Canvas.ZIndex="-1"
-            Source="ms-appx:///Assets/Images/keaita.jpg"
+            Source="ms-appx:///Assets/Images/changli.png"
             Stretch="UniformToFill"
             Visibility="Visible" />
         <!--<MediaPlayerElement
@@ -258,7 +257,7 @@
                 <Button
                     Command="{x:Bind ViewModel.OpenSettingCommand}"
                     Style="{ThemeResource TransparentButtonStyle}"
-                    Visibility="Collapsed">
+                    Visibility="Visible">
                     <i:Interaction.Behaviors>
                         <sound:ButtonSoundBehavior />
                     </i:Interaction.Behaviors>

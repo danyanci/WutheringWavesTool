@@ -203,7 +203,7 @@ public sealed partial class PlayerRecordViewModel : ViewModelBase, IDisposable
                 WeaponsActivity = link.Cache.WeaponsActivityItems.ToList();
                 WeaponsResident = link.Cache.WeaponsResidentItems.ToList();
                 RoleResident = link.Cache.RoleResidentItems.ToList();
-                Beginner = link.Cache.RoleActivityItems.ToList();
+                Beginner = link.Cache.BeginnerItems.ToList();
                 BeginnerChoice = link.Cache.BeginnerChoiceItems.ToList();
                 GratitudeOrientation = link.Cache.GratitudeOrientationItems.ToList();
                 CalculateRange();

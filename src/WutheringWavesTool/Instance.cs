@@ -68,7 +68,14 @@ public static class Instance
             .AddSingleton<IAppContext<App>, AppContext<App>>()
             .AddSingleton<IWavesClient, WavesClient>()
             .AddTransient<IViewFactorys, ViewFactorys>()
-            .AddSingleton<IWrallpaperService, WrallpaperService>()
+            .AddSingleton<IWallpaperService, WallpaperService>(
+                (s) =>
+                {
+                    var service = new WallpaperService(s.GetRequiredService<ITipShow>());
+                    service.RegisterHostPath(App.WrallpaperFolder);
+                    return service;
+                }
+            )
             #endregion
             #region Navigation
             .AddKeyedSingleton<INavigationService, HomeNavigationService>(

@@ -15,6 +15,7 @@ public sealed partial class ShellPage : Page
         this.ViewModel.TipShow.Owner = this.panel;
         this.ViewModel.Image = this.image;
         this.ViewModel.BackControl = this.backControl;
+        this.ViewModel.WallpaperService.RegisterImageHost(this.image);
     }
 
     public ShellViewModel ViewModel { get; }

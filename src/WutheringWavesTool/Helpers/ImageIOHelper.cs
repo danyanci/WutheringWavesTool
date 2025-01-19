@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.UI.Xaml.Media.Imaging;
+using Newtonsoft.Json.Linq;
 using SqlSugar;
 using Windows.Storage;
 using Windows.Storage.Streams;
@@ -53,7 +56,7 @@ public static class ImageIOHelper
             return (null, "源文件夹不存在！", "");
         var dir = new DirectoryInfo(sourceFolder);
         var items = dir.EnumerateFiles()
-            .Where(x => x.Name.EndsWith(".png") || x.Name.EndsWith(".png"));
+            .Where(x => x.Name.EndsWith(".png") || x.Name.EndsWith(".jpg"));
         var fileMd5 = "";
         if (items.Count() == 0)
         {
@@ -96,6 +99,7 @@ public static class ImageIOHelper
         {
             return (null, "文件MD5计算失败！", fileMd5);
         }
+        List<(string, string)> hashTable = new();
         foreach (var item in items)
         {
             string file = "";
@@ -115,24 +119,20 @@ public static class ImageIOHelper
                     .ToString(hashBytes)
                     .Replace("-", "")
                     .ToLowerInvariant();
-                if (folderFile == fileMd5)
-                {
-                    return new(new(new(item.FullName)), "加载成功！", folderFile);
-                }
-                else
-                {
-                    var extension = new FileInfo(filePath).Extension;
-                    var guid = Guid.NewGuid().ToString("N");
-                    file = $"{sourceFolder}\\{guid}.png";
-                }
+                hashTable.Add(new(item.FullName, folderFile));
             }
-            if (string.IsNullOrWhiteSpace(file) || !File.Exists(filePath))
-            {
-                return new(null, "获取数据失败", null);
-            }
-            File.Move(filePath, file);
-            return new(new(new(file)), "加载成功！", fileMd5);
         }
-        return new(null, "加载失败！", null);
+        //如果文件夹中存在文件
+        if (hashTable.Where(x => x.Item2 == fileMd5).Any())
+        {
+            var value = hashTable.Where(x => x.Item2 == fileMd5).First()!;
+            return new(new(new(value.Item1)), value.Item1, value.Item2);
+        }
+        else
+        {
+            var name = sourceFolder + $"\\{System.IO.Path.GetFileName(filePath)}";
+            File.Move(filePath, name);
+            return new(new(new(name)), name, fileMd5);
+        }
     }
 }
