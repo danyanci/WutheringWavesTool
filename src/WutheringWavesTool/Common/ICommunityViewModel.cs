@@ -1,8 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Waves.Api.Models.Communitys;
-
-namespace WutheringWavesTool.Common;
+﻿namespace WutheringWavesTool.Common;
 
 public interface ICommunityViewModel : IDisposable
 {

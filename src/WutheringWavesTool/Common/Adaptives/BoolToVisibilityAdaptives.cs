@@ -1,6 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-
-namespace WutheringWavesTool.Common.Adaptives;
+﻿namespace WutheringWavesTool.Common.Adaptives;
 
 public sealed class BoolToVisibilityAdaptives : IAdaptive<Visibility, bool?>
 {

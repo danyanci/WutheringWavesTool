@@ -1,17 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection;
-using Waves.Api.Models.Record;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Models.Args;
-using WutheringWavesTool.Services;
-using WutheringWavesTool.Services.Contracts;
-using static System.Formats.Asn1.AsnWriter;
-
-namespace WutheringWavesTool.ViewModel.DialogViewModels;
+﻿namespace WutheringWavesTool.ViewModel.DialogViewModels;
 
 public partial class InputRecordCardViewModel : ObservableObject
 {

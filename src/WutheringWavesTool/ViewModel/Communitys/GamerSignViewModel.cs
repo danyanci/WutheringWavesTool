@@ -1,16 +1,4 @@
-﻿using System.Diagnostics;
-using System.Linq;
-using System.Net.WebSockets;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Waves.Api.Models.Communitys;
-using WavesLauncher.Core.Contracts;
-using Windows.System.RemoteSystems;
-using WutheringWavesTool.Common;
-
-namespace WutheringWavesTool.ViewModel.Communitys;
+﻿namespace WutheringWavesTool.ViewModel.Communitys;
 
 public sealed partial class GamerSignViewModel : ViewModelBase
 {

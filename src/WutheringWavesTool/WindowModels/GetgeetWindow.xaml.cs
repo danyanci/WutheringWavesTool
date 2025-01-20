@@ -1,13 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.Web.WebView2.Core;
-using Waves.Api.Models.Messanger;
-using WutheringWavesTool.Common.Bases;
-
-namespace WutheringWavesTool.WindowModels;
+﻿namespace WutheringWavesTool.WindowModels;
 
 public sealed partial class GetGeetWindow : WindowModelBase
 {

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using WutheringWavesTool;
-using WutheringWavesTool.Services.Contracts;
-
-namespace WutheringWavesTool.Services;
+﻿namespace WutheringWavesTool.Services;
 
 public class PickersService : IPickersService
 {

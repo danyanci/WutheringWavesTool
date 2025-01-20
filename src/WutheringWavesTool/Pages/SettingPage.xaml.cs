@@ -1,11 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Models;
-using WutheringWavesTool.ViewModel;
-
-namespace WutheringWavesTool.Pages;
+﻿namespace WutheringWavesTool.Pages;
 
 public sealed partial class SettingPage : Page, IPage
 {

@@ -1,13 +1,4 @@
-﻿using System;
-using System.Linq;
-using CommunityToolkit.WinUI;
-using Microsoft.UI.Composition;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using Windows.Foundation;
-
-namespace WutheringWavesTool.Controls;
+﻿namespace WutheringWavesTool.Controls;
 
 [TemplateVisualState(Name = LoadingState, GroupName = CommonGroup)]
 [TemplateVisualState(Name = LoadedState, GroupName = CommonGroup)]

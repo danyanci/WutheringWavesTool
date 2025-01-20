@@ -1,8 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using WutheringWavesTool.ViewModel.Communitys;
-
-namespace WutheringWavesTool.Controls.Selector;
+﻿namespace WutheringWavesTool.Controls.Selector;
 
 public partial class CommunitySelector : DataTemplateSelector
 {

@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using System.Threading;
-using System.Threading.Tasks;
-using WutheringWavesTool.Controls;
 using WutheringWavesTool.Helpers;
-using WutheringWavesTool.Models;
-using WutheringWavesTool.Services.Contracts;
 
 namespace WutheringWavesTool.Services;
 
@@ -30,9 +21,19 @@ public class WallpaperService : IWallpaperService
         this.BaseFolder = folder;
     }
 
-    public void RegisterImageHost(ImageEx image)
+    public async Task RegisterImageHostAsync(ImageEx image)
     {
         this.ImageHost = image;
+        if (!string.IsNullOrWhiteSpace(AppSettings.WallpaperPath))
+        {
+            await this.SetWrallpaper(AppSettings.WallpaperPath);
+        }
+        else
+        {
+            await this.SetWrallpaper(
+                AppDomain.CurrentDomain.BaseDirectory + "Assets/Images/changli.png"
+            );
+        }
     }
 
     public async Task<bool> SetWrallpaper(string path)
@@ -44,6 +45,7 @@ public class WallpaperService : IWallpaperService
             if (TipShow != null)
                 TipShow.ShowMessage(result.Item2, Microsoft.UI.Xaml.Controls.Symbol.Pictures);
             this.NowHexValue = result.Item3!;
+            AppSettings.WallpaperPath = path;
             return true;
         }
         else

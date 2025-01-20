@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Waves.Api.Models.Record;
-
-namespace WutheringWavesTool.Services.Contracts;
+﻿namespace WutheringWavesTool.Services.Contracts;
 
 public interface IRecordCacheService
 {

@@ -1,6 +1,4 @@
-﻿using Waves.Api.Models.Record;
-
-namespace WutheringWavesTool.Models.Args;
+﻿namespace WutheringWavesTool.Models.Args;
 
 /// <summary>
 /// 创建抽卡记录参数

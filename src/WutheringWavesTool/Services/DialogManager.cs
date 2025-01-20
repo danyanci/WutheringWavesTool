@@ -1,12 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Services.Contracts;
-
-namespace WutheringWavesTool.Services;
+﻿namespace WutheringWavesTool.Services;
 
 public class DialogManager : IDialogManager
 {

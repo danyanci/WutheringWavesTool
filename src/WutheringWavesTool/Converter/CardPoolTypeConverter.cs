@@ -1,8 +1,4 @@
-﻿using System;
-using Microsoft.UI.Xaml.Data;
-using Waves.Api.Models.Enums;
-
-namespace WutheringWavesTool.Converter;
+﻿namespace WutheringWavesTool.Converter;
 
 public partial class CardPoolTypeConverter : IValueConverter
 {

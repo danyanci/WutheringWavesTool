@@ -1,6 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-
-namespace WutheringWavesTool.Controls.Propertys;
+﻿namespace WutheringWavesTool.Controls.Propertys;
 
 public class NavigationItemClickHelper
 {

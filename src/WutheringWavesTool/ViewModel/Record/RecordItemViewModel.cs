@@ -1,20 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.UI.Xaml;
-using Waves.Api.Helper;
-using Waves.Api.Models.Enums;
-using Waves.Api.Models.Record;
-using Waves.Api.Models.Wrappers;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Models.Args;
-using WutheringWavesTool.Models.Wrapper;
-
-namespace WutheringWavesTool.ViewModel.Record;
+﻿namespace WutheringWavesTool.ViewModel.Record;
 
 public sealed partial class RecordItemViewModel : ViewModelBase
 {

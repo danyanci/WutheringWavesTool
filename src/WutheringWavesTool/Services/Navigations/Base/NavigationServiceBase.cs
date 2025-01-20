@@ -1,12 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Navigation;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Services.Contracts;
-
-namespace WutheringWavesTool.Services.Navigations.Base;
+﻿namespace WutheringWavesTool.Services.Navigations.Base;
 
 public class NavigationServiceBase : INavigationService
 {

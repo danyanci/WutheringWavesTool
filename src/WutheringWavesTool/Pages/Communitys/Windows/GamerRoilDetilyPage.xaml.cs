@@ -1,11 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Waves.Api.Models.Communitys;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.ViewModel.Communitys.WinViewModel;
-
-namespace WutheringWavesTool.Pages.Communitys.Windows;
+﻿namespace WutheringWavesTool.Pages.Communitys.Windows;
 
 public sealed partial class GamerRoilDetilyPage : Page, IWindowPage
 {

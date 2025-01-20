@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Newtonsoft.Json.Linq;
-using Waves.Api.Models.Record;
-using Waves.Api.Models.Wrappers;
-
-namespace WutheringWavesTool.Models.Wrapper;
+﻿namespace WutheringWavesTool.Models.Wrapper;
 
 public sealed partial class RecordActivityFiveStarItemWrapper : ObservableObject
 {

@@ -1,9 +1,4 @@
-﻿using System;
-using CommunityToolkit.WinUI.Animations;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media.Animation;
-
-namespace WutheringWavesTool.Controls.Animation;
+﻿namespace WutheringWavesTool.Controls.Animation;
 
 public static class OpacityAnimationHelper
 {

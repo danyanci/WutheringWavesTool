@@ -1,8 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
-using Windows.UI.Xaml;
-
-namespace WutheringWavesTool.Controls;
+﻿namespace WutheringWavesTool.Controls;
 
 public partial class ImageExBase
 {

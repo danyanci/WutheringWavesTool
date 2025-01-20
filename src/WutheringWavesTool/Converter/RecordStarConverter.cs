@@ -1,8 +1,4 @@
-﻿using System;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Data;
-
-namespace WutheringWavesTool.Converter;
+﻿namespace WutheringWavesTool.Converter;
 
 public partial class RecordStarConverter : IValueConverter
 {

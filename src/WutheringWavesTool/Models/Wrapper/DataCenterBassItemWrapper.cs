@@ -1,23 +1,4 @@
-﻿using System;
-using System.IO;
-using System.IO.Pipes;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Waves.Api.Models.Communitys.DataCenter;
-using Windows.Graphics.Imaging;
-using Windows.Storage;
-using Windows.Storage.Streams;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Controls;
-using WutheringWavesTool.Helpers;
-using WutheringWavesTool.Models.Messanger;
-
-namespace WutheringWavesTool.Models.Wrapper;
+﻿namespace WutheringWavesTool.Models.Wrapper;
 
 public partial class DataCenterBassItemWrapper : ObservableObject
 {

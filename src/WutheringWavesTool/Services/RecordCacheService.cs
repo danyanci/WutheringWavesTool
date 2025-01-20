@@ -1,11 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Waves.Api.Models;
-using Waves.Api.Models.Record;
-using WutheringWavesTool.Services.Contracts;
+﻿using System.Text;
 
 namespace WutheringWavesTool.Services;
 

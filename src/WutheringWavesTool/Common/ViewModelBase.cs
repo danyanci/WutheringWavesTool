@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using CommunityToolkit.Mvvm.ComponentModel;
-
-namespace WutheringWavesTool.Common;
+﻿namespace WutheringWavesTool.Common;
 
 public partial class ViewModelBase : ObservableRecipient
 {

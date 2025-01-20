@@ -1,10 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using WutheringWavesTool.Models;
-using WutheringWavesTool.Services.Contracts;
-
-namespace WutheringWavesTool.ViewModel;
+﻿namespace WutheringWavesTool.ViewModel;
 
 partial class SettingViewModel
 {

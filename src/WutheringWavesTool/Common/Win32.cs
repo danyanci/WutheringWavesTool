@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-
-namespace WutheringWavesTool.Common;
+﻿namespace WutheringWavesTool.Common;
 
 public static class Win32
 {

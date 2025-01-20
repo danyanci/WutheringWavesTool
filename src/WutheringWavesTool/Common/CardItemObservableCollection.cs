@@ -1,9 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-
-namespace WutheringWavesTool.Common;
+﻿namespace WutheringWavesTool.Common;
 
 public sealed partial class CardItemObservableCollection<T> : ObservableCollection<T>
 {

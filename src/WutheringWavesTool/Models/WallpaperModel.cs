@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.UI.Xaml.Media.Imaging;
-
-namespace WutheringWavesTool.Models;
+﻿namespace WutheringWavesTool.Models;
 
 public class WallpaperModel
 {

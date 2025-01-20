@@ -1,8 +1,4 @@
-﻿using Microsoft.UI;
-using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml;
-
-namespace WutheringWavesTool.Controls;
+﻿namespace WutheringWavesTool.Controls;
 
 partial class TitleBar
 {

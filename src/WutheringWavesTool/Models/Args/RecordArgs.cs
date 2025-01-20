@@ -1,10 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Waves.Api.Models.Enums;
-using Waves.Api.Models.Record;
-using Waves.Api.Models.Wrappers;
-
-namespace WutheringWavesTool.Models.Args;
+﻿namespace WutheringWavesTool.Models.Args;
 
 public class RecordArgs
 {

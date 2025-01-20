@@ -1,18 +1,4 @@
-﻿using System;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
-using WinUICommunity;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Controls;
-using WutheringWavesTool.Controls.Animation;
-using WutheringWavesTool.Pages.GamePages;
-using WutheringWavesTool.Services.Contracts;
-using WutheringWavesTool.ViewModel.GameViewModels;
-
-namespace WutheringWavesTool.ViewModel;
+﻿namespace WutheringWavesTool.ViewModel;
 
 public sealed partial class ShellViewModel : ViewModelBase
 {

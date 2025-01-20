@@ -1,7 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using WutheringWavesTool.Services.Contracts;
-
-namespace WutheringWavesTool.Common.Bases;
+﻿namespace WutheringWavesTool.Common.Bases;
 
 public partial class DialogViewModelBase : ViewModelBase
 {

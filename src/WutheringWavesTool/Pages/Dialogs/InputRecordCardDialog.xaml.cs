@@ -1,11 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using Waves.Api.Models.Record;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Models.Args;
-using WutheringWavesTool.ViewModel.DialogViewModels;
-
-namespace WutheringWavesTool.Pages.Dialogs;
+﻿namespace WutheringWavesTool.Pages.Dialogs;
 
 public sealed partial class InputRecordCardDialog : ContentDialog, IDialog
 {

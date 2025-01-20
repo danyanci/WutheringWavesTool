@@ -1,11 +1,4 @@
-﻿using System;
-using Microsoft.UI;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Media;
-using Windows.UI;
-using WinUICommunity;
-
-namespace WutheringWavesTool.Converter;
+﻿namespace WutheringWavesTool.Converter;
 
 public partial class RecordColorConverter : IValueConverter
 {

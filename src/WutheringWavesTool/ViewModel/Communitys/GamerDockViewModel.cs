@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Waves.Api.Models.Communitys;
-using Waves.Api.Models.Communitys.DataCenter;
-using WavesLauncher.Core.Contracts;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Models.Wrapper;
-using WutheringWavesTool.Services.Contracts;
-
-namespace WutheringWavesTool.ViewModel.Communitys;
+﻿namespace WutheringWavesTool.ViewModel.Communitys;
 
 public partial class GamerDockViewModel : ViewModelBase, IDisposable
 {

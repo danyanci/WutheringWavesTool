@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WutheringWavesTool.Controls;
+﻿namespace WutheringWavesTool.Controls;
 
 public delegate void ImageExFailedEventHandler(object sender, ImageExFailedEventArgs e);
 

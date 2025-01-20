@@ -1,22 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-using Waves.Api.Models.Communitys;
-using Waves.Api.Models.Messanger;
-using WavesLauncher.Core.Contracts;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Models.Messanger;
-using WutheringWavesTool.Services.Contracts;
-using WutheringWavesTool.Services.Navigations;
-
-namespace WutheringWavesTool.ViewModel;
+﻿namespace WutheringWavesTool.ViewModel;
 
 public partial class CommunityViewModel : ViewModelBase, IDisposable
 {
@@ -31,7 +13,6 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
         AppContext = appContext;
         ViewFactorys = viewFactorys;
         NavigationService = navigationService;
-
         RegisterMessanger();
     }
 
@@ -72,7 +53,7 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
 
     private async void LoginMessangerMethod(object recipient, LoginMessanger message)
     {
-        await Loaded();
+        await LoadedAsync();
     }
 
     [RelayCommand]
@@ -80,11 +61,11 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     {
         AppSettings.Token = "";
         AppSettings.TokenId = "";
-        await Loaded();
+        await LoadedAsync();
     }
 
     [RelayCommand]
-    async Task Loaded(Frame frame = null)
+    async Task LoadedAsync(Frame frame = null)
     {
         if (frame != null)
             this.NavigationService.RegisterView(frame);

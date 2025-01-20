@@ -1,8 +1,4 @@
-﻿using System;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Controls;
-
-namespace WutheringWavesTool.Services.Contracts;
+﻿namespace WutheringWavesTool.Services.Contracts;
 
 public interface IPageService
 {

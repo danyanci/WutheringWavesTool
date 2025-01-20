@@ -1,12 +1,4 @@
-﻿using System;
-using System.IO;
-using Microsoft.Extensions.DependencyInjection;
-using SqlSugar;
-using Waves.Core.GameContext;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Services.Contracts;
-
-namespace WutheringWavesTool;
+﻿namespace WutheringWavesTool;
 
 public partial class App : ClientApplication
 {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.UI.Xaml.Controls;
-
-namespace WutheringWavesTool.Services.Contracts;
+﻿namespace WutheringWavesTool.Services.Contracts;
 
 public interface INavigationViewService
 {

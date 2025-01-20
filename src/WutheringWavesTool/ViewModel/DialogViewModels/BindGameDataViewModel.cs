@@ -1,21 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Extensions.DependencyInjection;
-using Waves.Api.Models.Communitys;
-using Waves.Core.GameContext;
-using Waves.Core.GameContext.Contexts;
-using WavesLauncher.Core.Contracts;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Common.Bases;
-using WutheringWavesTool.Models;
-using WutheringWavesTool.Models.Messanger;
-using WutheringWavesTool.Services.Contracts;
-
-namespace WutheringWavesTool.ViewModel.DialogViewModels;
+﻿namespace WutheringWavesTool.ViewModel.DialogViewModels;
 
 public sealed partial class BindGameDataViewModel : DialogViewModelBase, IDisposable
 {

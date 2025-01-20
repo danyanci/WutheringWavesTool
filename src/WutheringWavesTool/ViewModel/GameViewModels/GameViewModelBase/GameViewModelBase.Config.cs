@@ -1,8 +1,4 @@
-﻿using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-
-namespace WutheringWavesTool.ViewModel.GameViewModels;
+﻿namespace WutheringWavesTool.ViewModel.GameViewModels;
 
 partial class GameViewModelBase
 {

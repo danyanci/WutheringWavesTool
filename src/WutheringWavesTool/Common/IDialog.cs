@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace WutheringWavesTool.Common;
 
-namespace WutheringWavesTool.Common
+public interface IDialog
 {
-    public interface IDialog
-    {
-        public void SetData(object data);
-    }
+    public void SetData(object data);
 }

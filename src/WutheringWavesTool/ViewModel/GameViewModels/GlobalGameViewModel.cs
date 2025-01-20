@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.Extensions.DependencyInjection;
-using Waves.Api.Models;
-using Waves.Core.GameContext;
-using Waves.Core.GameContext.Contexts;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Services.Contracts;
-
-namespace WutheringWavesTool.ViewModel.GameViewModels;
+﻿namespace WutheringWavesTool.ViewModel.GameViewModels;
 
 public sealed partial class GlobalGameViewModel : GameViewModelBase
 {

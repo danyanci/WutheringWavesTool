@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WutheringWavesTool.Common;
+﻿namespace WutheringWavesTool.Common;
 
 public static class ByteConversion
 {

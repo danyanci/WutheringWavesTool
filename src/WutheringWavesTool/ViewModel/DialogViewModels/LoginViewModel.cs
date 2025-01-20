@@ -1,21 +1,4 @@
-﻿using System;
-using System.Text.Json;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Dm.filter;
-using Microsoft.UI.Xaml;
-using Waves.Api.Models;
-using Waves.Api.Models.Communitys;
-using Waves.Api.Models.Messanger;
-using WavesLauncher.Core.Contracts;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Services;
-using WutheringWavesTool.Services.Contracts;
-using static Dm.net.buffer.ByteArrayBuffer;
-
-namespace WutheringWavesTool.ViewModel.DialogViewModels;
+﻿namespace WutheringWavesTool.ViewModel.DialogViewModels;
 
 public sealed partial class LoginViewModel : ViewModelBase
 {

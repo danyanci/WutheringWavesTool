@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace WutheringWavesTool.Common;
+﻿namespace WutheringWavesTool.Common;
 
 public static class GameIcon
 {

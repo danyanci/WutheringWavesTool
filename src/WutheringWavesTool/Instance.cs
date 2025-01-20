@@ -1,24 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using Waves.Core;
-using WavesLauncher.Core.Contracts;
-using WutheringWavesTool.Pages;
-using WutheringWavesTool.Pages.Communitys;
-using WutheringWavesTool.Pages.Communitys.Windows;
-using WutheringWavesTool.Pages.Dialogs;
-using WutheringWavesTool.Pages.Record;
-using WutheringWavesTool.Services;
-using WutheringWavesTool.Services.Contracts;
-using WutheringWavesTool.Services.Navigations;
-using WutheringWavesTool.ViewModel;
-using WutheringWavesTool.ViewModel.Communitys;
-using WutheringWavesTool.ViewModel.Communitys.WinViewModel;
-using WutheringWavesTool.ViewModel.DialogViewModels;
-using WutheringWavesTool.ViewModel.GameViewModels;
-using WutheringWavesTool.ViewModel.Record;
-
-namespace WutheringWavesTool;
+﻿namespace WutheringWavesTool;
 
 public static class Instance
 {

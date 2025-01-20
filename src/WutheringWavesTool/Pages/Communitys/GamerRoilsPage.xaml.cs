@@ -1,13 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-using Waves.Api.Models.Communitys;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.ViewModel.Communitys;
-
-namespace WutheringWavesTool.Pages.Communitys;
+﻿namespace WutheringWavesTool.Pages.Communitys;
 
 public sealed partial class GamerRoilsPage : Page, IPage, IDisposable
 {

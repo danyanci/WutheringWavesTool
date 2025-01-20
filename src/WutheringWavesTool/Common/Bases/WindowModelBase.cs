@@ -1,14 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Windowing;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Media;
-using Newtonsoft.Json.Linq;
-using WinUICommunity;
-using WinUIEx;
-using WutheringWavesTool.Services.Contracts;
-
-namespace WutheringWavesTool.Common.Bases;
+﻿namespace WutheringWavesTool.Common.Bases;
 
 public partial class WindowModelBase : WindowEx
 {

@@ -1,18 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Threading;
-using System.Threading.Tasks;
-using Waves.Api.Models;
-using Waves.Api.Models.Communitys;
-using Waves.Api.Models.Record;
-using Waves.Core.Contracts;
-using WavesLauncher.Core.Contracts;
-
-namespace WutheringWavesTool.Services;
+﻿namespace WutheringWavesTool.Services;
 
 public sealed partial class WavesClient : IWavesClient
 {

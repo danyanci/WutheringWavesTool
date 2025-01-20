@@ -30,7 +30,6 @@
     <None Remove="Assets\GameIcons\bilibili.ico" />
     <None Remove="Assets\GameIcons\global.ico" />
     <None Remove="Assets\geet.html" />
-    <None Remove="Assets\Images\shouanren.png" />
     <None Remove="Assets\Images\shouanren2.png" />
     <None Remove="Assets\logo.ico" />
     <None Remove="Assets\mcLogo.png" />
@@ -161,9 +160,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="Assets\Images\loading.gif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Assets\Images\shouanren.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="Assets\Images\shouanren2.png">

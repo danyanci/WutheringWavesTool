@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WutheringWavesTool.Common;
+﻿namespace WutheringWavesTool.Common;
 
 public interface IPage
 {

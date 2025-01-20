@@ -1,7 +1,4 @@
-﻿using System;
-using Microsoft.UI.Xaml.Data;
-
-namespace WutheringWavesTool.Converter;
+﻿namespace WutheringWavesTool.Converter;
 
 public partial class IntToSecondTimeConverter : IValueConverter
 {

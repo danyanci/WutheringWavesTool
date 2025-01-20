@@ -1,17 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Media.Animation;
-using Microsoft.UI.Xaml.Navigation;
-using Waves.Api.Models.Enums;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Models.Args;
-using WutheringWavesTool.ViewModel;
-using WutheringWavesTool.ViewModel.Record;
-
-namespace WutheringWavesTool.Pages.Record;
+﻿namespace WutheringWavesTool.Pages.Record;
 
 public sealed partial class PlayerRecordPage : Page, IWindowPage
 {

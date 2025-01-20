@@ -1,12 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Models.Args;
-using WutheringWavesTool.ViewModel.Record;
-
-namespace WutheringWavesTool.Pages.Record;
+﻿namespace WutheringWavesTool.Pages.Record;
 
 public sealed partial class RecordItemPage : Page, IPage
 {

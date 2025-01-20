@@ -1,11 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using CommunityToolkit.Mvvm.ComponentModel;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Waves.Api.Models.Communitys.DataCenter;
-
-namespace WutheringWavesTool.Models.Wrapper;
+﻿namespace WutheringWavesTool.Models.Wrapper;
 
 public sealed partial class DataCenterGamerChallengeIndexListWrapper : ObservableObject
 {

@@ -1,12 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.UI.Xaml.Media.Imaging;
-using Waves.Api.Models.Communitys;
-using WutheringWavesTool.Common;
-
-namespace WutheringWavesTool.ViewModel.Communitys.WinViewModel;
+﻿namespace WutheringWavesTool.ViewModel.Communitys.WinViewModel;
 
 public sealed partial class GamerRoilDetilyViewModel : ViewModelBase
 {

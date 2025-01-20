@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using WutheringWavesTool.ViewModel;
-
-namespace WutheringWavesTool.Pages;
+﻿namespace WutheringWavesTool.Pages;
 
 public sealed partial class ShellPage : Page
 {
@@ -15,15 +11,15 @@ public sealed partial class ShellPage : Page
         this.ViewModel.TipShow.Owner = this.panel;
         this.ViewModel.Image = this.image;
         this.ViewModel.BackControl = this.backControl;
-        this.ViewModel.WallpaperService.RegisterImageHost(this.image);
     }
 
     public ShellViewModel ViewModel { get; }
 
-    private void ShellPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private async void ShellPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         this.titlebar.UpDate();
         this.ViewModel.AppContext.RegisterRoot(this.XamlRoot);
+        await this.ViewModel.WallpaperService.RegisterImageHostAsync(this.image);
         //this.player.MediaPlayer.IsLoopingEnabled = true;
     }
 }

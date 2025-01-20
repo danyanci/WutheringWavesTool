@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WutheringWavesTool.Controls;
+﻿namespace WutheringWavesTool.Controls;
 
 public delegate void ImageExOpenedEventHandler(object sender, ImageExOpenedEventArgs e);
 

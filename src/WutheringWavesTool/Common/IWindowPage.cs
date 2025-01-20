@@ -1,6 +1,4 @@
-﻿using Microsoft.UI.Xaml;
-
-namespace WutheringWavesTool.Common;
+﻿namespace WutheringWavesTool.Common;
 
 public interface IWindowPage
 {

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Waves.Api.Models.Record;
-using WutheringWavesTool.Models.Args;
-
-namespace WutheringWavesTool.Services.Contracts;
+﻿namespace WutheringWavesTool.Services.Contracts;
 
 public interface IPlayerRecordContext : IDisposable
 {

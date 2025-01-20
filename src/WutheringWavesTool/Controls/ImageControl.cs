@@ -1,9 +1,4 @@
-﻿using System;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media;
-
-namespace WutheringWavesTool.Controls;
+﻿namespace WutheringWavesTool.Controls;
 
 [TemplatePart(Name = MainImageName, Type = typeof(Image))]
 [TemplatePart(Name = BackImageName, Type = typeof(Image))]

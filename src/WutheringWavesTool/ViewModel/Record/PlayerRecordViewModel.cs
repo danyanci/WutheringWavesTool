@@ -1,27 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Media.Animation;
-using Waves.Api.Helper;
-using Waves.Api.Models.Enums;
-using Waves.Api.Models.Record;
-using Waves.Api.Models.Wrappers;
-using Windows.ApplicationModel.Appointments;
-using WinUICommunity;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Models.Args;
-using WutheringWavesTool.Services;
-using WutheringWavesTool.Services.Contracts;
-using WutheringWavesTool.ViewModel.Record;
-
-namespace WutheringWavesTool.ViewModel;
+﻿namespace WutheringWavesTool.ViewModel;
 
 public sealed partial class PlayerRecordViewModel : ViewModelBase, IDisposable
 {

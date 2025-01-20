@@ -1,12 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.ViewModel;
-using WutheringWavesTool.ViewModel.Communitys;
-
-namespace WutheringWavesTool.Pages;
+﻿namespace WutheringWavesTool.Pages;
 
 public sealed partial class CommunityPage : Page, IPage, IDisposable
 {

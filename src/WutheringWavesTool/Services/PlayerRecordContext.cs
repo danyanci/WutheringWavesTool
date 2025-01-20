@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using Waves.Api.Models.Record;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Models.Args;
-using WutheringWavesTool.Pages.Dialogs;
-using WutheringWavesTool.Services.Contracts;
-using WutheringWavesTool.Services.Navigations;
-using WutheringWavesTool.ViewModel.DialogViewModels;
-
-namespace WutheringWavesTool.Services;
+﻿namespace WutheringWavesTool.Services;
 
 public class PlayerRecordContext : Contracts.IPlayerRecordContext
 {

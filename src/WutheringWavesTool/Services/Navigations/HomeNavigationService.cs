@@ -1,12 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using Microsoft.UI.Xaml.Media.Animation;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Pages;
-using WutheringWavesTool.Services.Contracts;
-using WutheringWavesTool.Services.Navigations.Base;
-
-namespace WutheringWavesTool.Services.Navigations;
+﻿namespace WutheringWavesTool.Services.Navigations;
 
 public class HomeNavigationService : NavigationServiceBase
 {

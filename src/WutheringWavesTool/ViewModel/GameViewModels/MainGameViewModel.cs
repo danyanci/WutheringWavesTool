@@ -1,23 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
-using Waves.Api.Models;
-using Waves.Api.Models.Communitys;
-using Waves.Core.GameContext;
-using Waves.Core.GameContext.Contexts;
-using WavesLauncher.Core.Contracts;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Models;
-using WutheringWavesTool.Models.Messanger;
-using WutheringWavesTool.Services.Contracts;
-
-namespace WutheringWavesTool.ViewModel.GameViewModels;
+﻿namespace WutheringWavesTool.ViewModel.GameViewModels;
 
 public sealed partial class MainGameViewModel : GameViewModelBase
 {

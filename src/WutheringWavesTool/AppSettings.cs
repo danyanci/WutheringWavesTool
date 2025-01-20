@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Windows.Storage;
-
-namespace WutheringWavesTool;
+﻿namespace WutheringWavesTool;
 
 public class AppSettings
 {
@@ -15,6 +12,12 @@ public class AppSettings
     }
 
     public static string? TokenId
+    {
+        get => Read();
+        set => Write(value);
+    }
+
+    public static string? WallpaperPath
     {
         get => Read();
         set => Write(value);

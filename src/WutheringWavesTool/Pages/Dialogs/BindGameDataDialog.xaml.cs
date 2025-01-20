@@ -1,11 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using WinUICommunity;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.ViewModel.DialogViewModels;
-
-namespace WutheringWavesTool.Pages.Dialogs;
+﻿namespace WutheringWavesTool.Pages.Dialogs;
 
 public sealed partial class BindGameDataDialog : ContentDialog, IDialog
 {

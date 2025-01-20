@@ -1,9 +1,4 @@
-﻿using System.Threading.Tasks;
-using Waves.Api.Models.Communitys;
-using WutheringWavesTool.Common.Bases;
-using WutheringWavesTool.WindowModels;
-
-namespace WutheringWavesTool.Services.Contracts;
+﻿namespace WutheringWavesTool.Services.Contracts;
 
 public interface IViewFactorys
 {

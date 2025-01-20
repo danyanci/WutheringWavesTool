@@ -1,8 +1,4 @@
-﻿using Microsoft.UI.Xaml.Controls;
-using WutheringWavesTool.Controls;
-using WutheringWavesTool.Services.Contracts;
-
-namespace WutheringWavesTool.Services;
+﻿namespace WutheringWavesTool.Services;
 
 public sealed class TipShow : ITipShow
 {

@@ -1,10 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Pages.Bases;
-using WutheringWavesTool.ViewModel.GameViewModels;
+﻿using WutheringWavesTool.Pages.Bases;
 
 namespace WutheringWavesTool.Pages.GamePages
 {

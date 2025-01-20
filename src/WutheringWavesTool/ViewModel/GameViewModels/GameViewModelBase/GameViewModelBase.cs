@@ -1,24 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Waves.Api.Models;
-using Waves.Core;
-using Waves.Core.GameContext;
-using Waves.Core.Models;
-using Windows.Devices.WiFi;
-using WutheringWavesTool.Common;
-using WutheringWavesTool.Services.Contracts;
-
-namespace WutheringWavesTool.ViewModel.GameViewModels;
+﻿namespace WutheringWavesTool.ViewModel.GameViewModels;
 
 public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
 {
