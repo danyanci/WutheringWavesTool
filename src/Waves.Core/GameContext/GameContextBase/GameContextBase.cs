@@ -911,44 +911,6 @@ public abstract partial class GameContextBase : IGameContext
         );
     }
 
-    public async Task StartLauncheAsync()
-    {
-        var gameProgram = await this.GameLocalConfig.GetConfigAsync(
-            GameLocalSettingName.GameLauncherBassProgram
-        );
-        if (File.Exists(gameProgram))
-        {
-            var folder = System.IO.Path.GetDirectoryName(gameProgram);
-            this.NowProcess = new Process()
-            {
-                StartInfo = new ProcessStartInfo(gameProgram)
-                {
-                    WorkingDirectory = folder,
-                    UseShellExecute = true,
-                    CreateNoWindow = true,
-                    Arguments = this.IsDx11Launche ? "Client -dx11" : "Client -dx12",
-                    Verb = "runas",
-                },
-            };
-            NowProcess.EnableRaisingEvents = true;
-            NowProcess.Exited += NowProcess_Exited;
-            NowProcess.Start();
-        }
-    }
-
-    private void NowProcess_Exited(object? sender, EventArgs e)
-    {
-        if (NowProcess.HasExited)
-        {
-            this.IsLaunch = false;
-            this.gameContextOutputDelegate?.Invoke(
-                this,
-                new GameContextOutputArgs() { Type = GameContextActionType.None }
-            );
-        }
-        NowProcess.Exited -= NowProcess_Exited;
-    }
-
     public async Task<bool> CheckUpdateAsync(CancellationToken token = default)
     {
         var folder = await this.GameLocalConfig.GetConfigAsync(

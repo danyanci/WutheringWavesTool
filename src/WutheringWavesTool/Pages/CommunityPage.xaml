@@ -13,7 +13,7 @@
     xmlns:us="using:WutheringWavesTool.Pages.Communitys"
     xmlns:uvm="using:WutheringWavesTool.ViewModel.Communitys"
     xmlns:wModel="using:Waves.Api.Models.Communitys"
-    xmlns:wuc="using:WinUICommunity"
+    xmlns:wuc="using:WinUICommunity" xmlns:wrapper="using:WutheringWavesTool.Models.Wrapper"
     mc:Ignorable="d">
     <!--
         Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
@@ -82,17 +82,14 @@
                     ItemsSource="{x:Bind ViewModel.Roils, Mode=OneWay}"
                     SelectedItem="{x:Bind ViewModel.SelectRoil, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="wModel:GameRoilDataItem">
+                        <DataTemplate x:DataType="wrapper:GameRoilDataWrapper">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Border CornerRadius="5">
-                                    <Image Width="35" Height="35">
-                                        <Image.Source>
-                                            <BitmapImage UriSource="{x:Bind GameHeadUrl, Mode=OneWay}" />
-                                        </Image.Source>
+                                    <Image Width="35" Source="{x:Bind GameHeadUrl}" Height="35">
                                     </Image>
                                 </Border>
                                 <Grid Grid.Column="1" Margin="10,0,0,0">
@@ -104,17 +101,17 @@
                                         <ColumnDefinition Width="auto" />
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock Text="{x:Bind RoleName, Mode=OneWay}" />
+                                    <TextBlock Text="{x:Bind RoleName}" />
                                     <TextBlock
                                         Grid.Column="1"
                                         VerticalAlignment="Center"
                                         FontSize="10">
                                         <Run Text="-" />
-                                        <Run Text="{x:Bind Id, Mode=OneWay}" />
+                                        <Run Text="{x:Bind Id}" />
                                     </TextBlock>
                                     <TextBlock Grid.Row="1" Grid.ColumnSpan="2">
                                         <Run Text="联觉等级" />
-                                        <Run Text="{x:Bind GameLevel, Mode=OneWay}" />
+                                        <Run Text="{x:Bind GameLevel}" />
                                     </TextBlock>
                                 </Grid>
                             </Grid>

@@ -103,4 +103,13 @@ public sealed partial class ShellViewModel : ViewModelBase
             new DrillInNavigationTransitionInfo()
         );
     }
+
+    [RelayCommand]
+    void OpenTest()
+    {
+        this.HomeNavigationService.NavigationTo<TestViewModel>(
+            "Setting",
+            new DrillInNavigationTransitionInfo()
+        );
+    }
 }

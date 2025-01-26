@@ -1,4 +1,7 @@
-﻿namespace WutheringWavesTool;
+﻿using Waves.Core.Services;
+using static Azure.Core.HttpHeader;
+
+namespace WutheringWavesTool;
 
 public static class Instance
 {
@@ -46,7 +49,7 @@ public static class Instance
             #endregion
             #region Base
             .AddSingleton<IAppContext<App>, AppContext<App>>()
-            .AddSingleton<IWavesClient, WavesClient>()
+            .AddSingleton<IWavesClient,WavesClient>()
             .AddTransient<IViewFactorys, ViewFactorys>()
             .AddSingleton<IWallpaperService, WallpaperService>(
                 (s) =>

@@ -43,6 +43,8 @@ public class GameLocalSettingName
     public const string ProdDownloadFolderDone = nameof(ProdDownloadFolderDone);
 
     public const string ProdDownloadVersion = nameof(ProdDownloadVersion);
+
+    public const string GameTime = nameof(GameTime);
 }
 
 public class GameLocalConfig

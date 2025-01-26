@@ -209,7 +209,7 @@ public abstract partial class ImageExBase : Control
             hostElement.ActualHeight + (2 * lazyLoadingThreshold)
         );
 
-        if (controlRect.IntersectsWith(hostRect))
+        if (CommunityToolkit.WinUI.RectExtensions.IntersectsWith(controlRect, hostRect))
         {
             _isInViewport = true;
 

@@ -24,7 +24,7 @@ public sealed partial class ImageGroupAnimation : UserControl
         "IsDraw",
         typeof(bool),
         typeof(ImageGroupAnimation),
-        new PropertyMetadata(null)
+        new Microsoft.UI.Xaml.PropertyMetadata(null)
     );
 
     public ImageGroupAnimation()

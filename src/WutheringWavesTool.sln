@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WutheringWavesTool", "Wuthe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KLManager", "KLManager\KLManager.csproj", "{FDA86917-D2F9-426C-A8D5-A774FD55AE6A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenPlayer", "GreenPlayer\GreenPlayer.csproj", "{6356FB6A-398E-40E2-A37E-298D92F11483}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		All|Any CPU = All|Any CPU
@@ -54,12 +56,19 @@ Global
 		{FDA86917-D2F9-426C-A8D5-A774FD55AE6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDA86917-D2F9-426C-A8D5-A774FD55AE6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDA86917-D2F9-426C-A8D5-A774FD55AE6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6356FB6A-398E-40E2-A37E-298D92F11483}.All|Any CPU.ActiveCfg = Debug|Any CPU
+		{6356FB6A-398E-40E2-A37E-298D92F11483}.All|Any CPU.Build.0 = Debug|Any CPU
+		{6356FB6A-398E-40E2-A37E-298D92F11483}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6356FB6A-398E-40E2-A37E-298D92F11483}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6356FB6A-398E-40E2-A37E-298D92F11483}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6356FB6A-398E-40E2-A37E-298D92F11483}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6CA926B2-5543-4728-A7F4-88697A732BD7} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{6356FB6A-398E-40E2-A37E-298D92F11483} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6B51D1BF-69B7-4B5F-9EA6-4C828C3B72B3}

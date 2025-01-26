@@ -38,7 +38,7 @@ public static class WindowExtension
     public static double GetScaleAdjustment(Window window)
     {
         nint hWnd = WindowNative.GetWindowHandle(window);
-        WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
+        Microsoft.UI.WindowId wndId = Win32Interop.GetWindowIdFromWindow(hWnd);
         DisplayArea displayArea = DisplayArea.GetFromWindowId(wndId, DisplayAreaFallback.Primary);
         nint hMonitor = Win32Interop.GetMonitorFromDisplayId(displayArea.DisplayId);
 

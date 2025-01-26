@@ -25,10 +25,10 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     public partial bool IsLogin { get; set; }
 
     [ObservableProperty]
-    public partial ObservableCollection<GameRoilDataItem> Roils { get; set; }
+    public partial ObservableCollection<GameRoilDataWrapper> Roils { get; set; }
 
     [ObservableProperty]
-    public partial GameRoilDataItem SelectRoil { get; set; }
+    public partial GameRoilDataWrapper SelectRoil { get; set; }
 
     [ObservableProperty]
     public partial bool DataLoad { get; set; } = false;
@@ -42,7 +42,7 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     private async void ShowRoleMethod(object recipient, ShowRoleData message)
     {
         var Roles = await WavesClient.GetGamerRoilDetily(
-            this.SelectRoil,
+            this.SelectRoil.Item,
             message.Id,
             this.CTS.Token
         );
@@ -75,19 +75,34 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
         var gamers = await WavesClient.GetWavesGamerAsync(this.CTS.Token);
         if (gamers == null || gamers.Code != 200)
             return;
-        this.Roils = gamers.Data.ToObservableCollection();
+        this.Roils = await FormatRoilAsync(gamers.Data);
         if (Roils.Count > 0)
         {
             SelectRoil = Roils[0];
+            await WavesClient.RefreshGamerDataAsync(this.SelectRoil.Item,this.CTS.Token);
+            var Roildock =  await WavesClient.GetGamerBassDataAsync(SelectRoil.Item, this.CTS.Token);
+            var skin = WavesClient.GetGamerSkinAsync(this.SelectRoil.Item, this.CTS.Token);
             this.DataLoad = true;
         }
-        var skin = WavesClient.GetGamerSkinAsync(this.SelectRoil, this.CTS.Token);
+    }
+
+    async Task<ObservableCollection<GameRoilDataWrapper>> FormatRoilAsync(List<GameRoilDataItem> roilDataItems)
+    {
+        ObservableCollection<GameRoilDataWrapper> values = new();
+        foreach (var item in roilDataItems)
+        {
+            GameRoilDataWrapper value = new GameRoilDataWrapper(item);
+            var level = await WavesClient.GetGamerBassDataAsync(item,this.CTS.Token);
+            value.GameLevel = level!.Level;
+            values.Add(value);
+        }
+        return values;
     }
 
     [RelayCommand]
     void OpenSignWindow()
     {
-        var win = ViewFactorys.ShowSignWindow(this.SelectRoil);
+        var win = ViewFactorys.ShowSignWindow(this.SelectRoil.Item);
         win.MaxHeight = 350;
         win.MaxWidth = 350;
         (win.AppWindow.Presenter as OverlappedPresenter)!.IsMaximizable = false;

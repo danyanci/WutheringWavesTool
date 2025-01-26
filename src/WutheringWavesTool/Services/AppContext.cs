@@ -1,4 +1,7 @@
-﻿namespace WutheringWavesTool.Services;
+﻿using Waves.Core.Services;
+using WavesLauncher.Core.Contracts;
+
+namespace WutheringWavesTool.Services;
 
 public class AppContext<T> : IAppContext<T>
     where T : ClientApplication
@@ -51,6 +54,17 @@ public class AppContext<T> : IAppContext<T>
         {
             fe.RequestedTheme = ElementTheme.Dark;
         }
+        if(await WavesClient.IsLoginAsync())
+        {
+            var gamers = await WavesClient.GetWavesGamerAsync();
+            if(gamers!= null && gamers.Success)
+            {
+                foreach (var item in gamers.Data)
+                {
+                    var data = await WavesClient.RefreshGamerDataAsync(item);
+                }
+            }
+        }
         this.App.MainWindow.AppWindow.Closing += AppWindow_Closing;
     }
 
@@ -78,7 +92,10 @@ public class AppContext<T> : IAppContext<T>
 
     public async Task TryInvokeAsync(Action action)
     {
-        await DispatcherQueueExtensions.EnqueueAsync(this.App.MainWindow.DispatcherQueue, action);
+        await CommunityToolkit.WinUI.DispatcherQueueExtensions.EnqueueAsync(
+            this.App.MainWindow.DispatcherQueue,
+            action
+        );
     }
 
     public async Task ShowLoginDialogAsync() => await ShowDialogAsync<LoginDialog>();

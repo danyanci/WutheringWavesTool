@@ -254,25 +254,28 @@
                 </StackPanel>
             </ui:TitleBar.Header>
             <ui:TitleBar.Footer>
-                <Button
-                    Command="{x:Bind ViewModel.OpenSettingCommand}"
-                    Style="{ThemeResource TransparentButtonStyle}"
-                    Visibility="Visible">
-                    <i:Interaction.Behaviors>
-                        <sound:ButtonSoundBehavior />
-                    </i:Interaction.Behaviors>
-                    <Viewbox Height="15">
-                        <AnimatedIcon x:Name="AnimatedIcon">
-                            <AnimatedIcon.Source>
-                                <animatedvisuals:AnimatedSettingsVisualSource />
-                            </AnimatedIcon.Source>
-                            <AnimatedIcon.FallbackIconSource>
-                                <FontIconSource Glyph="&#xE713;" />
-                            </AnimatedIcon.FallbackIconSource>
-                        </AnimatedIcon>
-                    </Viewbox>
+                <StackPanel Orientation="Horizontal">
+                    <Button Command="{x:Bind ViewModel.OpenTestCommand}" Content="测试" />
+                    <Button
+                        Command="{x:Bind ViewModel.OpenSettingCommand}"
+                        Style="{ThemeResource TransparentButtonStyle}"
+                        Visibility="Visible">
+                        <i:Interaction.Behaviors>
+                            <sound:ButtonSoundBehavior />
+                        </i:Interaction.Behaviors>
+                        <Viewbox Height="15">
+                            <AnimatedIcon x:Name="AnimatedIcon">
+                                <AnimatedIcon.Source>
+                                    <animatedvisuals:AnimatedSettingsVisualSource />
+                                </AnimatedIcon.Source>
+                                <AnimatedIcon.FallbackIconSource>
+                                    <FontIconSource Glyph="&#xE713;" />
+                                </AnimatedIcon.FallbackIconSource>
+                            </AnimatedIcon>
+                        </Viewbox>
 
-                </Button>
+                    </Button>
+                </StackPanel>
             </ui:TitleBar.Footer>
         </ui:TitleBar>
         <Grid x:Name="panel" Grid.Row="1">

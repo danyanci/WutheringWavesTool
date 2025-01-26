@@ -38,37 +38,37 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
         {
             case "DataGamer":
                 ViewModel.NavigationService.NavigationTo<GameRoilsViewModel>(
-                    this.ViewModel.SelectRoil,
+                    this.ViewModel.SelectRoil.Item,
                     new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
                 );
                 break;
             case "DataDock":
                 ViewModel.NavigationService.NavigationTo<GamerDockViewModel>(
-                    this.ViewModel.SelectRoil,
+                    this.ViewModel.SelectRoil.Item,
                     new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
                 );
                 break;
             case "DataChallenge":
                 ViewModel.NavigationService.NavigationTo<GamerChallengeViewModel>(
-                    this.ViewModel.SelectRoil,
+                    this.ViewModel.SelectRoil.Item,
                     new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
                 );
                 break;
             case "DataAbyss":
                 ViewModel.NavigationService.NavigationTo<GamerTowerViewModel>(
-                    this.ViewModel.SelectRoil,
+                    this.ViewModel.SelectRoil.Item,
                     new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
                 );
                 break;
             case "DataWorld":
                 ViewModel.NavigationService.NavigationTo<GamerExploreIndexViewModel>(
-                    this.ViewModel.SelectRoil,
+                    this.ViewModel.SelectRoil.Item,
                     new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
                 );
                 break;
             case "Skin":
                 ViewModel.NavigationService.NavigationTo<GamerSkinViewModel>(
-                    this.ViewModel.SelectRoil,
+                    this.ViewModel.SelectRoil.Item,
                     new Microsoft.UI.Xaml.Media.Animation.DrillInNavigationTransitionInfo()
                 );
                 break;

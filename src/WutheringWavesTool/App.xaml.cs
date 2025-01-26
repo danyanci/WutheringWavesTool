@@ -1,4 +1,6 @@
-﻿namespace WutheringWavesTool;
+﻿using SqlSugar;
+
+namespace WutheringWavesTool;
 
 public partial class App : ClientApplication
 {

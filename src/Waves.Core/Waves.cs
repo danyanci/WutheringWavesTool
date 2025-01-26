@@ -3,7 +3,6 @@ using SqlSugar;
 using Waves.Core.Contracts;
 using Waves.Core.GameContext;
 using Waves.Core.GameContext.Contexts;
-using Waves.Core.Models.Handlers;
 using Waves.Core.Services;
 
 namespace Waves.Core;
@@ -26,7 +25,6 @@ public static class Waves
                 {
                     var context = GameContextFactory.GetMainGameContext();
                     context.HttpClientService = provider.GetRequiredService<IHttpClientService>();
-                    context.InitAsync().GetAwaiter().GetResult();
                     return context;
                 }
             )
@@ -36,7 +34,6 @@ public static class Waves
                 {
                     var context = GameContextFactory.GetBilibiliGameContext();
                     context.HttpClientService = provider.GetRequiredService<IHttpClientService>();
-                    context.InitAsync().GetAwaiter().GetResult();
                     return context;
                 }
             )
@@ -46,7 +43,6 @@ public static class Waves
                 {
                     var context = GameContextFactory.GetGlobalGameContext();
                     context.HttpClientService = provider.GetRequiredService<IHttpClientService>();
-                    context.InitAsync().GetAwaiter().GetResult();
                     return context;
                 }
             )

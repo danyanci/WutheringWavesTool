@@ -21,6 +21,7 @@ public sealed partial class PageService : IPageService
         this.RegisterView<GamerSkinPage, GamerSkinViewModel>();
 
         this.RegisterView<RecordItemPage, RecordItemViewModel>();
+        this.RegisterView<TestPage, TestViewModel>();
     }
 
     public Type GetPage(string key)
