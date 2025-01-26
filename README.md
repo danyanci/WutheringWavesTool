@@ -10,26 +10,18 @@ Windows系统版本：Windows 11
 
 其他：无要求
 
-##### 程序发布周期
-
-1.0-1.1：完善应用程序基础功能
-
-1.2：抽卡记录
-
 ##### 参与开发
 
 随便看看，随便玩玩，随便写写。
 
 ##### 安装方法
 
-本项目采用github代码控制与SourceForge分发。
-
-SourceForge地址：[WutheringWavesTool download | SourceForge.net](https://sourceforge.net/projects/wutheringwavestool/)
+进入Release页面下载最新的程序包
 
 
 
 ##### 其他引用
 
-[漂泊着工坊](#小程序://漂泊者工坊/NKZHnoa5GuFY4Uz)
+漂泊着工房：漂泊者工坊/NKZHnoa5GuFY4Uz
 
 [鸣潮助手](https://mc.appfeng.com/)
