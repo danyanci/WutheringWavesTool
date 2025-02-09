@@ -104,10 +104,39 @@
         </i:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Grid>
-        <ScrollView>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <ProgressBar
+                x:Name="totalProgress"
+                MinHeight="20"
+                HorizontalAlignment="Stretch"
+                CornerRadius="5"
+                Foreground="{ThemeResource AccentAAFillColorDefaultBrush}"
+                Maximum="100"
+                Style="{ThemeResource FillHeightProgressBar}"
+                Value="{x:Bind ViewModel.TotalProgress, Mode=OneWay}" />
+            <TextBlock
+                Grid.Column="1"
+                Margin="5,0,0,0"
+                VerticalAlignment="Center">
+                <Run Text="{x:Bind ViewModel.TotalProgress, Mode=OneWay}" />
+                <Run Text="%" />
+            </TextBlock>
+        </Grid>
+        <ScrollView Grid.Row="1">
             <ItemsControl ItemsSource="{x:Bind ViewModel.Explores, Mode=OneWay}">
                 <ItemsControl.ItemContainerTransitions>
-                    <RepositionThemeTransition />
+                    <TransitionCollection>
+                        <RepositionThemeTransition />
+                    </TransitionCollection>
                 </ItemsControl.ItemContainerTransitions>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="wrapper:DataCenterExploreItem">

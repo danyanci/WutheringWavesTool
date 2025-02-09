@@ -255,7 +255,10 @@
             </ui:TitleBar.Header>
             <ui:TitleBar.Footer>
                 <StackPanel Orientation="Horizontal">
-                    <Button Command="{x:Bind ViewModel.OpenTestCommand}" Content="测试" />
+                    <Button
+                        Command="{x:Bind ViewModel.OpenTestCommand}"
+                        Content="测试"
+                        Visibility="Collapsed" />
                     <Button
                         Command="{x:Bind ViewModel.OpenSettingCommand}"
                         Style="{ThemeResource TransparentButtonStyle}"

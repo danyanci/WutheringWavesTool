@@ -11,7 +11,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
                 <ResourceDictionary Source="/Controls/Styles/TitleBar.xaml" />
-                <ResourceDictionary Source="/Controls/Styles/ImageControl.xaml" />
                 <ResourceDictionary Source="/Controls/Styles/SpiltButtonStyle.xaml" />
                 <ResourceDictionary Source="/Controls/Styles/ProgressBar.xaml" />
                 <ResourceDictionary Source="ms-appx:///WinUICommunity.Components/Themes/Generic.xaml" />

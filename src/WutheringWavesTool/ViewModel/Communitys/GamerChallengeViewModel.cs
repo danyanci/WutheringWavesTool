@@ -58,6 +58,8 @@ public sealed partial class GamerChallengeViewModel : ViewModelBase, IDisposable
                     }
                     DataCenterChallengeBossItemWrapper listItem =
                         new DataCenterChallengeBossItemWrapper(indexList, item);
+                    if (Items == null)
+                        Items = new();
                     this.Items.Add(listItem);
                 }
             }

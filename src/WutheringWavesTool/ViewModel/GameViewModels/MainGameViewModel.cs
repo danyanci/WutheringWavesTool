@@ -75,14 +75,26 @@ public sealed partial class MainGameViewModel : GameViewModelBase
         {
             var gamers = await WavesClient.GetWavesGamerAsync();
             var first = gamers!.Data.Where(x => x.RoleId.ToString() == bindUser).First();
-            var rr = await WavesClient.GetGamerDataAsync(first);
+            var rr = await WavesClient.GetGamerDataAsync(first, this.CTS.Token);
+            var dock = await WavesClient.GetGamerBassDataAsync(first, this.CTS.Token);
             this.GamerData = rr!;
+            this.WeeklyInstCount = dock.WeeklyInstCount;
+            this.WeeklyInstCountLimit = dock.WeeklyInstCountLimit;
             ShowUserBind();
         }
     }
 
     [ObservableProperty]
     public partial int UserRow { get; set; }
+
+    [ObservableProperty]
+    public partial int WeeklyInstCount { get; set; }
+
+    [ObservableProperty]
+    public partial int WeeklyInstCountLimit { get; set; }
+
+    [ObservableProperty]
+    public partial string WeeklyInstTitle { get; set; }
 
     [ObservableProperty]
     public partial int UserColumn { get; set; }

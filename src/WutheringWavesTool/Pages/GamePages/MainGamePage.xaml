@@ -478,7 +478,6 @@
             Grid.Row="{x:Bind ViewModel.UserRow, Mode=OneWay}"
             Grid.Column="{x:Bind ViewModel.UserColumn, Mode=OneWay}"
             Width="350"
-            Height="175"
             Margin="10,10,0,0"
             Padding="20"
             HorizontalAlignment="Left"
@@ -552,6 +551,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
                     <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
                 </Grid.RowDefinitions>
                 <TextBlock>
                     <Run Text="先约电台  " />
@@ -570,6 +570,17 @@
                         <Run Text="{x:Bind ViewModel.GamerData.Data.BattlePassData[1].Total, Mode=OneWay}" />
                     </TextBlock>
                 </Grid>
+                <StackPanel
+                    Grid.Row="2"
+                    Margin="0,5,0,0"
+                    Orientation="Horizontal">
+                    <TextBlock Text="每周收取" />
+                    <TextBlock Margin="10,0,0,0">
+                        <Run Text="{x:Bind ViewModel.WeeklyInstCount, Mode=OneWay}" />
+                        <Run Text="/" />
+                        <Run Text="{x:Bind ViewModel.WeeklyInstCountLimit, Mode=OneWay}" />
+                    </TextBlock>
+                </StackPanel>
             </Grid>
             <Button
                 Grid.RowSpan="4"

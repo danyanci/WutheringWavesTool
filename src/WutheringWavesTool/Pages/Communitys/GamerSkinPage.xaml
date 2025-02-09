@@ -52,8 +52,7 @@
                                     Padding="5"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Bottom"
-                                    Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
-                                    CornerRadius="5">
+                                    Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}">
                                     <TextBlock
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"

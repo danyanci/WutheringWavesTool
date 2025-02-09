@@ -138,6 +138,18 @@ namespace Waves.Api.Models.Communitys.DataCenter
 
         [JsonPropertyName("worldLevel")]
         public int WorldLevel { get; set; }
+
+        [JsonPropertyName("weeklyInstCount")]
+        public int WeeklyInstCount { get; set; }
+
+        [JsonPropertyName("weeklyInstCountLimit")]
+        public int WeeklyInstCountLimit { get; set; }
+
+        [JsonPropertyName("weeklyInstIconUrl")]
+        public string WeeklyInstIconUrl { get; set; }
+
+        [JsonPropertyName("weeklyInstTitle")]
+        public string WeeklyInstTitle { get; set; }
     }
 
     public class TreasureBoxList

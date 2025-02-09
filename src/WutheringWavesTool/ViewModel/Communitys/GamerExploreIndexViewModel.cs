@@ -1,4 +1,6 @@
-﻿namespace WutheringWavesTool.ViewModel.Communitys;
+﻿using System;
+
+namespace WutheringWavesTool.ViewModel.Communitys;
 
 public partial class GamerExploreIndexViewModel : ViewModelBase, IDisposable
 {
@@ -7,6 +9,9 @@ public partial class GamerExploreIndexViewModel : ViewModelBase, IDisposable
 
     public IWavesClient WavesClient { get; }
     public ITipShow TipShow { get; }
+
+    [ObservableProperty]
+    public partial double TotalProgress { get; set; }
 
     [ObservableProperty]
     public partial ObservableCollection<DataCenterExploreItem> Explores { get; set; }
@@ -81,5 +86,11 @@ public partial class GamerExploreIndexViewModel : ViewModelBase, IDisposable
         {
             this.Explores.Add(new(item));
         }
+        double total = 0;
+        foreach (var progress in Explores)
+        {
+            total += progress.CountryProgress;
+        }
+        TotalProgress =  Math.Round(total / Explores.Count);
     }
 }

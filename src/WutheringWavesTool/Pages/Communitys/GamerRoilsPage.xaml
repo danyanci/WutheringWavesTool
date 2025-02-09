@@ -3,6 +3,8 @@
     x:Class="WutheringWavesTool.Pages.Communitys.GamerRoilsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:CommunityToolkit.WinUI.Animations"
+    xmlns:b="using:CommunityToolkit.WinUI.Behaviors"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:WutheringWavesTool.Pages.Communitys"
@@ -94,6 +96,7 @@
                                         Source="{x:Bind TypeImage}"
                                         Stretch="UniformToFill" />
                                 </Border>
+
                                 <Border
                                     Grid.RowSpan="3"
                                     Margin="0,8,0,0"

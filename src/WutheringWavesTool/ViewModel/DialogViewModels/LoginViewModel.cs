@@ -59,6 +59,10 @@ public sealed partial class LoginViewModel : ViewModelBase
             TipMessage = "验证失败！";
             return;
         }
+        if(sendSMS.Code == 242)
+        {
+            TipMessage = "短信验证码发送频繁！";
+        }
         if (sendSMS.Data.GeeTest == false)
         {
             TipMessage = ("验证码发送成功！");
