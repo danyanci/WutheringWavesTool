@@ -15,52 +15,9 @@
     <UseWinUI>true</UseWinUI>
 	  <PublishAot>true</PublishAot>
     <EnableMsixTooling>true</EnableMsixTooling>
-	  <WindowsSdkPackageVersion>10.0.26100.53</WindowsSdkPackageVersion>
+	  <WindowsSdkPackageVersion>10.0.26100.56</WindowsSdkPackageVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Assets\appLogo.ico" />
-    <None Remove="Assets\Background\background.png" />
-    <None Remove="Assets\Background\background2.png" />
-    <None Remove="Assets\Background\kelaita.png" />
-    <None Remove="Assets\Background\kelaita2.png" />
-    <None Remove="Assets\backup.jpg" />
-    <None Remove="Assets\clickSound.wav" />
-    <None Remove="Assets\Font.ttf" />
-    <None Remove="Assets\GameIcons\bilibili.ico" />
-    <None Remove="Assets\GameIcons\global.ico" />
-    <None Remove="Assets\geet.html" />
-    <None Remove="Assets\Images\shouanren2.png" />
-    <None Remove="Assets\logo.ico" />
-    <None Remove="Assets\mcLogo.png" />
-    <None Remove="Controls\ImageGroupAnimation.xaml" />
-    <None Remove="Controls\PopupMessage.xaml" />
-    <None Remove="Controls\Styles\Button.xaml" />
-    <None Remove="Controls\Styles\ImageEx.xaml" />
-    <None Remove="Controls\Styles\ProgressBar.xaml" />
-    <None Remove="Controls\Styles\SpiltButtonStyle.xaml" />
-    <None Remove="Controls\Styles\TitleBar.xaml" />
-    <None Remove="Pages\CommunityPage.xaml" />
-    <None Remove="Pages\Communitys\GamerChallengePage.xaml" />
-    <None Remove="Pages\Communitys\GamerDockPage.xaml" />
-    <None Remove="Pages\Communitys\GamerExploreIndexPage.xaml" />
-    <None Remove="Pages\Communitys\GamerSignPage.xaml" />
-    <None Remove="Pages\Communitys\GamerSkinPage.xaml" />
-    <None Remove="Pages\Communitys\GamerTowerPage.xaml" />
-    <None Remove="Pages\Communitys\Windows\GamerRoilDetilyPage.xaml" />
-    <None Remove="Pages\Dialogs\BindGameDataDialog.xaml" />
-    <None Remove="Pages\Dialogs\InputRecordCardDialog.xaml" />
-    <None Remove="Pages\Dialogs\LoginDialog.xaml" />
-    <None Remove="Pages\GamePages\BilibiliGamePage.xaml" />
-    <None Remove="Pages\GamePages\GlobalGamePage.xaml" />
-    <None Remove="Pages\GamePages\MainGamePage.xaml" />
-    <None Remove="Pages\Record\PlayerRecordPage.xaml" />
-    <None Remove="Pages\Record\RecordItemPage.xaml" />
-    <None Remove="Pages\SettingPage.xaml" />
-    <None Remove="Pages\ShellPage.xaml" />
-    <None Remove="Pages\TestPage.xaml" />
-    <None Remove="WindowModels\GetgeetWindow.xaml" />
-  </ItemGroup>
 	<ItemGroup>
 		<RdXmlFile Include="rd.xml" />
 	</ItemGroup>
@@ -82,16 +39,10 @@
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
-  <!--
-    Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
-    Tools extension to be activated for this project even if the Windows App SDK Nuget
-    package has not yet been restored.
-  -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
-	  <PackageReference Include="CommunityToolkit.WinUI.Animations" Version="8.2.250129-preview2" />
 	  <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.2.250129-preview2" />
 	  <PackageReference Include="CommunityToolkit.WinUI.Extensions" Version="8.2.250129-preview2" />
 	  <PackageReference Include="H.NotifyIcon.WinUI" Version="2.2.0" />
@@ -104,13 +55,11 @@
 	  <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
 	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
 	  <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
-	  <PackageReference Include="System.Private.Uri" Version="4.3.2" />
 	  <PackageReference Include="WinUICommunity.Components" Version="7.1.0" />
 	  <PackageReference Include="WinUICommunity.Win2D" Version="7.1.0" />
 	  <PackageReference Include="WinUIEx" Version="2.5.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GreenPlayer\GreenPlayer.csproj" />
     <ProjectReference Include="..\Waves.Api\Waves.Api.csproj" />
     <ProjectReference Include="..\Waves.Core\Waves.Core.csproj" />
   </ItemGroup>
@@ -371,5 +320,6 @@
     <AppxBundle>Always</AppxBundle>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 </Project>
