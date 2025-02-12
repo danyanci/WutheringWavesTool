@@ -216,7 +216,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         {
             this.PredDownloadBthVisibility = Visibility.Visible;
             PredDownloadString = $"({localVersion}->{result.Version})";
-            if (prodDownloadDone == null)
+            if (prodVersion != result.Version)
             {
                 this.ProdBthEnable = true;
                 ProdBthString = "开始预下载";
@@ -256,20 +256,27 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         {
             if (prodVersion != localVersion && Directory.Exists(prodDownload))
             {
-                var prodS = await this.GetProdSessionAsync();
-                if (
-                    prodS.Item1.Default.Version != localVersion
-                    && prodS.Item1.Default.Version == prodVersion
-                )
+                var status = await GameContext.GetGameStatusAsync(this.CTS.Token);
+                if (status.IsProdInstalling == false)
                 {
-                    TipShow.ShowMessage(
-                        "检测到游戏预发布更新，已开始安装最新版本",
-                        Microsoft.UI.Xaml.Controls.Symbol.Accept
-                    );
-                    Task.Run(async () =>
+                    var prodS = await this.GetProdSessionAsync();
+                    if (
+                        prodS.Item1.Default.Version != localVersion
+                        && prodS.Item1.Default.Version == prodVersion
+                    )
                     {
-                        this.GameContext.InstallProdGameResourceAsync(folder, prodS.Item1);
-                    });
+                        TipShow.ShowMessage(
+                            "检测到游戏预发布更新，已开始安装最新版本",
+                            Microsoft.UI.Xaml.Controls.Symbol.Accept
+                        );
+                        Task.Run(async () =>
+                        {
+                            await this.GameContext.InstallProdGameResourceAsync(
+                                folder,
+                                prodS.Item1
+                            );
+                        });
+                    }
                 }
             }
         }
@@ -500,6 +507,14 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     {
         await GameContext.ClearGameResourceAsync();
     }
+
+    [RelayCommand]
+    async Task ShowGameResource()
+    {
+        await ShowGameResourceMethod();
+    }
+
+    public abstract Task ShowGameResourceMethod();
 
     public virtual Task LoadedAfter()
     {

@@ -33,6 +33,10 @@ partial class GameContextBase
                 downloadFolder
             );
             await this.GameLocalConfig.SaveConfigAsync(
+                GameLocalSettingName.ProdDownloadFolderDone,
+                "False"
+            );
+            await this.GameLocalConfig.SaveConfigAsync(
                 GameLocalSettingName.ProdDownloadVersion,
                 index.Predownload.Version
             );
@@ -389,7 +393,12 @@ partial class GameContextBase
                 GameLocalSettingName.LocalGameVersion,
                 index.Default.Version
             );
-
+            await GameLocalConfig.SaveConfigAsync(
+                GameLocalSettingName.ProdDownloadFolderDone,
+                "False"
+            );
+            await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.ProdDownloadFolderPath, "");
+            await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.ProdDownloadVersion, "");
             this.InstallProd = false;
         }
         catch (Exception)

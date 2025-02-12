@@ -15,5 +15,6 @@ public interface IAppContext<T>
 
     public Task ShowLoginDialogAsync();
     public Task<ContentDialogResult> ShowBindGameDataAsync(string name);
+    public Task ShowGameResourceDialogAsync(string contextName);
     public void CloseDialog();
 }

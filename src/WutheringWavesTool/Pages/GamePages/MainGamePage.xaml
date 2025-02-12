@@ -244,17 +244,14 @@
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                         <MenuFlyoutSeparator />
-                        <MenuFlyoutItem Command="{x:Bind ViewModel.VerifyGameCommand}" Text="修复游戏文件">
+                        <MenuFlyoutItem Command="{x:Bind ViewModel.VerifyGameCommand}" Text="检查游戏完整性">
                             <MenuFlyoutItem.Icon>
                                 <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEC7A;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
-                        <MenuFlyoutItem Command="{x:Bind ViewModel.DeleteGameCommand}" Text="清理本地游戏资源">
+                        <MenuFlyoutItem Command="{x:Bind ViewModel.ShowGameResourceCommand}" Text="查看游戏资源">
                             <MenuFlyoutItem.Icon>
-                                <FontIcon
-                                    FontFamily="Segoe Fluent Icons"
-                                    Foreground="Red"
-                                    Glyph="&#xE894;" />
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE721;" />
                             </MenuFlyoutItem.Icon>
                         </MenuFlyoutItem>
                     </MenuFlyout>

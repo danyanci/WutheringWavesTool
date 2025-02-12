@@ -18,6 +18,9 @@
 	  <WindowsSdkPackageVersion>10.0.26100.56</WindowsSdkPackageVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Pages\Dialogs\GameResourceDialog.xaml" />
+  </ItemGroup>
 	<ItemGroup>
 		<RdXmlFile Include="rd.xml" />
 	</ItemGroup>
@@ -148,6 +151,11 @@
     <Content Update="Assets\Background\kelaita2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Dialogs\GameResourceDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\TestPage.xaml">

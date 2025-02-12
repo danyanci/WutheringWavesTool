@@ -55,4 +55,9 @@ public sealed partial class GlobalGameViewModel : GameViewModelBase
                 break;
         }
     }
+
+    public override async Task ShowGameResourceMethod()
+    {
+        await AppContext.ShowGameResourceDialogAsync(nameof(GlobalGameContext));
+    }
 }

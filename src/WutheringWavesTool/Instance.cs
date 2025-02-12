@@ -20,6 +20,8 @@ public static class Instance
             .AddTransient<GlobalGameViewModel>()
             .AddTransient<SettingViewModel>()
             .AddTransient<CommunityViewModel>()
+            .AddTransient<GameResourceDialog>()
+            .AddTransient<GameResourceViewModel>()
             #region Community
             .AddTransient<GamerSignPage>()
             .AddTransient<GamerSignViewModel>()
@@ -49,7 +51,7 @@ public static class Instance
             #endregion
             #region Base
             .AddSingleton<IAppContext<App>, AppContext<App>>()
-            .AddSingleton<IWavesClient,WavesClient>()
+            .AddSingleton<IWavesClient, WavesClient>()
             .AddTransient<IViewFactorys, ViewFactorys>()
             .AddSingleton<IWallpaperService, WallpaperService>(
                 (s) =>

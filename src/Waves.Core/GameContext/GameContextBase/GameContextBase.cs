@@ -145,6 +145,7 @@ public abstract partial class GameContextBase : IGameContext
         status.IsDownload = this.IsDownload;
         status.IsClear = this.IsClear;
         status.IsProdDownloading = this.IsProdDownload;
+        status.IsProdInstalling = this.InstallProd;
         if (this.DownloadBaseUrl != null)
         {
             var result = await NetworkCheck.PingAsync(DownloadBaseUrl);

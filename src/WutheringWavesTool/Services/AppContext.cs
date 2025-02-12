@@ -54,10 +54,10 @@ public class AppContext<T> : IAppContext<T>
         {
             fe.RequestedTheme = ElementTheme.Dark;
         }
-        if(await WavesClient.IsLoginAsync())
+        if (await WavesClient.IsLoginAsync())
         {
             var gamers = await WavesClient.GetWavesGamerAsync();
-            if(gamers!= null && gamers.Success)
+            if (gamers != null && gamers.Success)
             {
                 foreach (var item in gamers.Data)
                 {
@@ -99,6 +99,15 @@ public class AppContext<T> : IAppContext<T>
     }
 
     public async Task ShowLoginDialogAsync() => await ShowDialogAsync<LoginDialog>();
+
+    public async Task ShowGameResourceDialogAsync(string contextName)
+    {
+        var dialog = Instance.Service.GetRequiredService<GameResourceDialog>();
+        dialog.SetData(contextName);
+        dialog.XamlRoot = this.Root;
+        this._dialog = dialog;
+        await _dialog.ShowAsync();
+    }
 
     public async Task<ContentDialogResult> ShowBindGameDataAsync(string name) =>
         await ShowDialogAsync<BindGameDataDialog>(name);

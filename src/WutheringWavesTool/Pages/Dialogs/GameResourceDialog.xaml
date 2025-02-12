@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog
+    x:Class="WutheringWavesTool.Pages.Dialogs.GameResourceDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="using:Microsoft.Xaml.Interactivity"
+    xmlns:local="using:WutheringWavesTool.Pages.Dialogs"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:WinUICommunity"
+    CornerRadius="5"
+    RequestedTheme="Dark"
+    mc:Ignorable="d">
+    <i:Interaction.Behaviors>
+        <i:EventTriggerBehavior EventName="Loaded">
+            <i:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
+        </i:EventTriggerBehavior>
+    </i:Interaction.Behaviors>
+    <Grid Height="200" MaxWidth="700">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock
+            VerticalAlignment="Center"
+            FontFamily="{ThemeResource DefaultFont}"
+            FontSize="25"
+            Text="游戏资源" />
+        <Button
+            Width="35"
+            Height="35"
+            Padding="0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Command="{x:Bind ViewModel.CloseCommand}"
+            CornerRadius="35"
+            Style="{ThemeResource TransparentButtonStyle}">
+            <FontIcon
+                FontFamily="Segoe Fluent Icons"
+                FontSize="15"
+                Glyph="&#xE894;" />
+        </Button>
+        <ui:SettingsCard
+            Grid.Row="1"
+            Width="480"
+            Margin="0,5,0,0"
+            Description="{x:Bind ViewModel.GameFilesSize, Mode=OneWay}"
+            Header="游戏资源大小"
+            IsClickEnabled="True">
+            <Button Content="卸载" />
+        </ui:SettingsCard>
+        <ui:SettingsCard
+            Grid.Row="2"
+            Width="480"
+            Margin="0,5,0,0"
+            HorizontalAlignment="Stretch"
+            Description="{x:Bind ViewModel.GameProdSize, Mode=OneWay}"
+            Header="预下载大小"
+            IsClickEnabled="True">
+            <Button Content="卸载" />
+        </ui:SettingsCard>
+    </Grid>
+</ContentDialog>

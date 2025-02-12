@@ -161,4 +161,9 @@ public sealed partial class MainGameViewModel : GameViewModelBase
                 break;
         }
     }
+
+    public override async Task ShowGameResourceMethod()
+    {
+        await AppContext.ShowGameResourceDialogAsync(nameof(MainGameContext));
+    }
 }

@@ -9,4 +9,9 @@ public sealed partial class BilibiliGameViewModel : GameViewModelBase
         ITipShow tipShow
     )
         : base(gameContext, pickersService, appContext, tipShow) { }
+
+    public override async Task ShowGameResourceMethod()
+    {
+        await AppContext.ShowGameResourceDialogAsync(nameof(BilibiliGameContext));
+    }
 }

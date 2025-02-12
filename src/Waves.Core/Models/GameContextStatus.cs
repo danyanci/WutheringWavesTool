@@ -27,4 +27,6 @@ public class GameContextStatus
     public bool ConnectNetwork { get; internal set; }
 
     public bool IsProdDownloading { get; internal set; }
+
+    public bool IsProdInstalling { get; internal set; }
 }
