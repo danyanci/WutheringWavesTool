@@ -406,4 +406,27 @@ partial class GameContextBase
             return;
         }
     }
+
+    public async Task DeleteGameProdResourceAsync()
+    {
+        if (this._downloadCTS != null)
+            await _downloadCTS.CancelAsync();
+        if (this._clearCTS != null)
+            await _clearCTS.CancelAsync();
+        var gameFolder = await GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.ProdDownloadFolderPath
+        );
+        Directory.Delete(gameFolder, true);
+        await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.ProdDownloadVersion, "");
+        await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.ProdDownloadFolderPath, "");
+        await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.ProdDownloadFolderDone, "");
+        this.IsDownload = false;
+        this.IsVerify = false;
+        this.IsPause = false;
+        this.IsLaunch = false;
+        this.gameContextOutputDelegate?.Invoke(
+            this,
+            new GameContextOutputArgs() { Type = GameContextActionType.None }
+        );
+    }
 }

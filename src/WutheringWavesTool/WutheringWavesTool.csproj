@@ -20,6 +20,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Pages\Dialogs\GameResourceDialog.xaml" />
+    <None Remove="Pages\Dialogs\SelectWallpaperDialog.xaml" />
   </ItemGroup>
 	<ItemGroup>
 		<RdXmlFile Include="rd.xml" />
@@ -151,6 +152,11 @@
     <Content Update="Assets\Background\kelaita2.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Dialogs\SelectWallpaperDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Dialogs\GameResourceDialog.xaml">

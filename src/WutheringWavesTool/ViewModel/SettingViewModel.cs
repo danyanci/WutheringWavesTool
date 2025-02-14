@@ -1,15 +1,18 @@
-﻿namespace WutheringWavesTool.ViewModel;
+﻿using WutheringWavesTool.Services.DialogServices;
+
+namespace WutheringWavesTool.ViewModel;
 
 public sealed partial class SettingViewModel : ViewModelBase
 {
-    public SettingViewModel(IWallpaperService wallpaperService)
+    public SettingViewModel(
+        [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager
+    )
     {
-        WallpaperService = wallpaperService;
+        DialogManager = dialogManager;
     }
 
+    public IDialogManager DialogManager { get; }
+
     [RelayCommand]
-    async Task Loaded()
-    {
-        await InitWallpaperAsync();
-    }
+    async Task Loaded() { }
 }

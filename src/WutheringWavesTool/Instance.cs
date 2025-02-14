@@ -1,4 +1,5 @@
 ﻿using Waves.Core.Services;
+using WutheringWavesTool.Services.DialogServices;
 using static Azure.Core.HttpHeader;
 
 namespace WutheringWavesTool;
@@ -42,6 +43,8 @@ public static class Instance
             .AddTransient<LoginViewModel>()
             .AddTransient<BindGameDataDialog>()
             .AddTransient<BindGameDataViewModel>()
+            .AddTransient<SelectWallpaperDialog>()
+            .AddTransient<SelectWallpaperViewModel>()
             #endregion
             #endregion
             #region Navigation
@@ -70,8 +73,9 @@ public static class Instance
                 nameof(CommunityNavigationService)
             )
             #endregion
+            .AddKeyedSingleton<IDialogManager, MainDialogService>(nameof(MainDialogService))
             #region Record
-            .AddScoped<IDialogManager, DialogManager>()
+            .AddScoped<IDialogManager, ScopeDialogService>()
             .AddScoped<ITipShow, TipShow>()
             .AddKeyedScoped<IPlayerRecordContext, PlayerRecordContext>("PlayerRecord")
             .AddKeyedScoped<INavigationService, RecordNavigationService>(

@@ -1,17 +1,21 @@
-﻿namespace WutheringWavesTool.Common.Bases;
+﻿using WutheringWavesTool.Services.DialogServices;
+
+namespace WutheringWavesTool.Common.Bases;
 
 public partial class DialogViewModelBase : ViewModelBase
 {
-    public DialogViewModelBase(IAppContext<App> appContext)
+    public DialogViewModelBase(
+        [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager
+    )
     {
-        AppContext = appContext;
+        DialogManager = dialogManager;
     }
 
-    public IAppContext<App> AppContext { get; }
+    public IDialogManager DialogManager { get; }
 
     [RelayCommand]
     protected void Close()
     {
-        AppContext.CloseDialog();
+        DialogManager.CloseDialog();
     }
 }

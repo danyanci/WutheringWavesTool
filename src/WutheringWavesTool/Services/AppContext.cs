@@ -15,13 +15,7 @@ public class AppContext<T> : IAppContext<T>
 
     public T App { get; private set; }
 
-    public XamlRoot Root { get; private set; }
     public IWavesClient WavesClient { get; }
-
-    public void RegisterRoot(XamlRoot root)
-    {
-        this.Root = root;
-    }
 
     public async Task LauncherAsync(T app)
     {
@@ -96,51 +90,5 @@ public class AppContext<T> : IAppContext<T>
             this.App.MainWindow.DispatcherQueue,
             action
         );
-    }
-
-    public async Task ShowLoginDialogAsync() => await ShowDialogAsync<LoginDialog>();
-
-    public async Task ShowGameResourceDialogAsync(string contextName)
-    {
-        var dialog = Instance.Service.GetRequiredService<GameResourceDialog>();
-        dialog.SetData(contextName);
-        dialog.XamlRoot = this.Root;
-        this._dialog = dialog;
-        await _dialog.ShowAsync();
-    }
-
-    public async Task<ContentDialogResult> ShowBindGameDataAsync(string name) =>
-        await ShowDialogAsync<BindGameDataDialog>(name);
-
-    public async Task ShowDialogAsync<T>()
-        where T : ContentDialog, IDialog
-    {
-        if (_dialog != null)
-            return;
-        var dialog = Instance.Service.GetRequiredService<T>();
-        dialog.XamlRoot = this.Root;
-        this._dialog = dialog;
-        await _dialog.ShowAsync();
-    }
-
-    public async Task<ContentDialogResult> ShowDialogAsync<T>(object data)
-        where T : ContentDialog, IDialog
-    {
-        if (_dialog != null)
-            return ContentDialogResult.None;
-        var dialog = Instance.Service.GetRequiredService<T>();
-        dialog.XamlRoot = this.Root;
-        dialog.SetData(data);
-        this._dialog = dialog;
-        return await _dialog.ShowAsync();
-    }
-
-    public void CloseDialog()
-    {
-        if (_dialog == null)
-            return;
-        _dialog.Hide();
-        _dialog = null;
-        GC.Collect();
     }
 }

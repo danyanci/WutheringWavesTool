@@ -1,14 +1,18 @@
-﻿namespace WutheringWavesTool.ViewModel.DialogViewModels;
+﻿using WutheringWavesTool.Services.DialogServices;
 
-public sealed partial class LoginViewModel : ViewModelBase
+namespace WutheringWavesTool.ViewModel.DialogViewModels;
+
+public sealed partial class LoginViewModel : DialogViewModelBase
 {
     private string? _loginType;
 
     public LoginViewModel(
         IAppContext<App> appContext,
         IViewFactorys viewFactorys,
-        IWavesClient wavesClient
+        IWavesClient wavesClient,
+        [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager
     )
+        : base(dialogManager)
     {
         AppContext = appContext;
         ViewFactorys = viewFactorys;
@@ -59,7 +63,7 @@ public sealed partial class LoginViewModel : ViewModelBase
             TipMessage = "验证失败！";
             return;
         }
-        if(sendSMS.Code == 242)
+        if (sendSMS.Code == 242)
         {
             TipMessage = "短信验证码发送频繁！";
         }
@@ -89,9 +93,6 @@ public sealed partial class LoginViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    void Close() => AppContext.CloseDialog();
-
-    [RelayCommand]
     void ShowGetGeet()
     {
         if (string.IsNullOrWhiteSpace(Phone))
@@ -117,7 +118,7 @@ public sealed partial class LoginViewModel : ViewModelBase
             WeakReferenceMessenger.Default.Send(
                 new LoginMessanger(login.Success, login.Data.Token, long.Parse(login.Data.UserId))
             );
-            AppContext.CloseDialog();
+            DialogManager.CloseDialog();
         }
         else
         {
@@ -129,7 +130,7 @@ public sealed partial class LoginViewModel : ViewModelBase
             );
             if (mine != null && mine.Code == 200)
             {
-                AppContext.CloseDialog();
+                DialogManager.CloseDialog();
             }
             else if (mine != null)
             {

@@ -48,7 +48,10 @@
             Description="{x:Bind ViewModel.GameFilesSize, Mode=OneWay}"
             Header="游戏资源大小"
             IsClickEnabled="True">
-            <Button Content="卸载" />
+            <Button
+                Command="{x:Bind ViewModel.SendDeleteGameResourceCommand}"
+                Content="卸载"
+                IsEnabled="{x:Bind ViewModel.DeleteGameResourceEnable, Mode=OneWay}" />
         </ui:SettingsCard>
         <ui:SettingsCard
             Grid.Row="2"
@@ -58,7 +61,10 @@
             Description="{x:Bind ViewModel.GameProdSize, Mode=OneWay}"
             Header="预下载大小"
             IsClickEnabled="True">
-            <Button Content="卸载" />
+            <Button
+                Command="{x:Bind ViewModel.SendDeleteProdGameResourceCommand}"
+                Content="卸载"
+                IsEnabled="{x:Bind ViewModel.DeleteProdGameResourceEnable, Mode=OneWay}" />
         </ui:SettingsCard>
     </Grid>
 </ContentDialog>

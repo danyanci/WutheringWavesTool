@@ -67,6 +67,7 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     public IPickersService PickersService { get; }
     public IAppContext<App> AppContext { get; }
     public ITipShow TipShow { get; }
+    public IDialogManager DialogManager { get; }
 
     [ObservableProperty]
     public partial string LastVerision { get; set; }
@@ -78,15 +79,18 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
         IGameContext gameContext,
         IPickersService pickersService,
         IAppContext<App> appContext,
-        ITipShow tipShow
+        ITipShow tipShow,
+        IDialogManager dialogManager
     )
     {
         GameContext = gameContext;
         PickersService = pickersService;
         AppContext = appContext;
         TipShow = tipShow;
+        DialogManager = dialogManager;
         this.GameContext.GameContextOutput += GameContext_GameContextOutput;
         this.GameContext.GameContextProdOutput += GameContext_GameContextProdOutput;
+        RegisterMessanger();
     }
 
     private async Task GameContext_GameContextOutput(
@@ -503,9 +507,14 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
-    async Task DeleteGame()
+    public async Task DeleteGame()
     {
         await GameContext.ClearGameResourceAsync();
+    }
+
+    public async Task DeleteProdResource()
+    {
+        await GameContext.DeleteGameProdResourceAsync();
     }
 
     [RelayCommand]

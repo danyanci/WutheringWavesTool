@@ -18,8 +18,7 @@ public sealed partial class ShellPage : Page
     private async void ShellPage_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
     {
         this.titlebar.UpDate();
-        this.ViewModel.AppContext.RegisterRoot(this.XamlRoot);
+        this.ViewModel.DialogManager.RegisterRoot(this.XamlRoot);
         await this.ViewModel.WallpaperService.RegisterImageHostAsync(this.image);
-        //this.player.MediaPlayer.IsLoopingEnabled = true;
     }
 }

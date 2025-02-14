@@ -14,7 +14,7 @@ public sealed partial class PlayerRecordPage : Page, IWindowPage
 
     private async void PlayerRecordPage_Loaded(object sender, RoutedEventArgs e)
     {
-        this.ViewModel.PlayerRecordContext.DialogManager.SetRoot(this.XamlRoot);
+        this.ViewModel.PlayerRecordContext.DialogManager.RegisterRoot(this.XamlRoot);
         await this.ViewModel.Loaded();
     }
 

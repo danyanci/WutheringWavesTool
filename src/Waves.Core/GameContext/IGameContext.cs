@@ -73,5 +73,6 @@ public interface IGameContext
         CancellationToken token = default
     );
     void StopProdDownload();
+    Task DeleteGameProdResourceAsync();
     #endregion
 }

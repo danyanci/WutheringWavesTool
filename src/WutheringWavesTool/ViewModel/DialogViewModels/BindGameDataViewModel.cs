@@ -1,9 +1,14 @@
-﻿namespace WutheringWavesTool.ViewModel.DialogViewModels;
+﻿using WutheringWavesTool.Services.DialogServices;
+
+namespace WutheringWavesTool.ViewModel.DialogViewModels;
 
 public sealed partial class BindGameDataViewModel : DialogViewModelBase, IDisposable
 {
-    public BindGameDataViewModel(IAppContext<App> appContext, IWavesClient wavesClient)
-        : base(appContext)
+    public BindGameDataViewModel(
+        IWavesClient wavesClient,
+        [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager
+    )
+        : base(dialogManager)
     {
         WavesClient = wavesClient;
     }

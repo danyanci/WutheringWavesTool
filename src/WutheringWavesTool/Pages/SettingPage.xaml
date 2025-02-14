@@ -9,6 +9,7 @@
     xmlns:item="using:WutheringWavesTool.Models"
     xmlns:local="using:WutheringWavesTool.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:WinUICommunity"
     xmlns:wuc="using:WinUICommunity"
     Margin="25"
     mc:Ignorable="d">
@@ -22,40 +23,12 @@
             FontFamily="{StaticResource DefaultFont}"
             FontSize="15"
             Text="通用" />
-        <Expander
+        <ui:SettingsCard
             Margin="0,5,0,0"
             HorizontalAlignment="Stretch"
             HorizontalContentAlignment="Stretch"
-            Header="壁纸">
-            <Expander.Content>
-                <ScrollView>
-                    <ItemsView
-                        IsItemInvokedEnabled="True"
-                        ItemInvoked="ItemsView_ItemInvoked"
-                        ItemsSource="{x:Bind ViewModel.Images, Mode=OneWay}"
-                        SelectionMode="None">
-                        <ItemsView.ItemTemplate>
-                            <DataTemplate x:DataType="item:WallpaperModel">
-                                <ItemContainer>
-                                    <controls:ImageEx
-                                        Margin="5"
-                                        DecodePixelHeight="200"
-                                        DecodePixelWidth="200"
-                                        Source="{x:Bind Image}"
-                                        Stretch="UniformToFill" />
-                                </ItemContainer>
-                            </DataTemplate>
-                        </ItemsView.ItemTemplate>
-                        <ItemsView.Layout>
-                            <LinedFlowLayout
-                                ItemsStretch="Fill"
-                                LineHeight="120"
-                                LineSpacing="5"
-                                MinItemSpacing="5" />
-                        </ItemsView.Layout>
-                    </ItemsView>
-                </ScrollView>
-            </Expander.Content>
-        </Expander>
+            Command="{x:Bind ViewModel.SelectWallpaperCommand}"
+            Header="壁纸"
+            IsClickEnabled="True" />
     </StackPanel>
 </Page>

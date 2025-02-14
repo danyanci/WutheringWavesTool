@@ -1,4 +1,6 @@
-﻿namespace WutheringWavesTool.ViewModel;
+﻿using WutheringWavesTool.Services.DialogServices;
+
+namespace WutheringWavesTool.ViewModel;
 
 public sealed partial class ShellViewModel : ViewModelBase
 {
@@ -6,6 +8,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     public ITipShow TipShow { get; }
     public IAppContext<App> AppContext { get; }
     public IWallpaperService WallpaperService { get; }
+    public IDialogManager DialogManager { get; }
 
     [ObservableProperty]
     public partial string ServerName { get; set; }
@@ -16,13 +19,15 @@ public sealed partial class ShellViewModel : ViewModelBase
         [FromKeyedServices(nameof(HomeNavigationService))] INavigationService homeNavigationService,
         ITipShow tipShow,
         IAppContext<App> appContext,
-        IWallpaperService wallpaperService
+        IWallpaperService wallpaperService,
+        [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager
     )
     {
         HomeNavigationService = homeNavigationService;
         TipShow = tipShow;
         AppContext = appContext;
         WallpaperService = wallpaperService;
+        DialogManager = dialogManager;
         HomeNavigationService.Navigated += HomeNavigationService_Navigated;
     }
 

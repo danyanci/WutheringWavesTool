@@ -65,20 +65,12 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
-                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Button
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 Command="{x:Bind ViewModel.InvokeCommand}"
                 Content="确定"
-                Style="{ThemeResource AccentButtonStyle}" />
-            <Button
-                Grid.Column="1"
-                Margin="5,0,0,0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Content="合并"
                 Style="{ThemeResource AccentButtonStyle}" />
             <Button
                 Grid.Column="2"

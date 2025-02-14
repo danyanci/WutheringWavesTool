@@ -1,4 +1,6 @@
-﻿namespace WutheringWavesTool.ViewModel.GameViewModels;
+﻿using WutheringWavesTool.Services.DialogServices;
+
+namespace WutheringWavesTool.ViewModel.GameViewModels;
 
 public sealed partial class GlobalGameViewModel : GameViewModelBase
 {
@@ -6,9 +8,10 @@ public sealed partial class GlobalGameViewModel : GameViewModelBase
         [FromKeyedServices(nameof(GlobalGameContext))] IGameContext gameContext,
         IPickersService pickersService,
         IAppContext<App> appContext,
-        ITipShow tipShow
+        ITipShow tipShow,
+        [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager
     )
-        : base(gameContext, pickersService, appContext, tipShow) { }
+        : base(gameContext, pickersService, appContext, tipShow, dialogManager) { }
 
     private ObservableCollection<Content> activity;
     private ObservableCollection<Content> news;
@@ -58,6 +61,11 @@ public sealed partial class GlobalGameViewModel : GameViewModelBase
 
     public override async Task ShowGameResourceMethod()
     {
-        await AppContext.ShowGameResourceDialogAsync(nameof(GlobalGameContext));
+        await DialogManager.ShowGameResourceDialogAsync(nameof(GlobalGameContext));
+    }
+
+    public override Task RemoveGameResource(DeleteGameResource resourceMessage)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace WutheringWavesTool.ViewModel.GameViewModels;
+﻿using WutheringWavesTool.Services.DialogServices;
+
+namespace WutheringWavesTool.ViewModel.GameViewModels;
 
 public sealed partial class MainGameViewModel : GameViewModelBase
 {
@@ -7,9 +9,10 @@ public sealed partial class MainGameViewModel : GameViewModelBase
         IPickersService pickersService,
         IAppContext<App> appContext,
         ITipShow tipShow,
-        IWavesClient wavesClient
+        IWavesClient wavesClient,
+        [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager
     )
-        : base(gameContext, pickersService, appContext, tipShow)
+        : base(gameContext, pickersService, appContext, tipShow, dialogManager)
     {
         WavesClient = wavesClient;
         this.RegisterMessanger();
@@ -134,7 +137,7 @@ public sealed partial class MainGameViewModel : GameViewModelBase
     {
         if (await WavesClient.IsLoginAsync())
         {
-            await this.AppContext.ShowBindGameDataAsync("Main");
+            await this.DialogManager.ShowBindGameDataAsync("Main");
         }
         else
         {
@@ -164,6 +167,21 @@ public sealed partial class MainGameViewModel : GameViewModelBase
 
     public override async Task ShowGameResourceMethod()
     {
-        await AppContext.ShowGameResourceDialogAsync(nameof(MainGameContext));
+        await DialogManager.ShowGameResourceDialogAsync(nameof(MainGameContext));
+    }
+
+    public override async Task RemoveGameResource(DeleteGameResource resourceMessage)
+    {
+        if (
+            resourceMessage.IsMainResource
+            && resourceMessage.GameContextName == nameof(MainGameContext)
+        )
+        {
+            await DeleteGame();
+        }
+        else
+        {
+            await DeleteProdResource();
+        }
     }
 }

@@ -1,18 +1,21 @@
-﻿namespace WutheringWavesTool.ViewModel;
+﻿using WutheringWavesTool.Services.DialogServices;
+
+namespace WutheringWavesTool.ViewModel;
 
 public partial class CommunityViewModel : ViewModelBase, IDisposable
 {
     public CommunityViewModel(
         IWavesClient wavesClient,
-        IAppContext<App> appContext,
         IViewFactorys viewFactorys,
-        [FromKeyedServices(nameof(CommunityNavigationService))] INavigationService navigationService
+        [FromKeyedServices(nameof(CommunityNavigationService))]
+            INavigationService navigationService,
+        [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager
     )
     {
         WavesClient = wavesClient;
-        AppContext = appContext;
         ViewFactorys = viewFactorys;
         NavigationService = navigationService;
+        DialogManager = dialogManager;
         RegisterMessanger();
     }
 
@@ -20,6 +23,7 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     public IAppContext<App> AppContext { get; }
     public IViewFactorys ViewFactorys { get; }
     public INavigationService NavigationService { get; set; }
+    public IDialogManager DialogManager { get; }
 
     [ObservableProperty]
     public partial bool IsLogin { get; set; }
@@ -79,20 +83,22 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
         if (Roils.Count > 0)
         {
             SelectRoil = Roils[0];
-            await WavesClient.RefreshGamerDataAsync(this.SelectRoil.Item,this.CTS.Token);
-            var Roildock =  await WavesClient.GetGamerBassDataAsync(SelectRoil.Item, this.CTS.Token);
+            await WavesClient.RefreshGamerDataAsync(this.SelectRoil.Item, this.CTS.Token);
+            var Roildock = await WavesClient.GetGamerBassDataAsync(SelectRoil.Item, this.CTS.Token);
             var skin = WavesClient.GetGamerSkinAsync(this.SelectRoil.Item, this.CTS.Token);
             this.DataLoad = true;
         }
     }
 
-    async Task<ObservableCollection<GameRoilDataWrapper>> FormatRoilAsync(List<GameRoilDataItem> roilDataItems)
+    async Task<ObservableCollection<GameRoilDataWrapper>> FormatRoilAsync(
+        List<GameRoilDataItem> roilDataItems
+    )
     {
         ObservableCollection<GameRoilDataWrapper> values = new();
         foreach (var item in roilDataItems)
         {
             GameRoilDataWrapper value = new GameRoilDataWrapper(item);
-            var level = await WavesClient.GetGamerBassDataAsync(item,this.CTS.Token);
+            var level = await WavesClient.GetGamerBassDataAsync(item, this.CTS.Token);
             value.GameLevel = level!.Level;
             values.Add(value);
         }
@@ -123,7 +129,7 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     async Task ShowGetGeet()
     {
-        await AppContext.ShowLoginDialogAsync();
+        await DialogManager.ShowLoginDialogAsync();
     }
 
     public void Dispose()

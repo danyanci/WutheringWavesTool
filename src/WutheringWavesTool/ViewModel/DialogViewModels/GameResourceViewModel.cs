@@ -1,12 +1,15 @@
-﻿namespace WutheringWavesTool.ViewModel.DialogViewModels;
+﻿using WutheringWavesTool.Services.DialogServices;
 
-public sealed partial class GameResourceViewModel : ViewModelBase
+namespace WutheringWavesTool.ViewModel.DialogViewModels;
+
+public sealed partial class GameResourceViewModel : DialogViewModelBase
 {
-    public GameResourceViewModel(IViewFactorys viewFactorys)
-    {
-        ViewFactorys = viewFactorys;
-    }
+    public GameResourceViewModel(
+        [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager
+    )
+        : base(dialogManager) { }
 
+    public string ContextName { get; private set; }
     public IGameContext GameContext { get; private set; }
     public IViewFactorys ViewFactorys { get; }
 
@@ -16,15 +19,16 @@ public sealed partial class GameResourceViewModel : ViewModelBase
     [ObservableProperty]
     public partial string GameProdSize { get; set; }
 
+    [ObservableProperty]
+    public partial bool DeleteGameResourceEnable { get; set; } = true;
+
+    [ObservableProperty]
+    public partial bool DeleteProdGameResourceEnable { get; set; } = true;
+
     internal void SetData(string contextName)
     {
+        ContextName = contextName;
         this.GameContext = Instance.Service.GetRequiredKeyedService<IGameContext>(contextName);
-    }
-
-    [RelayCommand]
-    void Close()
-    {
-        ViewFactorys.AppContext.CloseDialog();
     }
 
     [RelayCommand]
@@ -71,5 +75,27 @@ public sealed partial class GameResourceViewModel : ViewModelBase
         });
         GameFilesSize = $"{(gameSize / (1024.0 * 1024.0 * 1024.0)):F2} GB";
         GameProdSize = $"{(prodSize / (1024.0 * 1024.0 * 1024.0)):F2} GB";
+        if (gameSize == 0)
+        {
+            this.DeleteGameResourceEnable = false;
+        }
+        if (prodSize == 0)
+        {
+            this.DeleteProdGameResourceEnable = false;
+        }
+    }
+
+    [RelayCommand]
+    void SendDeleteGameResource()
+    {
+        WeakReferenceMessenger.Default.Send<DeleteGameResource>(new(true, ContextName));
+        Close();
+    }
+
+    [RelayCommand]
+    void SendDeleteProdGameResource()
+    {
+        WeakReferenceMessenger.Default.Send<DeleteGameResource>(new(false, ContextName));
+        Close();
     }
 }
