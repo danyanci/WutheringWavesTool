@@ -28,15 +28,20 @@
                 VerticalAlignment="Center"
                 FontSize="15"
                 Text="选择或导入壁纸" />
-            <Button
-                HorizontalAlignment="Right"
-                Command="{x:Bind ViewModel.CloseCommand}"
-                Style="{ThemeResource TransparentButtonStyle}">
-                <FontIcon
-                    FontFamily="Segoe Fluent Icons"
-                    FontSize="14"
-                    Glyph="&#xE894;" />
-            </Button>
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button Command="{x:Bind ViewModel.SelectWallpaperCommand}" Style="{ThemeResource TransparentButtonStyle}">
+                    <FontIcon
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="14"
+                        Glyph="&#xEA52;" />
+                </Button>
+                <Button Command="{x:Bind ViewModel.CloseCommand}" Style="{ThemeResource TransparentButtonStyle}">
+                    <FontIcon
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="14"
+                        Glyph="&#xE894;" />
+                </Button>
+            </StackPanel>
             <ScrollView Grid.Row="1">
                 <ItemsView
                     IsItemInvokedEnabled="True"
@@ -47,7 +52,7 @@
                         <DataTemplate x:DataType="item:WallpaperModel">
                             <ItemContainer>
                                 <controls:ImageEx
-                                    Margin="5"
+                                    Margin="10"
                                     DecodePixelHeight="200"
                                     DecodePixelWidth="200"
                                     Source="{x:Bind Image}"
@@ -56,11 +61,12 @@
                         </DataTemplate>
                     </ItemsView.ItemTemplate>
                     <ItemsView.Layout>
-                        <LinedFlowLayout
-                            ItemsStretch="Fill"
-                            LineHeight="100"
-                            LineSpacing="5"
-                            MinItemSpacing="2" />
+                        <UniformGridLayout
+                            ItemsJustification="Start"
+                            ItemsStretch="Uniform"
+                            MinColumnSpacing="2"
+                            MinItemHeight="120"
+                            MinItemWidth="260" />
                     </ItemsView.Layout>
                 </ItemsView>
             </ScrollView>

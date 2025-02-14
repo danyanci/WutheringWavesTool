@@ -45,7 +45,7 @@ public class WallpaperService : IWallpaperService
             if (TipShow != null)
                 TipShow.ShowMessage(result.Item2, Microsoft.UI.Xaml.Controls.Symbol.Pictures);
             this.NowHexValue = result.Item3!;
-            AppSettings.WallpaperPath = path;
+            AppSettings.WallpaperPath = result.Item2;
             return true;
         }
         else

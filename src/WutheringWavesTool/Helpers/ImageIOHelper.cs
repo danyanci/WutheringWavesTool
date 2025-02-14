@@ -118,7 +118,7 @@ public static class ImageIOHelper
         else
         {
             var name = sourceFolder + $"\\{System.IO.Path.GetFileName(filePath)}";
-            File.Move(filePath, name);
+            File.Copy(filePath, name);
             return new(new(new(name)), name, fileMd5);
         }
     }

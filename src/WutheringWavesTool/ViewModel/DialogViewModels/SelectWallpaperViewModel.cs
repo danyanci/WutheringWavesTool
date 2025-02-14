@@ -6,14 +6,17 @@ public sealed partial class SelectWallpaperViewModel : DialogViewModelBase
 {
     public SelectWallpaperViewModel(
         [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager,
-        IWallpaperService wallpaperService
+        IWallpaperService wallpaperService,
+        IPickersService pickersService
     )
         : base(dialogManager)
     {
         WallpaperService = wallpaperService;
+        PickersService = pickersService;
     }
 
     public IWallpaperService WallpaperService { get; }
+    public IPickersService PickersService { get; }
 
     [ObservableProperty]
     public partial ObservableCollection<WallpaperModel> Images { get; set; } = new();
@@ -34,5 +37,12 @@ public sealed partial class SelectWallpaperViewModel : DialogViewModelBase
     async Task Loaded()
     {
         await InitWallpaperAsync();
+    }
+
+    [RelayCommand]
+    async Task SelectWallpaper()
+    {
+        var file = await PickersService.GetFileOpenPicker([".jpg", ".png"]);
+        await WallpaperService.SetWrallpaper(file.Path);
     }
 }

@@ -66,6 +66,7 @@ public sealed partial class LoginViewModel : DialogViewModelBase
         if (sendSMS.Code == 242)
         {
             TipMessage = "短信验证码发送频繁！";
+            return;
         }
         if (sendSMS.Data.GeeTest == false)
         {
