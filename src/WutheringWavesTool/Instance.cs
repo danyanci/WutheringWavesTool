@@ -26,8 +26,8 @@ public static class Instance
             #region Community
             .AddTransient<GamerSignPage>()
             .AddTransient<GamerSignViewModel>()
-            .AddSingleton<GamerRoilDetilyPage>()
-            .AddSingleton<GamerRoilDetilyViewModel>()
+            .AddSingleton<GamerRoilsDetilyPage>()
+            .AddSingleton<GamerRoilsDetilyViewModel>()
             .AddTransient<GameRoilsViewModel>()
             .AddTransient<GamerDockViewModel>()
             .AddTransient<GamerChallengeViewModel>()

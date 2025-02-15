@@ -45,14 +45,7 @@ public partial class CommunityViewModel : ViewModelBase, IDisposable
 
     private async void ShowRoleMethod(object recipient, ShowRoleData message)
     {
-        var Roles = await WavesClient.GetGamerRoilDetily(
-            this.SelectRoil.Item,
-            message.Id,
-            this.CTS.Token
-        );
-        if (Roles == null)
-            return;
-        ViewFactorys.ShowRoleDataWindow(Roles).AppWindow.Show();
+        ViewFactorys.ShowRolesDataWindow(message).AppWindow.Show();
     }
 
     private async void LoginMessangerMethod(object recipient, LoginMessanger message)

@@ -29,6 +29,19 @@ public partial class DataCenterRoilItemWrapper : ObservableObject
 
     [ObservableProperty]
     public partial string RoleName { get; set; }
+    public GameRoilDataItem User { get; }
+
+    public DataCenterRoilItemWrapper(RoleList roleData, GameRoilDataItem user)
+    {
+        this.StarLevel = roleData.StarLevel;
+        this.RoilId = roleData.RoleId;
+        this.AttributeName = roleData.AttributeName;
+        this.RoleName = roleData.RoleName;
+        this.AttibuteId = roleData.AttributeId;
+        TypeImage = new BitmapImage(new(SwitchType(roleData)));
+        RoleIconUrl = new BitmapImage(new(roleData.RoleIconUrl));
+        User = user;
+    }
 
     public DataCenterRoilItemWrapper(RoleList roleData)
     {
@@ -41,7 +54,7 @@ public partial class DataCenterRoilItemWrapper : ObservableObject
         RoleIconUrl = new BitmapImage(new(roleData.RoleIconUrl));
     }
 
-    private string SwitchType(RoleList RoleData)
+    public static string SwitchType(RoleList RoleData)
     {
         var TypeImage = "";
         switch (RoleData.AttributeId)
@@ -71,6 +84,8 @@ public partial class DataCenterRoilItemWrapper : ObservableObject
     [RelayCommand]
     void ClickShow()
     {
-        WeakReferenceMessenger.Default.Send<ShowRoleData>(new ShowRoleData(RoilId));
+        if (this.User == null)
+            return;
+        WeakReferenceMessenger.Default.Send<ShowRoleData>(new ShowRoleData(RoilId, this.User));
     }
 }

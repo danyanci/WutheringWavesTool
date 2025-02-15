@@ -7,7 +7,7 @@ public interface IViewFactorys
 
     public WindowModelBase ShowSignWindow(GameRoilDataItem role);
 
-    public WindowModelBase ShowRoleDataWindow(GamerRoilDetily detily);
+    public WindowModelBase ShowRolesDataWindow(ShowRoleData detily);
 
     public WindowModelBase ShowPlayerRecordWindow();
 }

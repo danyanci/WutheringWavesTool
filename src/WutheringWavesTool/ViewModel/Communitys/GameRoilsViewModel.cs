@@ -35,7 +35,7 @@ public sealed partial class GameRoilsViewModel : ViewModelBase, ICommunityViewMo
             TipShow.ShowMessage("数据请求错误", Symbol.Clear);
             return;
         }
-        this.cacheRoils = FormatRole(GameRoil);
+        this.cacheRoils = FormatRole(GameRoil, User);
         if (this.SelectFilter == null)
         {
             this.SelectFilter = GamerFilter[0];
@@ -58,7 +58,10 @@ public sealed partial class GameRoilsViewModel : ViewModelBase, ICommunityViewMo
         }
     }
 
-    private ObservableCollection<DataCenterRoilItemWrapper> FormatRole(GamerRoleData gameRoil)
+    private ObservableCollection<DataCenterRoilItemWrapper> FormatRole(
+        GamerRoleData gameRoil,
+        GameRoilDataItem user
+    )
     {
         ObservableCollection<DataCenterRoilItemWrapper> items = new();
         if (gameRoil == null)
@@ -68,7 +71,7 @@ public sealed partial class GameRoilsViewModel : ViewModelBase, ICommunityViewMo
         }
         foreach (var item in gameRoil.RoleList)
         {
-            items.Add(new(item));
+            items.Add(new(item, user));
         }
         return items;
     }

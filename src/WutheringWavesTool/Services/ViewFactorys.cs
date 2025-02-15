@@ -36,9 +36,9 @@ public class ViewFactorys : IViewFactorys
         return win;
     }
 
-    public WindowModelBase ShowRoleDataWindow(GamerRoilDetily detily)
+    public WindowModelBase ShowRolesDataWindow(ShowRoleData detily)
     {
-        var window = this.ShowWindowBase<GamerRoilDetilyPage>(detily);
+        var window = this.ShowWindowBase<GamerRoilsDetilyPage>(detily);
         window.MaxHeight = 530;
         window.MaxWidth = 750;
         return window;
