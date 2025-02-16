@@ -1,6 +1,6 @@
 ﻿namespace WutheringWavesTool.Common;
 
-public interface IWindowPage
+public interface IWindowPage : IDisposable
 {
     public void SetWindow(Window window);
 

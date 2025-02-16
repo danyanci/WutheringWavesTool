@@ -18,7 +18,6 @@ public partial class GamerRoilDetilySelector : DataTemplateSelector
         {
             return TypeItemTemplate;
         }
-        return base.SelectTemplateCore(item);
     }
 
     protected override DataTemplate SelectTemplateCore(object item, DependencyObject container)
@@ -31,6 +30,5 @@ public partial class GamerRoilDetilySelector : DataTemplateSelector
         {
             return TypeItemTemplate;
         }
-        return base.SelectTemplateCore(item, container);
     }
 }

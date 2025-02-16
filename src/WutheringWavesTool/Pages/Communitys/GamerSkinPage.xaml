@@ -25,7 +25,6 @@
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate x:DataType="wModel:RoleSkinList">
                             <Grid
-                                Margin="4"
                                 Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
                                 BorderBrush="{ThemeResource CardStrokeColorDefaultSolid}"
                                 BorderThickness="1"
@@ -65,9 +64,10 @@
                         <UniformGridLayout
                             ItemsJustification="Start"
                             ItemsStretch="Uniform"
-                            MinColumnSpacing="2"
-                            MinItemHeight="140"
-                            MinItemWidth="120" />
+                            MinColumnSpacing="5"
+                            MinItemHeight="110"
+                            MinItemWidth="90"
+                            MinRowSpacing="5" />
                     </ItemsRepeater.Layout>
                 </ItemsRepeater>
             </ScrollView>
@@ -120,9 +120,10 @@
                         <UniformGridLayout
                             ItemsJustification="Start"
                             ItemsStretch="Uniform"
-                            MinColumnSpacing="2"
-                            MinItemHeight="140"
-                            MinItemWidth="120" />
+                            MinColumnSpacing="5"
+                            MinItemHeight="110"
+                            MinItemWidth="90"
+                            MinRowSpacing="5" />
                     </ItemsRepeater.Layout>
                 </ItemsRepeater>
             </ScrollView>

@@ -26,8 +26,8 @@ public static class Instance
             #region Community
             .AddTransient<GamerSignPage>()
             .AddTransient<GamerSignViewModel>()
-            .AddSingleton<GamerRoilsDetilyPage>()
-            .AddSingleton<GamerRoilsDetilyViewModel>()
+            .AddTransient<GamerRoilsDetilyPage>()
+            .AddTransient<GamerRoilsDetilyViewModel>()
             .AddTransient<GameRoilsViewModel>()
             .AddTransient<GamerDockViewModel>()
             .AddTransient<GamerChallengeViewModel>()
@@ -37,6 +37,9 @@ public static class Instance
             #endregion
             #region Record
             .AddTransient<RecordItemViewModel>()
+            #endregion
+            #region Roil
+            .AddTransient<GamerRoilViewModel>()
             #endregion
             #region Dialog
             .AddTransient<LoginDialog>()
@@ -82,6 +85,10 @@ public static class Instance
                 nameof(RecordNavigationService)
             )
             .AddScoped<IRecordCacheService, RecordCacheService>()
+            .AddKeyedScoped<IGamerRoilContext, GamerRoilContext>(nameof(GamerRoilContext))
+            .AddKeyedScoped<INavigationService, GameRoilNavigationService>(
+                nameof(GameRoilNavigationService)
+            )
             #endregion
             .AddGameContext()
             .BuildServiceProvider();

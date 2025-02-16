@@ -12,6 +12,8 @@ public sealed partial class GamerSignPage : Page, IWindowPage
 
     public GamerSignViewModel ViewModel { get; }
 
+    public void Dispose() { }
+
     public void SetData(object value)
     {
         if (value is GameRoilDataItem item)

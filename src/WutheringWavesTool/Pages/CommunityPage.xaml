@@ -13,7 +13,8 @@
     xmlns:us="using:WutheringWavesTool.Pages.Communitys"
     xmlns:uvm="using:WutheringWavesTool.ViewModel.Communitys"
     xmlns:wModel="using:Waves.Api.Models.Communitys"
-    xmlns:wuc="using:WinUICommunity" xmlns:wrapper="using:WutheringWavesTool.Models.Wrapper"
+    xmlns:wrapper="using:WutheringWavesTool.Models.Wrapper"
+    xmlns:wuc="using:WinUICommunity"
     mc:Ignorable="d">
     <!--
         Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
@@ -79,6 +80,7 @@
                 <ComboBox
                     Padding="10"
                     HorizontalAlignment="Stretch"
+                    IsEnabled="False"
                     ItemsSource="{x:Bind ViewModel.Roils, Mode=OneWay}"
                     SelectedItem="{x:Bind ViewModel.SelectRoil, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <ComboBox.ItemTemplate>
@@ -89,8 +91,10 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Border CornerRadius="5">
-                                    <Image Width="35" Source="{x:Bind GameHeadUrl}" Height="35">
-                                    </Image>
+                                    <Image
+                                        Width="35"
+                                        Height="35"
+                                        Source="{x:Bind GameHeadUrl}" />
                                 </Border>
                                 <Grid Grid.Column="1" Margin="10,0,0,0">
                                     <Grid.RowDefinitions>

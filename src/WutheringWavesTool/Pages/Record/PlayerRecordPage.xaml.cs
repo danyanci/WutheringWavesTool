@@ -50,4 +50,10 @@ public sealed partial class PlayerRecordPage : Page, IWindowPage
     {
         this.ViewModel.PlayerRecordContext.NavigationService.RegisterView(this.frame);
     }
+
+    public void Dispose()
+    {
+        this.Loaded -= PlayerRecordPage_Loaded;
+        ViewModel.Dispose();
+    }
 }

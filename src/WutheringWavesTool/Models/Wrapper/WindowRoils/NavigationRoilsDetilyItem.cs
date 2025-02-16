@@ -4,7 +4,7 @@ public interface INavigationRoilsItem { }
 
 public partial class NavigationRoilsDetilyItem : ObservableObject, INavigationRoilsItem
 {
-    public NavigationRoilsDetilyItem(RoleList roleData)
+    public NavigationRoilsDetilyItem(RoleList roleData, GameRoilDataItem item)
     {
         this.StarLevel = roleData.StarLevel;
         this.RoilId = roleData.RoleId;
@@ -13,6 +13,7 @@ public partial class NavigationRoilsDetilyItem : ObservableObject, INavigationRo
         this.AttibuteId = roleData.AttributeId;
         TypeImage = new BitmapImage(new(DataCenterRoilItemWrapper.SwitchType(roleData)));
         RoleIconUrl = new BitmapImage(new(roleData.RoleIconUrl));
+        Item = item;
     }
 
     [ObservableProperty]
@@ -33,6 +34,7 @@ public partial class NavigationRoilsDetilyItem : ObservableObject, INavigationRo
 
     [ObservableProperty]
     public partial string RoleName { get; set; }
+    public GameRoilDataItem Item { get; }
 }
 
 public partial class NavigationRoilsTypeItem : ObservableObject, INavigationRoilsItem
