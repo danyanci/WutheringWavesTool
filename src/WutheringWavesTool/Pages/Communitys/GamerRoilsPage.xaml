@@ -14,7 +14,6 @@
     xmlns:vModel="using:WutheringWavesTool.Models"
     xmlns:wuc="using:WinUICommunity"
     mc:Ignorable="d">
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />

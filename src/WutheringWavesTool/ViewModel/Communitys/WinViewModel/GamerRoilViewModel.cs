@@ -21,6 +21,15 @@ public sealed partial class GamerRoilViewModel : ViewModelBase
     #region RoleData
     [ObservableProperty]
     public partial string RolePic { get; set; }
+
+    [ObservableProperty]
+    public partial string RoleName { get; set; }
+
+    [ObservableProperty]
+    public partial int RoleLevel { get; set; }
+
+    [ObservableProperty]
+    public partial int RoleStar { get; set; }
     #endregion
 
     #region Weapon
@@ -36,5 +45,8 @@ public sealed partial class GamerRoilViewModel : ViewModelBase
             return;
         }
         this.RolePic = result.Role.RolePicUrl;
+        this.RoleName = result.Role.RoleName;
+        this.RoleLevel = result.Role.Level;
+        this.RoleStar = result.Role.StarLevel;
     }
 }

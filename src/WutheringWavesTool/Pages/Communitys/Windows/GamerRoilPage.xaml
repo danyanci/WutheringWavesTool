@@ -8,13 +8,135 @@
     xmlns:local="using:WutheringWavesTool.Pages.Communitys.Windows"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:WutheringWavesTool.Controls"
+    xmlns:wuc="using:WinUICommunity"
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
         <i:EventTriggerBehavior EventName="Loaded">
             <i:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
         </i:EventTriggerBehavior>
     </i:Interaction.Behaviors>
-    <Grid>
-        <ui:ImageEx Opacity="0.05" Source="{x:Bind ViewModel.RolePic, Mode=OneWay}" />
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="7*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <ui:ImageEx
+            x:Name="picImage"
+            Grid.RowSpan="2"
+            Grid.ColumnSpan="1"
+            Margin="-250,0,0,0"
+            HorizontalAlignment="Left"
+            Opacity="0.2"
+            Source="{x:Bind ViewModel.RolePic, Mode=OneWay}"
+            Stretch="UniformToFill">
+            <ui:ImageEx.OpacityTransition>
+                <ScalarTransition />
+            </ui:ImageEx.OpacityTransition>
+
+            <i:Interaction.Behaviors>
+                <i:EventTriggerBehavior EventName="PointerEntered">
+                    <i:ChangePropertyAction
+                        PropertyName="Opacity"
+                        TargetObject="{x:Bind picImage}"
+                        Value="1" />
+                    <i:ChangePropertyAction
+                        PropertyName="Opacity"
+                        TargetObject="{x:Bind session}"
+                        Value="0" />
+                </i:EventTriggerBehavior>
+                <i:EventTriggerBehavior EventName="PointerExited">
+                    <i:ChangePropertyAction
+                        PropertyName="Opacity"
+                        TargetObject="{x:Bind picImage}"
+                        Value="0.1" />
+                    <i:ChangePropertyAction
+                        PropertyName="Opacity"
+                        TargetObject="{x:Bind session}"
+                        Value="1" />
+                </i:EventTriggerBehavior>
+            </i:Interaction.Behaviors>
+        </ui:ImageEx>
+        <Grid
+            x:Name="session"
+            Padding="10"
+            CornerRadius="5">
+            <Grid.OpacityTransition>
+                <ScalarTransition />
+            </Grid.OpacityTransition>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <TextBlock
+                Width="25"
+                FontFamily="{ThemeResource DefaultFont}"
+                FontSize="25"
+                Text="{x:Bind ViewModel.RoleName, Mode=OneWay}"
+                TextWrapping="Wrap" />
+            <TextBlock
+                Grid.Column="2"
+                Width="25"
+                Margin="-180,0,0,0"
+                FontFamily="{ThemeResource DefaultFont}"
+                FontSize="18"
+                TextWrapping="Wrap">
+                <Run Text="LV" />
+                <Run Text="{x:Bind ViewModel.RoleLevel, Mode=OneWay}" />
+            </TextBlock>
+            <RatingControl
+                Grid.Column="1"
+                Margin="30,0,0,0"
+                VerticalAlignment="Top"
+                IsReadOnly="True"
+                MaxRating="5"
+                Value="{x:Bind ViewModel.RoleStar, Mode=OneWay}">
+                <RatingControl.RenderTransform>
+                    <RotateTransform Angle="90" />
+                </RatingControl.RenderTransform>
+            </RatingControl>
+        </Grid>
+        <wuc:SelectorBarSegmented
+            Grid.Column="1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top">
+            <SelectorBarItem>
+                <SelectorBarItem.Icon>
+                    <FontIcon
+                        FontFamily="{ThemeResource RoilDetilyFont}"
+                        FontSize="17"
+                        Glyph="&#xE615;" />
+                </SelectorBarItem.Icon>
+            </SelectorBarItem>
+            <SelectorBarItem>
+                <SelectorBarItem.Icon>
+                    <FontIcon
+                        FontFamily="{ThemeResource RoilDetilyFont}"
+                        FontSize="17"
+                        Glyph="&#xE627;" />
+                </SelectorBarItem.Icon>
+            </SelectorBarItem>
+            <SelectorBarItem>
+                <SelectorBarItem.Icon>
+                    <FontIcon
+                        FontFamily="{ThemeResource RoilDetilyFont}"
+                        FontSize="17"
+                        Glyph="&#xE67C;" />
+                </SelectorBarItem.Icon>
+            </SelectorBarItem>
+            <SelectorBarItem>
+                <SelectorBarItem.Icon>
+                    <FontIcon
+                        FontFamily="{ThemeResource RoilDetilyFont}"
+                        FontSize="17"
+                        Glyph="&#xE6E3;" />
+                </SelectorBarItem.Icon>
+            </SelectorBarItem>
+        </wuc:SelectorBarSegmented>
     </Grid>
 </Page>
