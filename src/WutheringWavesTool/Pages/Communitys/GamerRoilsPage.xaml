@@ -132,6 +132,9 @@
                         MinItemHeight="150"
                         MinItemWidth="110" />
                 </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTransitionProvider>
+                    <LinedFlowLayoutItemCollectionTransitionProvider />
+                </ItemsRepeater.ItemTransitionProvider>
             </ItemsRepeater>
         </ScrollView>
     </Grid>

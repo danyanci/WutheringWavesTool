@@ -5,12 +5,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:WutheringWavesTool.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:gamer="using:Waves.Api.Models.Communitys"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:item="using:WutheringWavesTool.Models"
     xmlns:local="using:WutheringWavesTool.Pages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:WinUICommunity"
     xmlns:wuc="using:WinUICommunity"
+    xmlns:wui="using:WutheringWavesTool.Controls"
     Margin="25"
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
@@ -29,6 +31,66 @@
             HorizontalContentAlignment="Stretch"
             Command="{x:Bind ViewModel.SelectWallpaperCommand}"
             Header="壁纸"
-            IsClickEnabled="True" />
+            IsClickEnabled="True">
+            <ui:SettingsCard.HeaderIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B9;" />
+            </ui:SettingsCard.HeaderIcon>
+        </ui:SettingsCard>
+
+        <TextBlock
+            Margin="0,5,0,0"
+            FontFamily="{StaticResource DefaultFont}"
+            FontSize="15"
+            Text="库街区" />
+        <ui:SettingsCard
+            Margin="0,5,0,0"
+            Command="{x:Bind ViewModel.CopyTokenCommand}"
+            Header="复制授权码"
+            IsClickEnabled="True">
+            <ui:SettingsCard.HeaderIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE631;" />
+            </ui:SettingsCard.HeaderIcon>
+        </ui:SettingsCard>
+        <ui:SettingsExpander
+            Margin="0,5,0,0"
+            HorizontalAlignment="Stretch"
+            HorizontalContentAlignment="Stretch"
+            ItemsSource="{x:Bind ViewModel.GamerData, Mode=OneWay}">
+            <ui:SettingsExpander.HeaderIcon>
+                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEC7A;" />
+            </ui:SettingsExpander.HeaderIcon>
+            <ui:SettingsExpander.Header>
+                <TextBlock VerticalAlignment="Center" Text="账号管理" />
+            </ui:SettingsExpander.Header>
+            <ui:SettingsExpander.ItemTemplate>
+                <DataTemplate x:DataType="gamer:GameRoilDataItem">
+                    <ui:SettingsCard>
+                        <ui:SettingsCard.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <wui:ImageEx
+                                    Width="28"
+                                    Height="28"
+                                    CornerRadius="5"
+                                    Source="{x:Bind GameHeadUrl}" />
+                                <TextBlock Margin="5,0,0,0" VerticalAlignment="Center">
+                                    <Run Text="{x:Bind RoleName}" />
+                                    <Run Text="--" />
+                                    <Run Text="{x:Bind ServerName}" />
+                                </TextBlock>
+                            </StackPanel>
+                        </ui:SettingsCard.Header>
+                        <Button
+                            Command="{x:Bind CopyIdCommand}"
+                            Style="{ThemeResource TransparentButtonStyle}"
+                            ToolTipService.ToolTip="复制账号ID">
+                            <FontIcon
+                                FontFamily="Segoe Fluent Icons"
+                                FontSize="15"
+                                Glyph="&#xE8C8;" />
+                        </Button>
+                    </ui:SettingsCard>
+                </DataTemplate>
+            </ui:SettingsExpander.ItemTemplate>
+        </ui:SettingsExpander>
     </StackPanel>
 </Page>

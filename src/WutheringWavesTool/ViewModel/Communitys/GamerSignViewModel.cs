@@ -67,7 +67,7 @@ public sealed partial class GamerSignViewModel : ViewModelBase
             {
                 SignBthEnable = false;
                 SignBthCheck = true;
-                var todaySign = result.Data.SignInGoodsConfigs.Skip(signCount).Take(1);
+                var todaySign = result.Data.SignInGoodsConfigs.Skip(signCount + 1).Take(1);
                 if (todaySign.Any())
                 {
                     SignImage = new BitmapImage(new System.Uri(todaySign.First().GoodsUrl));
@@ -96,6 +96,8 @@ public sealed partial class GamerSignViewModel : ViewModelBase
     async Task SignAsync()
     {
         var result = await WavesClient.SignInAsync(SignRoil.UserId.ToString(), SignRoil.RoleId);
+        if (result == null)
+            return;
         if (result.Code == 1511)
         {
             Debug.WriteLine("已经签到！");

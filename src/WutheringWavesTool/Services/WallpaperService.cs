@@ -42,16 +42,13 @@ public class WallpaperService : IWallpaperService
         if (result.Item1 != null)
         {
             this.ImageHost.Source = result.Item1;
-            if (TipShow != null)
-                TipShow.ShowMessage(result.Item2, Microsoft.UI.Xaml.Controls.Symbol.Pictures);
             this.NowHexValue = result.Item3!;
             AppSettings.WallpaperPath = result.Item2;
             return true;
         }
         else
         {
-            if (TipShow != null)
-                TipShow.ShowMessage(result.Item2, Microsoft.UI.Xaml.Controls.Symbol.Pictures);
+            TipShow.ShowMessage(result.Item2, Microsoft.UI.Xaml.Controls.Symbol.Pictures);
             return false;
         }
     }

@@ -160,36 +160,40 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <wuc:SelectorBarSegmented
-                    x:Name="dataSelect"
+                <ScrollView
+                    x:Name="menuView"
                     x:Load="{x:Bind ViewModel.DataLoad, Mode=OneWay}"
-                    SelectionChanged="dataSelect_SelectionChanged">
-                    <SelectorBarItem
-                        FontFamily="{ThemeResource DefaultFont}"
-                        IsSelected="True"
-                        Tag="DataGamer"
-                        Text="共鸣者" />
-                    <SelectorBarItem
-                        FontFamily="{ThemeResource DefaultFont}"
-                        Tag="DataDock"
-                        Text="数据坞与声骸" />
-                    <SelectorBarItem
-                        FontFamily="{ThemeResource DefaultFont}"
-                        Tag="DataChallenge"
-                        Text="全息战略-强袭" />
-                    <SelectorBarItem
-                        FontFamily="{ThemeResource DefaultFont}"
-                        Tag="DataAbyss"
-                        Text="逆境深塔" />
-                    <SelectorBarItem
-                        FontFamily="{ThemeResource DefaultFont}"
-                        Tag="DataWorld"
-                        Text="世界探索" />
-                    <SelectorBarItem
-                        FontFamily="{ThemeResource DefaultFont}"
-                        Tag="Skin"
-                        Text="图鉴收集" />
-                </wuc:SelectorBarSegmented>
+                    HorizontalScrollBarVisibility="Hidden"
+                    VerticalScrollBarVisibility="Hidden">
+                    <wuc:SelectorBarSegmented x:Name="dataSelect" SelectionChanged="dataSelect_SelectionChanged">
+                        <SelectorBarItem
+                            FontFamily="{ThemeResource DefaultFont}"
+                            IsSelected="True"
+                            Tag="DataGamer"
+                            Text="共鸣者" />
+                        <SelectorBarItem
+                            FontFamily="{ThemeResource DefaultFont}"
+                            Tag="DataDock"
+                            Text="数据坞与声骸" />
+                        <SelectorBarItem
+                            FontFamily="{ThemeResource DefaultFont}"
+                            Tag="DataChallenge"
+                            Text="全息战略-强袭" />
+                        <SelectorBarItem
+                            FontFamily="{ThemeResource DefaultFont}"
+                            Tag="DataAbyss"
+                            Text="逆境深塔" />
+                        <SelectorBarItem
+                            FontFamily="{ThemeResource DefaultFont}"
+                            Tag="DataWorld"
+                            Text="世界探索" />
+                        <SelectorBarItem
+                            FontFamily="{ThemeResource DefaultFont}"
+                            Tag="Skin"
+                            Text="图鉴收集" />
+                    </wuc:SelectorBarSegmented>
+
+                </ScrollView>
                 <Frame
                     x:Name="frame"
                     Grid.Row="1"

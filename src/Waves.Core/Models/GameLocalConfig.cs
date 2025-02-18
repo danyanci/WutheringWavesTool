@@ -134,3 +134,13 @@ public class LocalSettings
     [SugarColumn(ColumnName = "Value")]
     public string Value { get; set; }
 }
+
+[SugarTable("playerTimes")]
+public class PlayerTime
+{
+    [SugarColumn(ColumnName = "DateTime", IsPrimaryKey = true)]
+    public DateTime Now { get; set; }
+
+    [SugarColumn(ColumnName = "Tick")]
+    public long Tick { get; set; }
+}

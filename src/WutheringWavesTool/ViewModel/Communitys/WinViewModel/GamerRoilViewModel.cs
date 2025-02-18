@@ -18,9 +18,23 @@ public sealed partial class GamerRoilViewModel : ViewModelBase
             this.ItemData = navigationRoilsDetilyItem;
     }
 
+    #region RoleData
+    [ObservableProperty]
+    public partial string RolePic { get; set; }
+    #endregion
+
+    #region Weapon
+
+    #endregion
+
     [RelayCommand]
     async Task Loaded()
     {
         var result = await WavesClient.GetGamerRoilDetily(this.ItemData.Item, this.ItemData.RoilId);
+        if (result == null)
+        {
+            return;
+        }
+        this.RolePic = result.Role.RolePicUrl;
     }
 }

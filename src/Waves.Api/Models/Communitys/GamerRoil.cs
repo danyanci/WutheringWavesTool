@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Waves.Api.Models.Messanger;
 
 namespace Waves.Api.Models.Communitys;
 
@@ -128,4 +131,11 @@ public class GameRoilDataItem
     /// </summary>
     [JsonPropertyName("actionRecoverSwitch")]
     public bool ActionRecoverSwitch { get; set; }
+
+    [JsonIgnore]
+    public IRelayCommand CopyIdCommand =>
+        new RelayCommand(() =>
+        {
+            WeakReferenceMessenger.Default.Send<CopyStringMessager>(new(this.RoleId));
+        });
 }
