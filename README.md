@@ -23,14 +23,14 @@
    - [x] 抽卡链接分析
    - [x] 借助本机代码的形式，增强动画流畅度与使用体验。
 
-## 如何开始
+### 如何开始
 
-### ✍如果你感兴趣，接着往下看
+#### ✍如果你感兴趣，接着往下看
 
-#### 对于熟悉dotnet以及WindowsAppSdk的开发人员
+##### 对于熟悉dotnet以及WindowsAppSdk的开发人员
 尝试clone本项目或者fork本项目进行个人或提交编写。
 
-#### 🏃作为一个普通的用户
+##### 🏃作为一个普通的用户
 进入到<a href="https://github.com/BlameTwo/WutheringWavesTool/releases">Release</a>页面下载最新版本进行安装。
 
 ##### 其他引用
