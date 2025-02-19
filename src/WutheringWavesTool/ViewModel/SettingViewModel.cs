@@ -7,11 +7,13 @@ public sealed partial class SettingViewModel : ViewModelBase
 {
     public SettingViewModel(
         [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager,
-        IWavesClient wavesClient
+        IWavesClient wavesClient,
+        IAppContext<App> appContext
     )
     {
         DialogManager = dialogManager;
         WavesClient = wavesClient;
+        AppContext = appContext;
         RegisterMessanger();
     }
 
@@ -29,6 +31,7 @@ public sealed partial class SettingViewModel : ViewModelBase
 
     public IDialogManager DialogManager { get; }
     public IWavesClient WavesClient { get; }
+    public IAppContext<App> AppContext { get; }
 
     [ObservableProperty]
     public partial ObservableCollection<GameRoilDataItem> GamerData { get; set; }
@@ -42,6 +45,7 @@ public sealed partial class SettingViewModel : ViewModelBase
             if (gamers != null)
                 this.GamerData = gamers.Data.ToObservableCollection();
         }
+        this.SelectTheme = AppSettings.AppTheme ?? "Default";
     }
 
     [RelayCommand]

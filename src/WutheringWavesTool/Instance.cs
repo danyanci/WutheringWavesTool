@@ -1,6 +1,4 @@
-﻿using Waves.Core.Services;
-using WutheringWavesTool.Services.DialogServices;
-using static Azure.Core.HttpHeader;
+﻿using WutheringWavesTool.Services.DialogServices;
 
 namespace WutheringWavesTool;
 

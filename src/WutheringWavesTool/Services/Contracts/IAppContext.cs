@@ -8,4 +8,8 @@ public interface IAppContext<T>
     public Task LauncherAsync(T app);
 
     public Task TryInvokeAsync(Action action);
+
+    public ElementTheme CurrentElement { get; set; }
+
+    public void SetElementTheme(ElementTheme theme);
 }

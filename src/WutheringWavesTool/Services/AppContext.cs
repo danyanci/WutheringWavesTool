@@ -44,9 +44,14 @@ public class AppContext<T> : IAppContext<T>
         winManager.IsMaximizable = false;
         this.App.MainWindow = win;
         win.Activate();
+
         if (win.Content is FrameworkElement fe)
         {
-            fe.RequestedTheme = ElementTheme.Dark;
+            fe.RequestedTheme =
+                AppSettings.AppTheme == null ? ElementTheme.Default
+                : AppSettings.AppTheme == "Dark" ? ElementTheme.Dark
+                : AppSettings.AppTheme == "Light" ? ElementTheme.Light
+                : ElementTheme.Default;
         }
         if (await WavesClient.IsLoginAsync())
         {
@@ -90,5 +95,16 @@ public class AppContext<T> : IAppContext<T>
             this.App.MainWindow.DispatcherQueue,
             action
         );
+    }
+
+    public ElementTheme CurrentElement { get; set; }
+
+    public void SetElementTheme(ElementTheme theme)
+    {
+        if (this.App.MainWindow.Content is FrameworkElement fe)
+        {
+            fe.RequestedTheme = theme;
+            this.CurrentElement = theme;
+        }
     }
 }

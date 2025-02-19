@@ -42,7 +42,7 @@
                         Glyph="&#xE894;" />
                 </Button>
             </StackPanel>
-            <ScrollView Grid.Row="1">
+            <ScrollView Grid.Row="1" Margin="0,15,0,0">
                 <ItemsView
                     IsItemInvokedEnabled="True"
                     ItemInvoked="ItemsView_ItemInvoked"
@@ -53,6 +53,7 @@
                             <ItemContainer>
                                 <controls:ImageEx
                                     Margin="10"
+                                    CornerRadius="5"
                                     DecodePixelHeight="200"
                                     DecodePixelWidth="200"
                                     Source="{x:Bind Image}"
@@ -65,8 +66,8 @@
                             ItemsJustification="Start"
                             ItemsStretch="Uniform"
                             MinColumnSpacing="2"
-                            MinItemHeight="120"
-                            MinItemWidth="260" />
+                            MinItemHeight="100"
+                            MinItemWidth="180" />
                     </ItemsView.Layout>
                 </ItemsView>
             </ScrollView>

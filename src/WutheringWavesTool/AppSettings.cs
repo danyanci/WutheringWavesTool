@@ -23,6 +23,12 @@ public class AppSettings
         set => Write(value);
     }
 
+    public static string? AppTheme
+    {
+        get => Read();
+        set => Write(value);
+    }
+
     internal static string? Read([CallerMemberName] string Path = null)
     {
         if (LocalSetting.Values.TryGetValue(Path, out object value))
