@@ -4,30 +4,34 @@
    <br/>
    <br/>
 
-   [![NET 6.0](https://img.shields.io/badge/dotnet-7.0-purple.svg?style=flat-square&color=512bd4)](https://learn.microsoft.com/zh-cn/dotnet/core/whats-new/dotnet-7)
+   [![NET 6.0](https://img.shields.io/badge/dotnet-8.0-purple.svg?style=flat-square&color=512bd4)](https://learn.microsoft.com/zh-cn/dotnet/core/whats-new/dotnet-7)
+   [![C#](https://img.shields.io/badge/CSharp-14.0-purple.svg?style=flat-square&color=512bd4)](https://learn.microsoft.com/zh-cn/dotnet/csharp/)
    [![Window-WinUI3](https://img.shields.io/badge/WindowsAppSDK-v1.6-blue)](https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/)
-   [![CommunityToolkit.Window](https://img.shields.io/badge/CommunityToolkit-v8.4-green)](https://learn.microsoft.com/zh-cn/dotnet/communitytoolkit/)
-   [![H.NotifyIcon](https://img.shields.io/badge/H.NotifyIcon-v2.0-SlateBlue)](https://github.com/HavenDV/H.NotifyIcon)
-   [![Net Extnetions](https://img.shields.io/badge/NetExtentions-v8.0-Purple)](https://dot.net)
-   [![Serilog](https://img.shields.io/badge/Serilog-v3.0-CadetBlue)](https://serilog.net/)
+   [![Window-WinUI3](https://img.shields.io/badge/AOT-purple)](https://learn.microsoft.com/zh-cn/dotnet/core/deploying/native-aot/interop/)
+</div>
+
+<div align="center">
+
+<h4> 此程序编写目的是为了增强鸣潮游戏体验而编写 </h4>
 
 </div>
 
-##### 安装需求
+相对于普通功能而言增加了以下特色功能：
+   - [x] 库街区一键登录与数据查看
+   - [x] 多服务器维护游戏数据与更新
+   - [x] 社区签到
+   - [x] 抽卡链接分析
+   - [x] 借助本机代码的形式，增强动画流畅度与使用体验。
 
-Windows系统版本：Windows 11
+### 如何开始
 
-其他：无要求
+#### ✍如果你感兴趣，接着往下看
 
-##### 参与开发
+##### 对于熟悉dotnet以及WindowsAppSdk的开发人员
+尝试clone本项目或者fork本项目进行个人或提交编写。
 
-随便看看，随便玩玩，随便写写。
-
-##### 安装方法
-
-进入Release页面下载最新的程序包
-
-
+##### 🏃作为一个普通的用户
+进入到<a href="https://github.com/BlameTwo/WutheringWavesTool/releases">Release</a>页面下载最新版本进行安装。
 
 ##### 其他引用
 
