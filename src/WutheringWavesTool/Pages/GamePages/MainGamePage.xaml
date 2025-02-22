@@ -331,6 +331,8 @@
                 Margin="5,5,0,0"
                 x:Load="{x:Bind ViewModel.SelectBarLoad, Mode=OneWay}"
                 Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultSolid}"
+                BorderThickness="1"
                 CornerRadius="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -395,6 +397,8 @@
                 Grid.Row="0"
                 Margin="5,0,0,0"
                 Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+                BorderBrush="{ThemeResource CardStrokeColorDefaultSolid}"
+                BorderThickness="1"
                 CornerRadius="5">
                 <ScrollViewer
                     HorizontalContentAlignment="Stretch"
@@ -432,12 +436,6 @@
                                 </Button>
                             </DataTemplate>
                         </ItemsRepeater>
-                        <Border
-                            Width="3"
-                            Margin="5,8,0,8"
-                            Background="{ThemeResource SystemColorGrayTextBrush}"
-                            CornerRadius="1"
-                            Opacity="0.8" />
                         <Button
                             Margin="5,0,0,0"
                             Padding="8"
@@ -480,6 +478,8 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Background="{ThemeResource AcrylicBackgroundFillColorBaseBrush}"
+            BorderBrush="{ThemeResource CardStrokeColorDefaultSolid}"
+            BorderThickness="1"
             CornerRadius="5"
             Visibility="{x:Bind ViewModel.GamerDataVisibility, Mode=OneWay}">
             <Grid.RowDefinitions>

@@ -1,4 +1,6 @@
-﻿namespace WutheringWavesTool.Models.Wrapper;
+﻿using WutheringWavesTool.Helpers;
+
+namespace WutheringWavesTool.Models.Wrapper;
 
 public partial class DataCenterBassItemWrapper : ObservableObject
 {
@@ -38,7 +40,7 @@ public partial class DataCenterRoilItemWrapper : ObservableObject
         this.AttributeName = roleData.AttributeName;
         this.RoleName = roleData.RoleName;
         this.AttibuteId = roleData.AttributeId;
-        TypeImage = new BitmapImage(new(SwitchType(roleData)));
+        TypeImage = new BitmapImage(new(RoleHelper.SwitchType(roleData.AttributeId)));
         RoleIconUrl = new BitmapImage(new(roleData.RoleIconUrl));
         User = user;
     }
@@ -50,35 +52,8 @@ public partial class DataCenterRoilItemWrapper : ObservableObject
         this.AttributeName = roleData.AttributeName;
         this.RoleName = roleData.RoleName;
         this.AttibuteId = roleData.AttributeId;
-        TypeImage = new BitmapImage(new(SwitchType(roleData)));
+        TypeImage = new BitmapImage(new(RoleHelper.SwitchType(roleData.AttributeId)));
         RoleIconUrl = new BitmapImage(new(roleData.RoleIconUrl));
-    }
-
-    public static string SwitchType(RoleList RoleData)
-    {
-        var TypeImage = "";
-        switch (RoleData.AttributeId)
-        {
-            case 1:
-                TypeImage = GameIcon.Icon1;
-                break;
-            case 2:
-                TypeImage = GameIcon.Icon2;
-                break;
-            case 3:
-                TypeImage = GameIcon.Icon3;
-                break;
-            case 4:
-                TypeImage = GameIcon.Icon4;
-                break;
-            case 5:
-                TypeImage = GameIcon.Icon5;
-                break;
-            case 6:
-                TypeImage = GameIcon.Icon6;
-                break;
-        }
-        return TypeImage;
     }
 
     [RelayCommand]

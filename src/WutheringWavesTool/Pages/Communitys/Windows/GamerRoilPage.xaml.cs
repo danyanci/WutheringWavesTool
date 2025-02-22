@@ -19,4 +19,12 @@ public sealed partial class GamerRoilPage : Page, IPage
     public GamerRoilViewModel ViewModel { get; }
 
     public Type PageType => typeof(GamerRoilPage);
+
+    private void SelectorBarSegmented_SelectionChanged(
+        SelectorBar sender,
+        SelectorBarSelectionChangedEventArgs args
+    )
+    {
+        this.ViewModel.SetPage(sender.SelectedItem.Tag.ToString());
+    }
 }

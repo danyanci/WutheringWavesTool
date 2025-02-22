@@ -22,6 +22,7 @@
             <converter:CardPoolTypeConverter x:Key="CardPoolTypeConverter" />
             <converter:RecordStarConverter x:Key="RecordStarConverter" />
             <converter:RecordColorConverter x:Key="RecordColorConverter" />
+            <converter:StarLevelColorConverter x:Key="StarLevelColorConverter" />
             <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityReversalConverter" Reversal="True" />
             <converter:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" Reversal="False" />
             <converter:IntToSecondTimeConverter x:Key="IntToSecondTimeConverter" />

@@ -1,4 +1,6 @@
-﻿namespace WutheringWavesTool.Models.Wrapper.WindowRoils;
+﻿using WutheringWavesTool.Helpers;
+
+namespace WutheringWavesTool.Models.Wrapper.WindowRoils;
 
 public interface INavigationRoilsItem { }
 
@@ -11,7 +13,7 @@ public partial class NavigationRoilsDetilyItem : ObservableObject, INavigationRo
         this.AttributeName = roleData.AttributeName;
         this.RoleName = roleData.RoleName;
         this.AttibuteId = roleData.AttributeId;
-        TypeImage = new BitmapImage(new(DataCenterRoilItemWrapper.SwitchType(roleData)));
+        TypeImage = new BitmapImage(new(RoleHelper.SwitchType(roleData.AttributeId)));
         RoleIconUrl = new BitmapImage(new(roleData.RoleIconUrl));
         Item = item;
     }
