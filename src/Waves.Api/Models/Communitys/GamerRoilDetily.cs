@@ -1,23 +1,29 @@
 ﻿using System.Text.Json.Serialization;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace Waves.Api.Models.Communitys;
 
-public class ChainList
+public partial class ChainList : ObservableObject
 {
     [JsonPropertyName("description")]
-    public string Description { get; set; }
+    [ObservableProperty]
+    public partial string Description { get; set; }
 
     [JsonPropertyName("iconUrl")]
-    public string IconUrl { get; set; }
+    [ObservableProperty]
+    public partial string IconUrl { get; set; }
 
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    [ObservableProperty]
+    public partial string Name { get; set; }
 
     [JsonPropertyName("order")]
-    public int Order { get; set; }
+    [ObservableProperty]
+    public partial int Order { get; set; }
 
     [JsonPropertyName("unlocked")]
-    public bool Unlocked { get; set; }
+    [ObservableProperty]
+    public partial bool Unlocked { get; set; }
 }
 
 public class EquipPhantomList

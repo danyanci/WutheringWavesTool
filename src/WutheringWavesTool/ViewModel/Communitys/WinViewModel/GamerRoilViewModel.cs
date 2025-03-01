@@ -87,7 +87,17 @@ public sealed partial class GamerRoilViewModel : ViewModelBase, IDisposable
     public partial Visibility PhantomDataVisibility { get; set; }
     #endregion
 
-    [RelayCommand]
+    #region Phantom
+    [ObservableProperty]
+    public partial string PhatomTypeName { get; set; }
+
+    [ObservableProperty]
+    public partial BitmapImage PhatomTypeImage { get; set; }
+
+    [ObservableProperty]
+    public partial bool PhatomVisibility { get; set; }
+    #endregion
+
     async Task Loaded()
     {
         var result = await WavesClient.GetGamerRoilDetily(this.ItemData.Item, this.ItemData.RoilId);
@@ -109,9 +119,15 @@ public sealed partial class GamerRoilViewModel : ViewModelBase, IDisposable
         this.WeaponSession = result.WeaponData.Weapon.EffectDescription;
         this.WeaponReason = result.WeaponData.ResonLevel;
         this.Skills = result.SkillList.ToObservableCollection();
-        //声骸
-        this.PhantomData = result.PhantomData.EquipPhantomList.ToObservableCollection();
-        //共鸣链
+        if (result.PhantomData.Cost != 0)
+        {
+            this.PhantomData = result.PhantomData.EquipPhantomList.ToObservableCollection();
+            this.PhatomVisibility = true;
+        }
+        else
+        {
+            this.PhatomVisibility = false;
+        }
         this.Chains = result.ChainList.ToObservableCollection();
     }
 
