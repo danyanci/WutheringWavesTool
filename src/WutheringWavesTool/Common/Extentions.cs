@@ -4,6 +4,8 @@ public static class Extentions
 {
     public static ObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> ts)
     {
+        if (ts == null)
+            return new ObservableCollection<T>();
         return new ObservableCollection<T>(ts);
     }
 

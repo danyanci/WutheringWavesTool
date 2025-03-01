@@ -33,6 +33,7 @@ public partial class App : ClientApplication
         {
             fs.WriteLine(e.Exception.Message);
         }
+        e.Handled = true;
     }
 
     protected override async void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)

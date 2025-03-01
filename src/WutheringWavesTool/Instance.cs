@@ -24,7 +24,6 @@ public static class Instance
             #region Community
             .AddTransient<GamerSignPage>()
             .AddTransient<GamerSignViewModel>()
-            .AddTransient<GamerRoilsDetilyPage>()
             .AddTransient<GamerRoilsDetilyViewModel>()
             .AddTransient<GameRoilsViewModel>()
             .AddTransient<GamerDockViewModel>()
@@ -37,6 +36,7 @@ public static class Instance
             .AddTransient<RecordItemViewModel>()
             #endregion
             #region Roil
+            .AddTransient<GamerRoilsDetilyPage>()
             .AddTransient<GamerRoilViewModel>()
             #endregion
             #region Dialog

@@ -21,7 +21,6 @@
   <ItemGroup>
     <None Remove="Assets\Fonts\gamerRoilDetilyFont.ttf" />
     <None Remove="Assets\RolePage\weapon.svg" />
-    <None Remove="Pages\Communitys\Windows\GamerRoilPage.xaml" />
     <None Remove="Pages\Communitys\Windows\GamerRoilsDetilyPage.xaml" />
     <None Remove="Pages\Dialogs\GameResourceDialog.xaml" />
     <None Remove="Pages\Dialogs\SelectWallpaperDialog.xaml" />
@@ -163,11 +162,6 @@
     <Content Update="Assets\RolePage\weapon.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Communitys\Windows\GamerRoilPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Communitys\Windows\GamerRoilsDetilyPage.xaml">

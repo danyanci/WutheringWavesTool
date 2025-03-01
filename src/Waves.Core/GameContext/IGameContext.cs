@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Waves.Api.Models;
+﻿using Waves.Api.Models;
 using Waves.Core.Contracts;
 using Waves.Core.Models;
 

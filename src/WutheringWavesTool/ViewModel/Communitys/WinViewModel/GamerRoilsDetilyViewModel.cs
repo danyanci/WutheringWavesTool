@@ -1,28 +1,22 @@
-﻿using WutheringWavesTool.Models.Wrapper.WindowRoils;
+﻿using System.Diagnostics.Contracts;
+using System.Threading.Tasks;
+using Microsoft.UI.Xaml.Controls.Primitives;
+using WutheringWavesTool.Models.Wrapper.WindowRoils;
 
 namespace WutheringWavesTool.ViewModel.Communitys.WinViewModel;
 
-public sealed partial class GamerRoilsDetilyViewModel : ViewModelBase
+public sealed partial class GamerRoilsDetilyViewModel : ViewModelBase, IDisposable
 {
-    public IGamerRoilContext GamerRoilContext { get; }
-
     public GamerRoilsDetilyViewModel(
-        IServiceScopeFactory serviceScopeFactory,
-        IWavesClient wavesClient
+        IWavesClient wavesClient,
+        GamerRoilViewModel gamerRoilViewModel
     )
     {
-        ServiceScopeFactory = serviceScopeFactory;
-        this.Scope = ServiceScopeFactory.CreateScope();
-        this.GamerRoilContext = Scope.ServiceProvider.GetRequiredKeyedService<IGamerRoilContext>(
-            nameof(GamerRoilContext)
-        );
-        GamerRoilContext.SetScope(Scope);
         WavesClient = wavesClient;
+        GamerRoilViewModel = gamerRoilViewModel;
     }
 
     public ShowRoleData Data { get; internal set; }
-    public IServiceScopeFactory ServiceScopeFactory { get; }
-    public IServiceScope Scope { get; }
     public IWavesClient WavesClient { get; }
 
     [ObservableProperty]
@@ -33,7 +27,13 @@ public sealed partial class GamerRoilsDetilyViewModel : ViewModelBase
     public partial INavigationRoilsItem SelectItem { get; set; }
 
     [ObservableProperty]
+    public partial GamerRoilViewModel GamerRoilViewModel { get; set; }
+
+    [ObservableProperty]
     public partial string Title { get; set; }
+
+    [ObservableProperty]
+    public partial bool SessionLoad { get; set; }
 
     [RelayCommand]
     async Task Loaded()
@@ -95,20 +95,21 @@ public sealed partial class GamerRoilsDetilyViewModel : ViewModelBase
         }
     }
 
-    internal void SwitchPage(NavigationRoilsDetilyItem item)
+    internal async Task SwitchPage(NavigationRoilsDetilyItem item)
     {
         this.Title = item.RoleName;
-        this.GamerRoilContext.NavigationService.NavigationTo<GamerRoilViewModel>(
-            item,
-            new DrillInNavigationTransitionInfo()
-        );
+        await this.GamerRoilViewModel.SetDataAsync(item);
+        this.SessionLoad = true;
     }
 
-    /// <summary>
-    /// 关闭作用域
-    /// </summary>
-    internal void Close()
+    public void Dispose()
     {
-        this.Scope.Dispose();
+        if (Roles != null)
+        {
+            Roles.Clear();
+            this.GamerRoilViewModel.Dispose();
+        }
+        Roles = null;
+        SelectItem = null;
     }
 }

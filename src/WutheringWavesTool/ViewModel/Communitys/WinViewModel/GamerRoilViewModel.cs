@@ -1,11 +1,14 @@
-﻿using Windows.Web.AtomPub;
+﻿using System.Threading.Tasks;
+using Windows.Web.AtomPub;
 using WutheringWavesTool.Helpers;
 using WutheringWavesTool.Models.Wrapper.WindowRoils;
 
 namespace WutheringWavesTool.ViewModel.Communitys.WinViewModel;
 
-public sealed partial class GamerRoilViewModel : ViewModelBase
+public sealed partial class GamerRoilViewModel : ViewModelBase, IDisposable
 {
+    private bool disposedValue;
+
     public NavigationRoilsDetilyItem ItemData { get; private set; }
     public IWavesClient WavesClient { get; }
 
@@ -14,15 +17,16 @@ public sealed partial class GamerRoilViewModel : ViewModelBase
         WavesClient = wavesClient;
     }
 
-    internal void SetData(NavigationRoilsDetilyItem? navigationRoilsDetilyItem)
+    internal async Task SetDataAsync(NavigationRoilsDetilyItem? navigationRoilsDetilyItem)
     {
         if (navigationRoilsDetilyItem != null)
             this.ItemData = navigationRoilsDetilyItem;
+        await this.Loaded();
     }
 
     #region RoleData
     [ObservableProperty]
-    public partial string RolePic { get; set; }
+    public partial BitmapImage RolePic { get; set; }
 
     [ObservableProperty]
     public partial string RoleName { get; set; }
@@ -91,7 +95,7 @@ public sealed partial class GamerRoilViewModel : ViewModelBase
         {
             return;
         }
-        this.RolePic = result.Role.RolePicUrl;
+        this.RolePic = new(new(result.Role.RolePicUrl));
         this.RoleName = result.Role.RoleName;
         this.RoleLevel = result.Role.Level;
         this.RoleStar = result.Role.StarLevel;
@@ -131,5 +135,32 @@ public sealed partial class GamerRoilViewModel : ViewModelBase
             ChainVisibility = Visibility.Collapsed;
             PhantomDataVisibility = Visibility.Visible;
         }
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                this.CTS.Cancel();
+                if (PhantomData != null)
+                    PhantomData.Clear();
+                if (Chains != null)
+                    Chains.Clear();
+                if (AttImage != null)
+                    Skills.Clear();
+                AttImage = null;
+                WeaponImage = null;
+                RolePic = null;
+            }
+            disposedValue = true;
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
     }
 }

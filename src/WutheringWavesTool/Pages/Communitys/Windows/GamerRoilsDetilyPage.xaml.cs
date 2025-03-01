@@ -1,4 +1,5 @@
-﻿using Windows.System;
+﻿using System.Threading.Tasks;
+using Windows.System;
 using WutheringWavesTool.Models.Wrapper.WindowRoils;
 
 namespace WutheringWavesTool.Pages.Communitys.Windows;
@@ -9,14 +10,15 @@ public sealed partial class GamerRoilsDetilyPage : Page, IWindowPage
     {
         this.InitializeComponent();
         ViewModel = viewModel;
-        this.ViewModel.GamerRoilContext.NavigationService.RegisterView(this.frame);
+        this.title_bth.Click += Button_Click;
+        this.Loaded += this.Page_Loaded;
     }
 
     public GamerRoilsDetilyViewModel ViewModel { get; }
 
     public void Dispose()
     {
-        this.ViewModel.Close();
+        this.ViewModel.Dispose();
     }
 
     public void SetData(object value)
@@ -31,23 +33,16 @@ public sealed partial class GamerRoilsDetilyPage : Page, IWindowPage
     public void SetWindow(Window window)
     {
         this.titlebar.Window = window;
-        this.titlebar.Window.AppWindow.Closing += AppWindow_Closing;
+        window.AppWindow.Closing += AppWindow_Closing;
         titlebar.UpDate();
     }
 
     private void AppWindow_Closing(AppWindow sender, AppWindowClosingEventArgs args)
     {
-        this.ViewModel.Close();
-    }
-
-    protected override void OnNavigatedFrom(NavigationEventArgs e)
-    {
-        base.OnNavigatedFrom(e);
-    }
-
-    protected override void OnNavigatedTo(NavigationEventArgs e)
-    {
-        base.OnNavigatedTo(e);
+        this.title_bth.Click -= Button_Click;
+        this.Loaded -= this.Page_Loaded;
+        this.ViewModel.Dispose();
+        GC.Collect();
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)
@@ -60,14 +55,24 @@ public sealed partial class GamerRoilsDetilyPage : Page, IWindowPage
         titlebar.UpDate();
     }
 
-    private void view_SelectionChanged(
+    private async void view_SelectionChanged(
         NavigationView sender,
         NavigationViewSelectionChangedEventArgs args
     )
     {
         if (args.SelectedItem != null && args.SelectedItem is NavigationRoilsDetilyItem item)
         {
-            this.ViewModel.SwitchPage(item);
+            await this.ViewModel.SwitchPage(item);
         }
+    }
+
+    private void SelectorBarSegmented_SelectionChanged(
+        SelectorBar sender,
+        SelectorBarSelectionChangedEventArgs args
+    )
+    {
+        if (sender.SelectedItem == null)
+            return;
+        this.ViewModel.GamerRoilViewModel.SetPage(sender.SelectedItem.Tag.ToString());
     }
 }
