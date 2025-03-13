@@ -73,5 +73,9 @@ public interface IGameContext
     );
     void StopProdDownload();
     Task DeleteGameProdResourceAsync();
+
+    Task<FileVersion> GetLocalDLSSAsync();
+    Task<FileVersion> GetLocalDLSSGenerateAsync();
+    Task<FileVersion> GetLocalXeSSGenerateAsync();
     #endregion
 }

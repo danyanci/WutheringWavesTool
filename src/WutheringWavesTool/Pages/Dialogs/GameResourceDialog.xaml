@@ -16,55 +16,100 @@
             <i:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
         </i:EventTriggerBehavior>
     </i:Interaction.Behaviors>
-    <Grid Height="200" MaxWidth="700">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
-            <RowDefinition />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <TextBlock
-            VerticalAlignment="Center"
-            FontFamily="{ThemeResource DefaultFont}"
-            FontSize="25"
-            Text="游戏资源" />
-        <Button
-            Width="35"
-            Height="35"
-            Padding="0"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            Command="{x:Bind ViewModel.CloseCommand}"
-            CornerRadius="35"
-            Style="{ThemeResource TransparentButtonStyle}">
-            <FontIcon
-                FontFamily="Segoe Fluent Icons"
-                FontSize="15"
-                Glyph="&#xE894;" />
-        </Button>
-        <ui:SettingsCard
-            Grid.Row="1"
-            Width="480"
-            Margin="0,5,0,0"
-            Description="{x:Bind ViewModel.GameFilesSize, Mode=OneWay}"
-            Header="游戏资源大小"
-            IsClickEnabled="True">
+    <ScrollViewer Height="400" MaxWidth="700">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                VerticalAlignment="Center"
+                FontFamily="{ThemeResource DefaultFont}"
+                FontSize="25"
+                Text="游戏资源" />
             <Button
-                Command="{x:Bind ViewModel.SendDeleteGameResourceCommand}"
-                Content="卸载"
-                IsEnabled="{x:Bind ViewModel.DeleteGameResourceEnable, Mode=OneWay}" />
-        </ui:SettingsCard>
-        <ui:SettingsCard
-            Grid.Row="2"
-            Width="480"
-            Margin="0,5,0,0"
-            HorizontalAlignment="Stretch"
-            Description="{x:Bind ViewModel.GameProdSize, Mode=OneWay}"
-            Header="预下载大小"
-            IsClickEnabled="True">
-            <Button
-                Command="{x:Bind ViewModel.SendDeleteProdGameResourceCommand}"
-                Content="卸载"
-                IsEnabled="{x:Bind ViewModel.DeleteProdGameResourceEnable, Mode=OneWay}" />
-        </ui:SettingsCard>
-    </Grid>
+                Width="35"
+                Height="35"
+                Padding="0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Command="{x:Bind ViewModel.CloseCommand}"
+                CornerRadius="35"
+                Style="{ThemeResource TransparentButtonStyle}">
+                <FontIcon
+                    FontFamily="Segoe Fluent Icons"
+                    FontSize="15"
+                    Glyph="&#xE894;" />
+            </Button>
+            <ui:SettingsCard
+                Grid.Row="1"
+                Width="480"
+                Margin="0,5,0,0"
+                Description="{x:Bind ViewModel.GameFilesSize, Mode=OneWay}"
+                Header="游戏资源大小"
+                IsClickEnabled="True">
+                <Button
+                    Command="{x:Bind ViewModel.SendDeleteGameResourceCommand}"
+                    Content="卸载"
+                    IsEnabled="{x:Bind ViewModel.DeleteGameResourceEnable, Mode=OneWay}" />
+            </ui:SettingsCard>
+            <ui:SettingsCard
+                Grid.Row="2"
+                Width="480"
+                Margin="0,5,0,0"
+                HorizontalAlignment="Stretch"
+                Description="{x:Bind ViewModel.GameProdSize, Mode=OneWay}"
+                Header="预下载大小"
+                IsClickEnabled="True">
+                <Button
+                    Command="{x:Bind ViewModel.SendDeleteProdGameResourceCommand}"
+                    Content="卸载"
+                    IsEnabled="{x:Bind ViewModel.DeleteProdGameResourceEnable, Mode=OneWay}" />
+            </ui:SettingsCard>
+            <ui:SettingsExpander
+                Grid.Row="3"
+                Width="480"
+                Margin="0,5,0,0"
+                Header="图形增强技术">
+                <ui:SettingsExpander.Items>
+                    <ui:SettingsCard Header="{x:Bind ViewModel.Dlss.DisplayName, Mode=OneWay}">
+                        <ui:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8AA;" />
+                        </ui:SettingsCard.HeaderIcon>
+                        <ui:SettingsCard.Description>
+                            <TextBlock>
+                                <Run Text="Version:" />
+                                <Run Text="{x:Bind ViewModel.Dlss.Version, Mode=OneWay}" />
+                            </TextBlock>
+                        </ui:SettingsCard.Description>
+                    </ui:SettingsCard>
+                    <ui:SettingsCard Grid.Row="4" Header="{x:Bind ViewModel.DlssG.DisplayName, Mode=OneWay}">
+                        <ui:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8AA;" />
+                        </ui:SettingsCard.HeaderIcon>
+                        <ui:SettingsCard.Description>
+                            <TextBlock>
+                                <Run Text="Version:" />
+                                <Run Text="{x:Bind ViewModel.DlssG.Version, Mode=OneWay}" />
+                            </TextBlock>
+                        </ui:SettingsCard.Description>
+                    </ui:SettingsCard>
+                    <ui:SettingsCard Grid.Row="5" Header="{x:Bind ViewModel.Xess.DisplayName, Mode=OneWay}">
+                        <ui:SettingsCard.HeaderIcon>
+                            <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8AA;" />
+                        </ui:SettingsCard.HeaderIcon>
+                        <ui:SettingsCard.Description>
+                            <TextBlock>
+                                <Run Text="Version:" />
+                                <Run Text="{x:Bind ViewModel.Xess.Version, Mode=OneWay}" />
+                            </TextBlock>
+                        </ui:SettingsCard.Description>
+                    </ui:SettingsCard>
+                </ui:SettingsExpander.Items>
+            </ui:SettingsExpander>
+        </Grid>
+    </ScrollViewer>
 </ContentDialog>

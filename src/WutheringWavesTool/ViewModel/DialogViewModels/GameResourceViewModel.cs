@@ -25,6 +25,15 @@ public sealed partial class GameResourceViewModel : DialogViewModelBase
     [ObservableProperty]
     public partial bool DeleteProdGameResourceEnable { get; set; } = true;
 
+    [ObservableProperty]
+    public partial FileVersion Dlss { get; private set; }
+
+    [ObservableProperty]
+    public partial FileVersion DlssG { get; private set; }
+
+    [ObservableProperty]
+    public partial FileVersion Xess { get; private set; }
+
     internal void SetData(string contextName)
     {
         ContextName = contextName;
@@ -83,6 +92,10 @@ public sealed partial class GameResourceViewModel : DialogViewModelBase
         {
             this.DeleteProdGameResourceEnable = false;
         }
+
+        this.Dlss = await GameContext.GetLocalDLSSAsync();
+        this.DlssG = await GameContext.GetLocalDLSSGenerateAsync();
+        this.Xess = await GameContext.GetLocalXeSSGenerateAsync();
     }
 
     [RelayCommand]
