@@ -12,6 +12,9 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     [ObservableProperty]
     public partial string ServerName { get; set; }
+
+    [ObservableProperty]
+    public partial Visibility BackVisibility { get; set; }
     public ImageEx Image { get; set; }
     public Border BackControl { get; internal set; }
 
@@ -50,7 +53,22 @@ public sealed partial class ShellViewModel : ViewModelBase
             BlurAnimationHelper.StartBlurAnimation(this.Image, 0, 10, TimeSpan.FromSeconds(0.3));
             OpacityAnimationHelper.StartAnimationHelper(this.BackControl, 0.5);
         }
+        if (HomeNavigationService.CanGoBack)
+        {
+            this.BackVisibility = Visibility.Visible;
+        }
+        else
+        {
+            this.BackVisibility = Visibility.Collapsed;
+        }
         GC.Collect();
+    }
+
+    [RelayCommand]
+    void BackPage()
+    {
+        if (HomeNavigationService.CanGoBack)
+            HomeNavigationService.GoBack();
     }
 
     [RelayCommand]

@@ -20,99 +20,107 @@
             <i:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
         </i:EventTriggerBehavior>
     </i:Interaction.Behaviors>
-    <StackPanel>
-        <TextBlock
-            FontFamily="{StaticResource DefaultFont}"
-            FontSize="15"
-            Text="通用" />
-        <ui:SettingsCard
-            Margin="0,5,0,0"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch"
-            Header="主题">
-            <ui:SettingsCard.HeaderIcon>
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE790;" />
-            </ui:SettingsCard.HeaderIcon>
-            <ComboBox ItemsSource="{x:Bind ViewModel.Themes, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectTheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                <i:Interaction.Behaviors>
-                    <i:EventTriggerBehavior EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{x:Bind ViewModel.SetThemeCommand}" />
-                    </i:EventTriggerBehavior>
-                </i:Interaction.Behaviors>
-            </ComboBox>
-        </ui:SettingsCard>
-        <ui:SettingsCard
-            Margin="0,5,0,0"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch"
-            Command="{x:Bind ViewModel.SelectWallpaperCommand}"
-            Header="壁纸"
-            IsClickEnabled="True">
-            <ui:SettingsCard.HeaderIcon>
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B9;" />
-            </ui:SettingsCard.HeaderIcon>
-        </ui:SettingsCard>
+    <Grid>
+        <Grid.ChildrenTransitions>
+            <TransitionCollection>
+                <RepositionThemeTransition />
+            </TransitionCollection>
+        </Grid.ChildrenTransitions>
+        <StackPanel HorizontalAlignment="Stretch">
+            <TextBlock
+                FontFamily="{StaticResource DefaultFont}"
+                FontSize="15"
+                Text="通用" />
+            <ui:SettingsCard
+                Margin="0,5,0,0"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                Header="主题">
+                <ui:SettingsCard.HeaderIcon>
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE790;" />
+                </ui:SettingsCard.HeaderIcon>
+                <ComboBox ItemsSource="{x:Bind ViewModel.Themes, Mode=OneWay}" SelectedItem="{x:Bind ViewModel.SelectTheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Behaviors>
+                        <i:EventTriggerBehavior EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{x:Bind ViewModel.SetThemeCommand}" />
+                        </i:EventTriggerBehavior>
+                    </i:Interaction.Behaviors>
+                </ComboBox>
+            </ui:SettingsCard>
+            <ui:SettingsCard
+                Margin="0,5,0,0"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                Command="{x:Bind ViewModel.SelectWallpaperCommand}"
+                Header="壁纸"
+                IsClickEnabled="True">
+                <ui:SettingsCard.HeaderIcon>
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B9;" />
+                </ui:SettingsCard.HeaderIcon>
+            </ui:SettingsCard>
 
-        <TextBlock
-            Margin="0,5,0,0"
-            FontFamily="{StaticResource DefaultFont}"
-            FontSize="15"
-            Text="库街区" />
-        <ui:SettingsCard
-            Margin="0,5,0,0"
-            Command="{x:Bind ViewModel.CopyTokenCommand}"
-            Header="复制授权码"
-            IsClickEnabled="True">
-            <ui:SettingsCard.ActionIcon>
-                <FontIcon
-                    FontFamily="Segoe Fluent Icons"
-                    FontSize="15"
-                    Glyph="&#xE8C8;" />
-            </ui:SettingsCard.ActionIcon>
-            <ui:SettingsCard.HeaderIcon>
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE631;" />
-            </ui:SettingsCard.HeaderIcon>
-        </ui:SettingsCard>
-        <ui:SettingsExpander
-            Margin="0,5,0,0"
-            HorizontalAlignment="Stretch"
-            HorizontalContentAlignment="Stretch"
-            ItemsSource="{x:Bind ViewModel.GamerData, Mode=OneWay}">
-            <ui:SettingsExpander.HeaderIcon>
-                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEC7A;" />
-            </ui:SettingsExpander.HeaderIcon>
-            <ui:SettingsExpander.Header>
-                <TextBlock VerticalAlignment="Center" Text="账号管理" />
-            </ui:SettingsExpander.Header>
-            <ui:SettingsExpander.ItemTemplate>
-                <DataTemplate x:DataType="gamer:GameRoilDataItem">
-                    <ui:SettingsCard>
-                        <ui:SettingsCard.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <wui:ImageEx
-                                    Width="28"
-                                    Height="28"
-                                    CornerRadius="5"
-                                    Source="{x:Bind GameHeadUrl}" />
-                                <TextBlock Margin="5,0,0,0" VerticalAlignment="Center">
-                                    <Run Text="{x:Bind RoleName}" />
-                                    <Run Text="--" />
-                                    <Run Text="{x:Bind ServerName}" />
-                                </TextBlock>
-                            </StackPanel>
-                        </ui:SettingsCard.Header>
-                        <Button
-                            Command="{x:Bind CopyIdCommand}"
-                            Style="{ThemeResource TransparentButtonStyle}"
-                            ToolTipService.ToolTip="复制账号ID">
-                            <FontIcon
-                                FontFamily="Segoe Fluent Icons"
-                                FontSize="15"
-                                Glyph="&#xE8C8;" />
-                        </Button>
-                    </ui:SettingsCard>
-                </DataTemplate>
-            </ui:SettingsExpander.ItemTemplate>
-        </ui:SettingsExpander>
-    </StackPanel>
+            <TextBlock
+                Margin="0,5,0,0"
+                FontFamily="{StaticResource DefaultFont}"
+                FontSize="15"
+                Text="库街区" />
+            <ui:SettingsCard
+                Margin="0,5,0,0"
+                Command="{x:Bind ViewModel.CopyTokenCommand}"
+                Header="复制授权码"
+                IsClickEnabled="True">
+                <ui:SettingsCard.ActionIcon>
+                    <FontIcon
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="15"
+                        Glyph="&#xE8C8;" />
+                </ui:SettingsCard.ActionIcon>
+                <ui:SettingsCard.HeaderIcon>
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE631;" />
+                </ui:SettingsCard.HeaderIcon>
+            </ui:SettingsCard>
+            <ui:SettingsExpander
+                Margin="0,5,0,0"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Stretch"
+                ItemsSource="{x:Bind ViewModel.GamerData, Mode=OneWay}">
+                <ui:SettingsExpander.HeaderIcon>
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xEC7A;" />
+                </ui:SettingsExpander.HeaderIcon>
+                <ui:SettingsExpander.Header>
+                    <TextBlock VerticalAlignment="Center" Text="账号管理" />
+                </ui:SettingsExpander.Header>
+                <ui:SettingsExpander.ItemTemplate>
+                    <DataTemplate x:DataType="gamer:GameRoilDataItem">
+                        <ui:SettingsCard>
+                            <ui:SettingsCard.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <wui:ImageEx
+                                        Width="28"
+                                        Height="28"
+                                        CornerRadius="5"
+                                        Source="{x:Bind GameHeadUrl}" />
+                                    <TextBlock Margin="5,0,0,0" VerticalAlignment="Center">
+                                        <Run Text="{x:Bind RoleName}" />
+                                        <Run Text="--" />
+                                        <Run Text="{x:Bind ServerName}" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </ui:SettingsCard.Header>
+                            <Button
+                                Command="{x:Bind CopyIdCommand}"
+                                Style="{ThemeResource TransparentButtonStyle}"
+                                ToolTipService.ToolTip="复制账号ID">
+                                <FontIcon
+                                    FontFamily="Segoe Fluent Icons"
+                                    FontSize="15"
+                                    Glyph="&#xE8C8;" />
+                            </Button>
+                        </ui:SettingsCard>
+                    </DataTemplate>
+                </ui:SettingsExpander.ItemTemplate>
+            </ui:SettingsExpander>
+        </StackPanel>
+
+    </Grid>
 </Page>

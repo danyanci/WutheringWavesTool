@@ -65,8 +65,26 @@
             FooterVerticalAlignment="Center"
             IsExtendsContentIntoTitleBar="True"
             TitleMode="Tall">
+
             <ui:TitleBar.Header>
                 <StackPanel Orientation="Horizontal">
+                    <StackPanel.ChildrenTransitions>
+                        <TransitionCollection>
+                            <RepositionThemeTransition />
+                        </TransitionCollection>
+                    </StackPanel.ChildrenTransitions>
+                    <Button
+                        Width="35"
+                        Height="35"
+                        Margin="5,0,0,0"
+                        Command="{x:Bind ViewModel.BackPageCommand}"
+                        Style="{ThemeResource TransparentButtonStyle}"
+                        Visibility="{x:Bind ViewModel.BackVisibility, Mode=OneWay}">
+                        <FontIcon
+                            FontFamily="Segoe Fluent Icons"
+                            FontSize="14"
+                            Glyph="&#xE72B;" />
+                    </Button>
                     <Button
                         x:Name="appIcon"
                         Margin="5,5,0,5"
@@ -218,23 +236,6 @@
                                 </Grid>
 
                             </Flyout>
-                            <!--<MenuFlyout>
-                                <MenuFlyoutItem Command="{x:Bind ViewModel.OpenMainCommand}" Text="官服">
-                                    <MenuFlyoutItem.Icon>
-                                        <ImageIcon Source="ms-appx:///Assets/kLogo.png" />
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem Command="{x:Bind ViewModel.OpenBilibiliCommand}" Text="B服">
-                                    <MenuFlyoutItem.Icon>
-                                        <ImageIcon Source="https://i0.hdslb.com/bfs/static/jinkela/long/images/favicon.ico" />
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                                <MenuFlyoutItem Command="{x:Bind ViewModel.OpenGlobalCommand}" Text="国际服">
-                                    <MenuFlyoutItem.Icon>
-                                        <FontIcon FontFamily="/Assets/Fonts/seguiemj.ttf#Segoe UI Emoji" Glyph="&#x1F30F;" />
-                                    </MenuFlyoutItem.Icon>
-                                </MenuFlyoutItem>
-                            </MenuFlyout>-->
                         </Button.Flyout>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock

@@ -16,7 +16,7 @@
             <i:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
         </i:EventTriggerBehavior>
     </i:Interaction.Behaviors>
-    <ScrollViewer Height="400" MaxWidth="700">
+    <ScrollViewer Height="270" MaxWidth="700">
 
         <Grid>
             <Grid.RowDefinitions>
@@ -73,7 +73,7 @@
                 Grid.Row="3"
                 Width="480"
                 Margin="0,5,0,0"
-                Header="图形增强技术">
+                Header="超级分辨率技术">
                 <ui:SettingsExpander.Items>
                     <ui:SettingsCard Header="{x:Bind ViewModel.Dlss.DisplayName, Mode=OneWay}">
                         <ui:SettingsCard.HeaderIcon>
