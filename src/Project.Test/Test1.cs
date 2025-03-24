@@ -31,5 +31,8 @@ namespace Project.Test
             var result = await mainGame.GetLocalDLSSAsync();
             var dlssG = await mainGame.GetLocalDLSSGenerateAsync();
         }
+
+        [TestMethod]
+        public void TestNewDownload() { }
     }
 }

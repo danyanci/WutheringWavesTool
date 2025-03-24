@@ -17,11 +17,6 @@
         </i:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Grid>
-        <Grid.ChildrenTransitions>
-            <TransitionCollection>
-                <RepositionThemeTransition />
-            </TransitionCollection>
-        </Grid.ChildrenTransitions>
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
@@ -226,6 +221,11 @@
                 FontSize="22"
                 IsEnabled="{x:Bind ViewModel.LauncherGameEnable, Mode=OneWay}"
                 Style="{ThemeResource AcrylicBackgroundSplitButton}">
+                <SplitButton.Transitions>
+                    <TransitionCollection>
+                        <EntranceThemeTransition FromVerticalOffset="130" />
+                    </TransitionCollection>
+                </SplitButton.Transitions>
                 <StackPanel Orientation="Horizontal">
                     <FontIcon
                         FontFamily="Segoe Fluent Icons"
@@ -319,8 +319,12 @@
             Height="230"
             Margin="10,10,0,15"
             HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Visibility="Visible">
+            VerticalAlignment="Bottom">
+            <Grid.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="150" />
+                </TransitionCollection>
+            </Grid.Transitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition />
@@ -482,6 +486,11 @@
             BorderThickness="1"
             CornerRadius="5"
             Visibility="{x:Bind ViewModel.GamerDataVisibility, Mode=OneWay}">
+            <Grid.Transitions>
+                <TransitionCollection>
+                    <EntranceThemeTransition FromVerticalOffset="-50" />
+                </TransitionCollection>
+            </Grid.Transitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition />

@@ -675,7 +675,7 @@ public abstract partial class GameContextBase : IGameContext
     }
 
     private readonly Queue<double> _speedHistory = new();
-    private const int SpeedHistoryWindowSize = 5; // 滑动窗口大小（最近 5 秒）
+    private const int SpeedHistoryWindowSize = 5;
 
     private double CalculateAverageSpeed(double currentSpeedInMBps)
     {

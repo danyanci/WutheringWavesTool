@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WutherWavesLauncher.Test (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WutherWavesLauncher.Test (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
