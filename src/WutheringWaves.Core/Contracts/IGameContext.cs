@@ -1,3 +1,10 @@
-﻿namespace WutheringWaves.Core.Contracts;
+﻿using WutheringWaves.Core.Models;
 
-public interface IGameContext { }
+namespace WutheringWaves.Core.Contracts;
+
+public interface IGameContext
+{
+    public IHttpClientService HttpClientService { get; }
+
+    public Task<GameLauncherModel> GetGameLauncherAsync();
+}

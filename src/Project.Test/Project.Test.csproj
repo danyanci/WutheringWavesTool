@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Waves.Core\Waves.Core.csproj" />
+    <ProjectReference Include="..\WutheringWaves.Core\WutheringWaves.Core.csproj" />
   </ItemGroup>
 
 </Project>
