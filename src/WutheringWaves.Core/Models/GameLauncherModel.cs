@@ -23,7 +23,7 @@ public class Changelog
     public string ZhHans { get; set; }
 }
 
-public class Default
+public class CdnDefault
 {
     [JsonPropertyName("cdnList")]
     public List<CdnList> CdnList { get; set; }
@@ -71,7 +71,7 @@ public class GameLauncherModel
     public ResourcesGray ResourcesGray { get; set; }
 
     [JsonPropertyName("default")]
-    public Default Default { get; set; }
+    public CdnDefault Default { get; set; }
 
     [JsonPropertyName("functionCode")]
     public FunctionCode FunctionCode { get; set; }

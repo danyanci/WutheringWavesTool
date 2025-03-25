@@ -7,7 +7,6 @@ namespace WutheringWaves.Core.GameContext
         public MainGameContext(GameApiContextConfig config, string contextName)
             : base(config, contextName) { }
 
-        public string GamerConfigPath { get; internal set; }
         public bool IsLimitSpeed { get; internal set; }
     }
 }

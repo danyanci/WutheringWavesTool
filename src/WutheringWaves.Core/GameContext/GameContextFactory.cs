@@ -6,10 +6,12 @@ public static class GameContextFactory
 {
     public static string GameBassPath { get; set; }
 
-    internal static MainGameContext GetMainGameContext() =>
-        new MainGameContext(GameApiContextConfig.Main, nameof(MainGameContext))
+    internal static MainGameContext GetMainGameContext()
+    {
+        return new MainGameContext(GameApiContextConfig.Main, nameof(MainGameContext))
         {
             GamerConfigPath = GameBassPath + "\\MainConfig",
             IsLimitSpeed = false,
         };
+    }
 }

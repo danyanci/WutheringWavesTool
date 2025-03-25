@@ -10,6 +10,7 @@
       For more information, visit https://learn.microsoft.com/dotnet/i/testing/unit-testing-platform-integration-dotnet-test#show-failure-per-test
       -->
     <TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
+	  <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
   </PropertyGroup>
 
   <ItemGroup>
