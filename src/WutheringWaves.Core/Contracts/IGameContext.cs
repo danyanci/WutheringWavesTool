@@ -25,7 +25,13 @@ public interface IGameContext
     /// 设置CDN分流
     /// </summary>
     /// <param name="result"></param>
-    void InitializeCdn(GameLauncherModel? result);
+    void InitializeLauncher(GameLauncherModel? result);
+
+    /// <summary>
+    /// 游戏核心状态
+    /// </summary>
+    /// <returns></returns>
+    public Task<GameCoreStatus> GetCoreStatusAsync();
 
     public string GamerConfigPath { get; }
 }

@@ -25,17 +25,17 @@ public sealed partial class GlobalGameViewModel : GameViewModelBase
 
     public override async Task LoadedAfter()
     {
-        var result =
-            await this.GameContext.GetGameLauncherStarterAsync(
-                await this.GameContext.GetGameLauncherSourceAsync(),
-                false
-            ) ?? null;
-        if (result != null && result.Guidance != null)
-        {
-            this.news = result.Guidance.News.Contents.ToObservableCollection();
-            this.notice = result.Guidance.Notice.Contents.ToObservableCollection();
-            this.activity = result.Guidance.Activity.Contents.ToObservableCollection();
-        }
+        //var result =
+        //    await this.GameContext.GetGameLauncherStarterAsync(
+        //        await this.GameContext.GetGameLauncherSourceAsync(),
+        //        false
+        //    ) ?? null;
+        //if (result != null && result.Guidance != null)
+        //{
+        //    this.news = result.Guidance.News.Contents.ToObservableCollection();
+        //    this.notice = result.Guidance.Notice.Contents.ToObservableCollection();
+        //    this.activity = result.Guidance.Activity.Contents.ToObservableCollection();
+        //}
         this.SelectBarLoad = true;
     }
 

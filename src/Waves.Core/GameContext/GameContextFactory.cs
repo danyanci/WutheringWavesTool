@@ -29,9 +29,4 @@ public static class GameContextFactory
             GamerConfigPath = GameContextFactory.GameBassPath + "\\MainConfig",
             IsLimitSpeed = false,
         };
-
-    internal static IGameContextDownloadCache GetGameContextDownloadCache(string gamefolder)
-    {
-        return new GameContextDownloadCache(gamefolder);
-    }
 }

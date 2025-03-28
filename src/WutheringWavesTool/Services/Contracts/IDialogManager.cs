@@ -9,7 +9,9 @@ public interface IDialogManager
     public Task ShowLoginDialogAsync();
     public Task<ContentDialogResult> ShowBindGameDataAsync(string name);
     public Task ShowGameResourceDialogAsync(string contextName);
-
+    public Task<Result> GetDialogResultAsync<T, Result>(object? data)
+        where T : ContentDialog, IResultDialog<Result>, new()
+        where Result : new();
     public void CloseDialog();
     Task ShowWallpaperDialogAsync();
 }

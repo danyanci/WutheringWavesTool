@@ -6,6 +6,8 @@ namespace WutheringWaves.Core.GameContext;
 
 public partial class GameContextBase : IGameContext
 {
+    private GameLauncherModel _launcherModel;
+
     public GameContextBase(GameApiContextConfig config, string contextName)
     {
         Config = config;
@@ -19,13 +21,12 @@ public partial class GameContextBase : IGameContext
     public IHttpClientService HttpClientService { get; internal set; }
 
     public GameLocalConfig GameLocalConfig { get; private set; }
-    public CdnList Cdn { get; private set; }
 
-    public void InitializeCdn(GameLauncherModel? result)
+    public void InitializeLauncher(GameLauncherModel? result)
     {
         if (result != null)
         {
-            this.Cdn = result.Default.CdnList.Where(x => x.P != 0).OrderBy(x => x.P).First();
+            this._launcherModel = result;
             return;
         }
         throw new ArgumentException("请求游戏数据错误");
@@ -43,5 +44,10 @@ public partial class GameContextBase : IGameContext
     private async Task InitSettingAsync()
     {
         await Task.CompletedTask;
+    }
+
+    public async Task<GameCoreStatus> GetCoreStatusAsync()
+    {
+        return await Task.FromResult<GameCoreStatus>(new GameCoreStatus());
     }
 }

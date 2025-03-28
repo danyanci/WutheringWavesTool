@@ -107,8 +107,9 @@ public abstract partial class GameContextBase : IGameContext
 
     public bool IsPause { get; private set; }
 
-    public IGameContextDownloadCache GameContextDownloadCahce { get; private set; }
     public Process NowProcess { get; private set; }
+
+    public virtual Type ContextType { get; }
 
     public async Task<GameContextStatus> GetGameStatusAsync(CancellationToken token = default)
     {

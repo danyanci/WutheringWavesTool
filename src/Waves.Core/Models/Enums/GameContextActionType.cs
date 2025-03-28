@@ -21,7 +21,7 @@ public enum GameDownloadActionSource
     Verify,
 
     /// <summary>
-    /// 下载游戏
+    ///
     /// </summary>
     Download,
 

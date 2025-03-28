@@ -11,7 +11,7 @@ namespace Waves.Api.Models;
 [JsonSerializable(typeof(AnimateBackground))]
 [JsonSerializable(typeof(AnimateBackground))]
 [JsonSerializable(typeof(AnimateBackgroundLanguage))]
-[JsonSerializable(typeof(DDefault))]
+[JsonSerializable(typeof(ResourceDefault))]
 [JsonSerializable(typeof(NavigationBarLanguage))]
 [JsonSerializable(typeof(CdnList))]
 [JsonSerializable(typeof(List<CdnList>))]
@@ -33,29 +33,44 @@ public partial class GameLauncherSourceContext : JsonSerializerContext { }
 
 public class GameLauncherSource
 {
+    [JsonPropertyName("chunkDownloadSwitch")]
+    public int ChunkDownloadSwitch { get; set; }
+
+    [JsonPropertyName("keyFileCheckSwitch")]
+    public int KeyFileCheckSwitch { get; set; }
+
+    [JsonPropertyName("resourcesLogin")]
+    public ResourcesLogin ResourcesLogin { get; set; }
+
+    [JsonPropertyName("checkExeIsRunning")]
+    public int CheckExeIsRunning { get; set; }
+
+    [JsonPropertyName("hashCacheCheckAccSwitch")]
+    public int HashCacheCheckAccSwitch { get; set; }
+
+    [JsonPropertyName("fingerprints")]
+    public List<string> Fingerprints { get; set; }
+
     [JsonPropertyName("default")]
-    public DDefault Default { get; set; }
+    public ResourceDefault ResourceDefault { get; set; }
 
-    [JsonPropertyName("crashInitSwitch")]
-    public int CrashInitSwitch { get; set; }
+    [JsonPropertyName("RHIOptionSwitch")]
+    public int RHIOptionSwitch { get; set; }
 
-    [JsonPropertyName("animateBgSwitch")]
-    public int AnimateBgSwitch { get; set; }
+    [JsonPropertyName("predownloadSwitch")]
+    public int PredownloadSwitch { get; set; }
 
-    [JsonPropertyName("animateBackground")]
-    public AnimateBackground AnimateBackground { get; set; }
+    [JsonPropertyName("RHIOptionList")]
+    public List<RHIOptionList> RHIOptionList { get; set; }
 
-    [JsonPropertyName("animateBackgroundLanguage")]
-    public AnimateBackgroundLanguage AnimateBackgroundLanguage { get; set; }
+    [JsonPropertyName("experiment")]
+    public Experiment Experiment { get; set; }
 
-    [JsonPropertyName("navigationBarSwitch")]
-    public int NavigationBarSwitch { get; set; }
+    [JsonPropertyName("predownload")]
+    public Predownload Predownload { get; set; }
 
-    [JsonPropertyName("navigationBarLanguage")]
-    public NavigationBarLanguage NavigationBarLanguage { get; set; }
-
-    [JsonPropertyName("resourcesGray")]
-    public ResourcesGray ResourcesGray { get; set; }
+    [JsonPropertyName("keyFileCheckList")]
+    public List<string> KeyFileCheckList { get; set; }
 }
 
 public class AnimateBackground
@@ -79,25 +94,97 @@ public class AnimateBackgroundLanguage
     public ZhHans ZhHans { get; set; }
 }
 
-public class DDefault
+public class ResourceDefault
 {
+    [JsonPropertyName("sampleHashSwitch")]
+    public int SampleHashSwitch { get; set; }
+
     [JsonPropertyName("cdnList")]
     public List<CdnList> CdnList { get; set; }
+
+    [JsonPropertyName("resourcesBasePath")]
+    public string ResourcesBasePath { get; set; }
 
     [JsonPropertyName("changelog")]
     public Changelog Changelog { get; set; }
 
-    [JsonPropertyName("installer")]
-    public string Installer { get; set; }
+    [JsonPropertyName("resources")]
+    public string Resources { get; set; }
 
-    [JsonPropertyName("installerMD5")]
-    public string InstallerMD5 { get; set; }
+    [JsonPropertyName("resourcesExcludePathNeedUpdate")]
+    public List<object> ResourcesExcludePathNeedUpdate { get; set; }
 
-    [JsonPropertyName("installerSize")]
-    public int InstallerSize { get; set; }
+    [JsonPropertyName("config")]
+    public Config Config { get; set; }
+
+    [JsonPropertyName("resourcesDiff")]
+    public ResourcesDiff ResourcesDiff { get; set; }
+
+    [JsonPropertyName("resourcesExcludePath")]
+    public List<object> ResourcesExcludePath { get; set; }
 
     [JsonPropertyName("version")]
     public string Version { get; set; }
+
+    [JsonPropertyName("changelogVisible")]
+    public int ChangelogVisible { get; set; }
+}
+
+public class Config
+{
+    [JsonPropertyName("indexFileMd5")]
+    public string IndexFileMd5 { get; set; }
+
+    [JsonPropertyName("unCompressSize")]
+    public long UnCompressSize { get; set; }
+
+    [JsonPropertyName("baseUrl")]
+    public string BaseUrl { get; set; }
+
+    [JsonPropertyName("size")]
+    public long Size { get; set; }
+
+    [JsonPropertyName("patchType")]
+    public string PatchType { get; set; }
+
+    [JsonPropertyName("indexFile")]
+    public string IndexFile { get; set; }
+
+    [JsonPropertyName("version")]
+    public string Version { get; set; }
+
+    [JsonPropertyName("patchConfig")]
+    public List<PatchConfig> PatchConfig { get; set; }
+}
+
+public class PatchConfig
+{
+    [JsonPropertyName("indexFileMd5")]
+    public string IndexFileMd5 { get; set; }
+
+    [JsonPropertyName("unCompressSize")]
+    public object UnCompressSize { get; set; }
+
+    [JsonPropertyName("baseUrl")]
+    public string BaseUrl { get; set; }
+
+    [JsonPropertyName("size")]
+    public object Size { get; set; }
+
+    [JsonPropertyName("indexFile")]
+    public string IndexFile { get; set; }
+
+    [JsonPropertyName("version")]
+    public string Version { get; set; }
+
+    [JsonPropertyName("ext")]
+    public Ext Ext { get; set; }
+}
+
+public class Ext
+{
+    [JsonPropertyName("maxFileSize")]
+    public object MaxFileSize { get; set; }
 }
 
 public class NavigationBarLanguage

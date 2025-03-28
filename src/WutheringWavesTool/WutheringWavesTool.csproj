@@ -23,6 +23,7 @@
     <None Remove="Assets\RolePage\weapon.svg" />
     <None Remove="Pages\Communitys\Windows\GamerRoilsDetilyPage.xaml" />
     <None Remove="Pages\Dialogs\GameResourceDialog.xaml" />
+    <None Remove="Pages\Dialogs\SelectDownloadGameDialog.xaml" />
     <None Remove="Pages\Dialogs\SelectWallpaperDialog.xaml" />
   </ItemGroup>
 	<ItemGroup>
@@ -162,6 +163,16 @@
     <Content Update="Assets\RolePage\weapon.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\Styles\LayeredProgressBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Dialogs\SelectDownloadGameDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Communitys\Windows\GamerRoilsDetilyPage.xaml">

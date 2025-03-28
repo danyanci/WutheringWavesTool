@@ -26,6 +26,6 @@ public class NewCoreTest
         var mainGame = Provider!.GetRequiredKeyedService<IGameContext>(nameof(MainGameContext));
         await mainGame.InitializeAsync();
         var result = await mainGame.GetGameLauncherAsync();
-        mainGame.InitializeCdn(result);
+        mainGame.InitializeLauncher(result);
     }
 }

@@ -46,6 +46,8 @@ public static class Instance
             .AddTransient<BindGameDataViewModel>()
             .AddTransient<SelectWallpaperDialog>()
             .AddTransient<SelectWallpaperViewModel>()
+            .AddTransient<SelectDownloadGameDialog>()
+            .AddTransient<SelectDownloadGameViewModel>()
             #endregion
             #endregion
             #region Navigation

@@ -1,4 +1,6 @@
-﻿namespace WutheringWavesTool.ViewModel.GameViewModels;
+﻿using WutheringWavesTool.Models.Dialogs;
+
+namespace WutheringWavesTool.ViewModel.GameViewModels;
 
 public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
 {
@@ -462,13 +464,12 @@ public abstract partial class GameViewModelBase : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
-    async Task OpenSelectGameDownloadFolder()
+    async Task StartDownload()
     {
-        var folder = await PickersService.GetFolderPicker();
-        IsProgressRingActive = true;
-        if (folder == null)
-            return;
-        await StartDown(folder.Path);
+        var result = await DialogManager.GetDialogResultAsync<
+            SelectDownloadGameDialog,
+            SelectDownloadFolderResult
+        >(this.GameContext.ContextType);
     }
 
     [RelayCommand]

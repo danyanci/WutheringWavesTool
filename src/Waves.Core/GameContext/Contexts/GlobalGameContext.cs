@@ -12,4 +12,6 @@ public class GlobalGameContext : GameContextBase
 {
     internal GlobalGameContext(GameApiContextConfig config)
         : base(config, nameof(GlobalGameContext)) { }
+
+    public override Type ContextType => typeof(GlobalGameContext);
 }

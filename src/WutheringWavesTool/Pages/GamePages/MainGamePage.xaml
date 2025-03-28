@@ -150,50 +150,45 @@
             Padding="20"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
-            Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
             CornerRadius="5"
             Visibility="{x:Bind ViewModel.SelectGameVisibility, Mode=OneWay}">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <Button
+            <SplitButton
+                Grid.Row="1"
                 Grid.Column="0"
+                Width="180"
+                Height="60"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                Command="{x:Bind ViewModel.OpenSelectGameDownloadFolderCommand}"
-                Style="{ThemeResource AccentButtonStyle}">
+                Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+                Command="{x:Bind ViewModel.StartDownloadCommand}"
+                Style="{ThemeResource AcrylicBackgroundSplitButton}">
+                <SplitButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Command="{x:Bind ViewModel.OpenSelectGameFolderCommand}" Text="选择本地路径">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE8B7;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </SplitButton.Flyout>
                 <StackPanel Orientation="Horizontal">
                     <FontIcon
                         FontFamily="Segoe Fluent Icons"
-                        FontSize="15"
+                        FontSize="18"
                         Glyph="&#xE896;" />
-                    <TextBlock FontSize="13">
-                        <Run Text="下载最新" />
-                        <Run Text="(" />
-                        <Run Text="{x:Bind ViewModel.LastVerision, Mode=OneWay}" />
-                        <Run Text=")" />
+                    <TextBlock Margin="5,0,0,0" FontSize="13">
+                        <Run
+                            FontFamily="{ThemeResource DefaultFont}"
+                            FontSize="18"
+                            Text="安装游戏" />
                     </TextBlock>
                 </StackPanel>
-            </Button>
-            <Button
-                Grid.Row="1"
-                Margin="0,10,0,0"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Command="{x:Bind ViewModel.OpenSelectGameFolderCommand}"
-                Style="{ThemeResource AccentButtonStyle}">
-                <StackPanel Orientation="Horizontal">
-                    <FontIcon
-                        FontFamily="Segoe Fluent Icons"
-                        FontSize="15"
-                        Glyph="&#xF89A;" />
-                    <TextBlock
-                        Margin="5,0,0,0"
-                        FontSize="13"
-                        Text="选择本地游戏" />
-                </StackPanel>
-            </Button>
+            </SplitButton>
+
         </Grid>
         <Grid
             Grid.Row="1"
@@ -317,7 +312,7 @@
             Grid.Column="{x:Bind ViewModel.NewsColumn, Mode=OneWay}"
             Width="350"
             Height="230"
-            Margin="10,10,0,15"
+            Margin="10,0,0,15"
             HorizontalAlignment="Left"
             VerticalAlignment="Bottom">
             <Grid.Transitions>

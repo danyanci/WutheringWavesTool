@@ -6,4 +6,6 @@ public class MainGameContext : GameContextBase
 {
     internal MainGameContext(GameApiContextConfig config)
         : base(config, nameof(MainGameContext)) { }
+
+    public override Type ContextType => typeof(MainGameContext);
 }

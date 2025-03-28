@@ -52,36 +52,4 @@ partial class GameContextBase
         );
         return launcherIndex;
     }
-
-    public async Task<GameLauncherStarter?> GetGameLauncherStarterAsync(
-        GameLauncherSource launcheSource,
-        bool ishans,
-        CancellationToken token = default
-    )
-    {
-        var cdn = launcheSource.Default.CdnList.OrderByDescending(x => x.P).LastOrDefault();
-        try
-        {
-            if (cdn != null)
-            {
-                string sourceUrl = "";
-                if (ishans)
-                    sourceUrl = cdn.Url + launcheSource.NavigationBarLanguage.ZhHans;
-                else
-                    sourceUrl = cdn.Url + launcheSource.NavigationBarLanguage.ZhHant;
-                var httpResult = await HttpClientService.GameDownloadClient.GetAsync(sourceUrl);
-                httpResult.EnsureSuccessStatusCode();
-                var str = await httpResult.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize(
-                    str,
-                    GameLauncherStarterContext.Default.GameLauncherStarter
-                );
-            }
-            return null;
-        }
-        catch (Exception ex)
-        {
-            return null;
-        }
-    }
 }

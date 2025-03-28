@@ -37,17 +37,6 @@ public sealed partial class MainGameViewModel : GameViewModelBase
 
     public override async Task LoadedAfter()
     {
-        var result =
-            await this.GameContext.GetGameLauncherStarterAsync(
-                await this.GameContext.GetGameLauncherSourceAsync(),
-                true
-            ) ?? null;
-        if (result != null && result.Guidance != null)
-        {
-            this.news = result.Guidance.News.Contents.ToObservableCollection();
-            this.notice = result.Guidance.Notice.Contents.ToObservableCollection();
-            this.activity = result.Guidance.Activity.Contents.ToObservableCollection();
-        }
         await RefreshBindAsync();
         this.SelectBarLoad = true;
     }

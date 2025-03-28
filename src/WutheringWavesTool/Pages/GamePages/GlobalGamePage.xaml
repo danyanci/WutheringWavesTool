@@ -149,7 +149,7 @@
                 Grid.Column="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
-                Command="{x:Bind ViewModel.OpenSelectGameDownloadFolderCommand}"
+                Command="{x:Bind ViewModel.OpenSelectGameFolderCommand}"
                 Style="{ThemeResource AccentButtonStyle}">
                 <StackPanel Orientation="Horizontal">
                     <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE896;" />

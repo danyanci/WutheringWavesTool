@@ -1,4 +1,6 @@
-﻿namespace WutheringWavesTool.Services;
+﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace WutheringWavesTool.Services;
 
 public abstract class DialogManager : IDialogManager
 {
@@ -64,12 +66,25 @@ public abstract class DialogManager : IDialogManager
         if (_dialog == null)
             return;
         _dialog.Hide();
-        _dialog = null;
         GC.Collect();
     }
 
     public async Task ShowWallpaperDialogAsync()
     {
         await ShowDialogAsync<SelectWallpaperDialog>(null);
+    }
+
+    public async Task<Result> GetDialogResultAsync<T, Result>(object? data)
+        where T : ContentDialog, IResultDialog<Result>, new()
+        where Result : new()
+    {
+        if (_dialog != null)
+            return new Result();
+        var dialog = Instance.Service.GetRequiredService<T>();
+        dialog.XamlRoot = this.Root;
+        dialog.SetData(data);
+        this._dialog = dialog;
+        await _dialog.ShowAsync();
+        return ((IResultDialog<Result>)_dialog).GetResult();
     }
 }

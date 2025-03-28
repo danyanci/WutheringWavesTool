@@ -8,7 +8,6 @@ public interface IGameContext
 {
     public IHttpClientService HttpClientService { get; set; }
 
-    public IGameContextDownloadCache GameContextDownloadCahce { get; }
     public Task InitAsync();
     public string ContextName { get; }
     public bool IsNext { get; }
@@ -66,11 +65,6 @@ public interface IGameContext
 
     Task<GameLauncherSource> GetGameLauncherSourceAsync(CancellationToken token = default);
 
-    Task<GameLauncherStarter?> GetGameLauncherStarterAsync(
-        GameLauncherSource launcheSource,
-        bool ishans,
-        CancellationToken token = default
-    );
     void StopProdDownload();
     Task DeleteGameProdResourceAsync();
 
@@ -78,4 +72,6 @@ public interface IGameContext
     Task<FileVersion> GetLocalDLSSGenerateAsync();
     Task<FileVersion> GetLocalXeSSGenerateAsync();
     #endregion
+
+    public Type ContextType { get; }
 }
