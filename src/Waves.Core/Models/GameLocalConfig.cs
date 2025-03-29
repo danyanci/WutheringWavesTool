@@ -80,7 +80,6 @@ public class GameLocalConfig
                 {
                     await context.Insertable(settings).ExecuteCommandAsync();
                 }
-                context.Ado.CommitTran();
                 return true;
             }
         }
@@ -117,11 +116,6 @@ public class GameLocalConfig
                 return existingSetting.Value;
             }
         }
-    }
-
-    internal void SaveConfigAsync(object prodDownloadFolderPath)
-    {
-        throw new NotImplementedException();
     }
 }
 

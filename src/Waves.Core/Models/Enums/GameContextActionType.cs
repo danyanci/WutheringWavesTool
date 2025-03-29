@@ -2,8 +2,7 @@
 
 public enum GameContextActionType
 {
-    Verify,
-    Download,
+    Work,
     Clear,
     Error,
     None,

@@ -14,37 +14,51 @@
         </i:EventTriggerBehavior>
     </i:Interaction.Behaviors>
     <Grid>
-        <SplitButton
-            Width="180"
-            Height="60"
-            Margin="10"
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <StackPanel
+            Grid.Row="1"
+            Grid.Column="1"
             HorizontalAlignment="Right"
             VerticalAlignment="Bottom"
-            Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
-            Command="{x:Bind ViewModel.ShowSelectInstallFolderCommand}"
-            FontFamily="{ThemeResource DefaultFont}"
-            FontSize="20"
-            Style="{ThemeResource AcrylicBackgroundSplitButton}"
-            Visibility="{x:Bind ViewModel.GameInstallBthVisibility, Mode=OneWay}">
-            <StackPanel Orientation="Horizontal">
-                <FontIcon
-                    FontFamily="Segoe Fluent Icons"
-                    FontWeight="Bold"
-                    Glyph="&#xE896;" />
-                <TextBlock Margin="5,0,0,0" Text="安装游戏" />
-            </StackPanel>
-            <SplitButton.Flyout>
-                <MenuFlyout>
-                    <MenuFlyoutItem Text="定位已经安装的路径">
-                        <MenuFlyoutItem.Icon>
-                            <FontIcon
-                                FontFamily="Segoe Fluent Icons"
-                                FontSize="16"
-                                Glyph="&#xE838;" />
-                        </MenuFlyoutItem.Icon>
-                    </MenuFlyoutItem>
-                </MenuFlyout>
-            </SplitButton.Flyout>
-        </SplitButton>
+            Orientation="Vertical">
+            <ProgressBar Maximum="{x:Bind ViewModel.MaxProgress, Mode=OneWay}" Value="{x:Bind ViewModel.Progress, Mode=OneWay}" />
+            <SplitButton
+                Width="180"
+                Height="60"
+                Margin="10"
+                Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
+                Command="{x:Bind ViewModel.ShowSelectInstallFolderCommand}"
+                FontFamily="{ThemeResource DefaultFont}"
+                FontSize="20"
+                Style="{ThemeResource AcrylicBackgroundSplitButton}"
+                Visibility="{x:Bind ViewModel.GameInstallBthVisibility, Mode=OneWay}">
+                <StackPanel Orientation="Horizontal">
+                    <FontIcon
+                        FontFamily="Segoe Fluent Icons"
+                        FontWeight="Bold"
+                        Glyph="{x:Bind ViewModel.BthIcon, Mode=OneWay}" />
+                    <TextBlock Margin="5,0,0,0" Text="{x:Bind ViewModel.BthContent, Mode=OneWay}" />
+                </StackPanel>
+                <SplitButton.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Text="定位已经安装的路径">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon
+                                    FontFamily="Segoe Fluent Icons"
+                                    FontSize="16"
+                                    Glyph="&#xE838;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+                    </MenuFlyout>
+                </SplitButton.Flyout>
+            </SplitButton>
+        </StackPanel>
     </Grid>
 </Page>

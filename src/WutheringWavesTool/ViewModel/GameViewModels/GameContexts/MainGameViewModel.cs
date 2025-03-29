@@ -6,9 +6,10 @@ public sealed partial class MainGameViewModel : GameContextViewModelBase
 {
     public MainGameViewModel(
         [FromKeyedServices(nameof(MainGameContext))] IGameContext gameContext,
-        [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager
+        [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager,
+        IAppContext<App> appContext
     )
-        : base(gameContext, dialogManager) { }
+        : base(gameContext, dialogManager, appContext) { }
 
     public override Task LoadAfter()
     {

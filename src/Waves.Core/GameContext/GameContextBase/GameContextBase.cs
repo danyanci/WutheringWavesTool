@@ -81,9 +81,22 @@ public abstract partial class GameContextBase : IGameContext
         var gameBaseFolder = await GameLocalConfig.GetConfigAsync(
             GameLocalSettingName.GameLauncherBassFolder
         );
-        if (gameBaseFolder == null)
+        var gameProgramFile = await GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.GameLauncherBassProgram
+        );
+        if (string.IsNullOrWhiteSpace(gameBaseFolder))
         {
             status.IsGameExists = false;
+        }
+        else if (string.IsNullOrWhiteSpace(gameBaseFolder) != null && File.Exists(gameProgramFile))
+        {
+            status.IsGameExists = true;
+            status.IsGameInstalled = true;
+        }
+        else
+        {
+            status.IsGameExists = true;
+            status.IsGameInstalled = false;
         }
         return status;
     }

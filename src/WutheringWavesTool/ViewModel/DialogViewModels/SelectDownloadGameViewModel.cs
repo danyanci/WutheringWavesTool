@@ -20,6 +20,7 @@ public partial class SelectDownloadGameViewModel : DialogViewModelBase
 
     [ObservableProperty]
     public partial bool IsLoading { get; set; }
+    public GameLauncherSource? Launcher { get; private set; }
 
     [ObservableProperty]
     public partial bool ShowBar { get; set; } = false;
@@ -78,9 +79,12 @@ public partial class SelectDownloadGameViewModel : DialogViewModelBase
         MaxValue = totalSizeMB;
         ShowBar = true;
         this.IsLoading = false;
-        var launcher = await this.GameContext.GetGameLauncherSourceAsync(this.CTS.Token);
-        var updateSize = usedSpaceMB + launcher.ResourceDefault.Config.Size / 1024 / 1024 / 1024;
-
+        Launcher = await this.GameContext.GetGameLauncherSourceAsync(this.CTS.Token);
+        if (Launcher == null)
+        {
+            TipMessage = "数据拉取失败";
+        }
+        var updateSize = usedSpaceMB + Launcher.ResourceDefault.Config.Size / 1024 / 1024 / 1024;
         this.BarValues = new ObservableCollection<LayerData>()
         {
             new LayerData()
@@ -112,13 +116,16 @@ public partial class SelectDownloadGameViewModel : DialogViewModelBase
         else
         {
             TipMessage =
-                $"本次更新大小约为{launcher.ResourceDefault.Config.Size / 1024 / 1024 / 1024}GB";
+                $"本次更新大小约为{Launcher.ResourceDefault.Config.Size / 1024 / 1024 / 1024}GB";
             IsDownload = true;
         }
     }
 
     [RelayCommand(CanExecute = nameof(GetIsDownload))]
-    void StartDownload() { }
+    void StartDownload()
+    {
+        this.Close();
+    }
 
     internal void SetData(Type type)
     {

@@ -2,7 +2,7 @@
 
 namespace Waves.Core.Models.Downloader;
 
-public class ChunkInfo
+public class IndexChunkInfo
 {
     [JsonPropertyName("start")]
     public long Start { get; set; }
@@ -14,7 +14,7 @@ public class ChunkInfo
     public string Md5 { get; set; }
 }
 
-public class Resource
+public class IndexResource
 {
     [JsonPropertyName("dest")]
     public string Dest { get; set; }
@@ -26,7 +26,7 @@ public class Resource
     public long Size { get; set; }
 
     [JsonPropertyName("chunkInfos")]
-    public List<ChunkInfo> ChunkInfos { get; set; }
+    public List<IndexChunkInfo> ChunkInfos { get; set; }
 
     [JsonPropertyName("start")]
     public long? Start { get; set; }
@@ -35,8 +35,13 @@ public class Resource
     public long? End { get; set; }
 }
 
-public class GameResource
+[JsonSerializable(typeof(IndexGameResource))]
+[JsonSerializable(typeof(IndexResource))]
+[JsonSerializable(typeof(IndexChunkInfo))]
+public partial class IndexGameResourceContext : JsonSerializerContext { }
+
+public class IndexGameResource
 {
     [JsonPropertyName("resource")]
-    public List<Resource> Resource { get; set; }
+    public List<IndexResource> Resource { get; set; }
 }

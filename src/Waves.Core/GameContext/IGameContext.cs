@@ -1,6 +1,7 @@
 ﻿using Waves.Api.Models;
 using Waves.Core.Contracts;
 using Waves.Core.Models;
+using Waves.Core.Models.Downloader;
 
 namespace Waves.Core.GameContext;
 
@@ -27,5 +28,14 @@ public interface IGameContext
 
     #region Core
     Task<GameContextStatus> GetGameContextStatusAsync(CancellationToken token = default);
+    #endregion
+
+    #region Downloader
+    Task<IndexGameResource> GetGameResourceAsync(
+        ResourceDefault ResourceDefault,
+        CancellationToken token = default
+    );
+
+    Task StartDownloadTaskAsync(string folder, GameLauncherSource? source);
     #endregion
 }

@@ -1,78 +1,39 @@
 ﻿namespace Waves.Core.Common;
 
-public class RateLimiter
+public class SpeedLimiter
 {
-    private readonly object _locker = new object();
-    private long _tokens;
-    private readonly long _capacity;
-    private readonly long _fillRate;
-    private DateTime _lastRefillTime;
+    private readonly int _maxBytesPerSecond;
+    private int _bytesRemaining;
+    private DateTime _lastUpdate;
 
-    public RateLimiter(long bytesPerSecond)
+    public SpeedLimiter(int bytesPerSecond)
     {
-        _capacity = bytesPerSecond;
-        _fillRate = bytesPerSecond;
-        _tokens = _capacity;
-        _lastRefillTime = DateTime.UtcNow;
+        _maxBytesPerSecond = bytesPerSecond;
+        _bytesRemaining = bytesPerSecond;
+        _lastUpdate = DateTime.Now;
     }
 
-    public async Task<int> ConsumeAndReadAsync(
-        Stream responseStream,
-        FileStream fileStream,
-        byte[] buffer,
-        CancellationToken token
-    )
+    public async Task Limit(int bytesTransferred)
     {
-        int bytesRead = await responseStream.ReadAsync(buffer, 0, buffer.Length, token);
-        await ConsumeAsync(bytesRead);
-        await fileStream.WriteAsync(buffer, 0, bytesRead, token);
-        return bytesRead;
-    }
+        var now = DateTime.Now;
+        var elapsed = (now - _lastUpdate).TotalSeconds;
+        _bytesRemaining += (int)(_maxBytesPerSecond * elapsed);
+        _bytesRemaining = Math.Min(_bytesRemaining, _maxBytesPerSecond);
 
-    private void RefillTokens()
-    {
-        var now = DateTime.UtcNow;
-        var elapsed = (now - _lastRefillTime).TotalSeconds;
-        _tokens = (long)Math.Min(_capacity, _tokens + elapsed * _fillRate);
-        _lastRefillTime = now;
-    }
-
-    public async Task<int> MaybeLimitAndReadAsync(
-        Stream responseStream,
-        FileStream fileStream,
-        byte[] buffer,
-        CancellationToken token,
-        bool isLimitSpeed,
-        RateLimiter rateLimiter
-    )
-    {
-        int bytesRead = await responseStream.ReadAsync(buffer, 0, buffer.Length, token);
-        if (isLimitSpeed)
+        _bytesRemaining -= bytesTransferred;
+        if (_bytesRemaining < 0)
         {
-            await rateLimiter.ConsumeAsync(bytesRead);
-        }
-        await fileStream.WriteAsync(buffer, 0, bytesRead, token);
-        return bytesRead;
-    }
+            var deficit = -_bytesRemaining;
+            var waitTime = deficit / (double)_maxBytesPerSecond;
+            await Task.Delay(TimeSpan.FromSeconds(waitTime));
 
-    public async Task ConsumeAsync(long bytesToConsume)
-    {
-        lock (_locker)
+            // 重置计数器
+            _bytesRemaining += (int)(_maxBytesPerSecond * waitTime);
+            _lastUpdate = DateTime.Now;
+        }
+        else
         {
-            RefillTokens();
-
-            while (_tokens < bytesToConsume)
-            {
-                var neededTokens = bytesToConsume - _tokens;
-                var waitTime = neededTokens / _fillRate;
-                Monitor.Wait(_locker, TimeSpan.FromSeconds(waitTime));
-                RefillTokens();
-            }
-
-            _tokens -= bytesToConsume;
+            _lastUpdate = now;
         }
-
-        var delay = bytesToConsume / _fillRate;
-        await Task.Delay(TimeSpan.FromSeconds(delay));
     }
 }
