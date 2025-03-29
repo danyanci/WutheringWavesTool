@@ -1,4 +1,6 @@
-﻿namespace WutheringWavesTool.Services.Contracts;
+﻿using WutheringWavesTool.Models.Dialogs;
+
+namespace WutheringWavesTool.Services.Contracts;
 
 public interface IDialogManager
 {
@@ -12,6 +14,8 @@ public interface IDialogManager
     public Task<Result> GetDialogResultAsync<T, Result>(object? data)
         where T : ContentDialog, IResultDialog<Result>, new()
         where Result : new();
+
+    public Task<SelectDownloadFolderResult> ShowSelectInstallFolderAsync(Type type);
     public void CloseDialog();
     Task ShowWallpaperDialogAsync();
 }

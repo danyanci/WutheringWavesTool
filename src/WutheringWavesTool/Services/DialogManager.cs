@@ -1,4 +1,5 @@
-﻿using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using WutheringWavesTool.Models.Dialogs;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WutheringWavesTool.Services;
 
@@ -46,7 +47,8 @@ public abstract class DialogManager : IDialogManager
         var dialog = Instance.Service.GetRequiredService<T>();
         dialog.XamlRoot = this.Root;
         this._dialog = dialog;
-        await _dialog.ShowAsync();
+        var result = await _dialog.ShowAsync();
+        _dialog = null;
     }
 
     public async Task<ContentDialogResult> ShowDialogAsync<T>(object data)
@@ -58,7 +60,9 @@ public abstract class DialogManager : IDialogManager
         dialog.XamlRoot = this.Root;
         dialog.SetData(data);
         this._dialog = dialog;
-        return await _dialog.ShowAsync();
+        var result = await _dialog.ShowAsync();
+        _dialog = null;
+        return result;
     }
 
     public void CloseDialog()
@@ -85,6 +89,11 @@ public abstract class DialogManager : IDialogManager
         dialog.SetData(data);
         this._dialog = dialog;
         await _dialog.ShowAsync();
-        return ((IResultDialog<Result>)_dialog).GetResult();
+        var result = ((IResultDialog<Result>)_dialog).GetResult();
+        _dialog = null;
+        return result;
     }
+
+    public async Task<SelectDownloadFolderResult> ShowSelectInstallFolderAsync(Type type) =>
+        await GetDialogResultAsync<SelectDownloadGameDialog, SelectDownloadFolderResult>(type);
 }

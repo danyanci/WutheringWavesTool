@@ -175,36 +175,6 @@
                                                         Text="官服" />
                                                 </StackPanel>
                                             </Button>
-                                            <Button
-                                                Margin="5,0,0,0"
-                                                Command="{x:Bind ViewModel.OpenBilibiliCommand}"
-                                                Style="{ThemeResource TransparentButtonStyle}">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Image
-                                                        Width="25"
-                                                        Height="25"
-                                                        Source="ms-appx:///Assets/GameIcons/bilibili.ico" />
-                                                    <TextBlock
-                                                        Margin="5,0,0,0"
-                                                        VerticalAlignment="Center"
-                                                        Text="B服" />
-                                                </StackPanel>
-                                            </Button>
-                                            <Button
-                                                Margin="5,0,0,0"
-                                                Command="{x:Bind ViewModel.OpenGlobalCommand}"
-                                                Style="{ThemeResource TransparentButtonStyle}">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Image
-                                                        Width="25"
-                                                        Height="25"
-                                                        Source="ms-appx:///Assets/GameIcons/global.ico" />
-                                                    <TextBlock
-                                                        Margin="5,0,0,0"
-                                                        VerticalAlignment="Center"
-                                                        Text="国际服" />
-                                                </StackPanel>
-                                            </Button>
                                         </StackPanel>
                                         <NavigationViewItemSeparator Margin="0,5,0,0" HorizontalAlignment="Stretch" />
                                         <TextBlock

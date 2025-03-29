@@ -1,4 +1,7 @@
-﻿namespace WutheringWavesTool.Services;
+﻿using WutheringWavesTool.Pages.GamePages;
+using WutheringWavesTool.ViewModel.GameViewModels;
+
+namespace WutheringWavesTool.Services;
 
 public sealed partial class PageService : IPageService
 {
@@ -7,12 +10,11 @@ public sealed partial class PageService : IPageService
     public PageService()
     {
         _pages = new();
-        this.RegisterView<MainGamePage, MainGameViewModel>();
-        this.RegisterView<BilibiliGamePage, BilibiliGameViewModel>();
-        this.RegisterView<GlobalGamePage, GlobalGameViewModel>();
         this.RegisterView<SettingPage, SettingViewModel>();
         this.RegisterView<CommunityPage, CommunityViewModel>();
-
+        #region GameContext
+        this.RegisterView<MainGamePage, MainGameViewModel>();
+        #endregion
         this.RegisterView<GamerRoilsPage, GameRoilsViewModel>();
         this.RegisterView<GamerDockPage, GamerDockViewModel>();
         this.RegisterView<GamerChallengePage, GamerChallengeViewModel>();

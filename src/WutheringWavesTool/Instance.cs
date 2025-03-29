@@ -1,4 +1,5 @@
 ﻿using WutheringWavesTool.Services.DialogServices;
+using WutheringWavesTool.ViewModel.GameViewModels;
 
 namespace WutheringWavesTool;
 
@@ -14,13 +15,13 @@ public static class Instance
             .AddSingleton<ShellViewModel>()
             .AddTransient<PlayerRecordPage>()
             .AddTransient<PlayerRecordViewModel>()
-            .AddTransient<MainGameViewModel>()
-            .AddTransient<BilibiliGameViewModel>()
-            .AddTransient<GlobalGameViewModel>()
             .AddTransient<SettingViewModel>()
             .AddTransient<CommunityViewModel>()
             .AddTransient<GameResourceDialog>()
             .AddTransient<GameResourceViewModel>()
+            #region GameContext
+            .AddTransient<MainGameViewModel>()
+            #endregion
             #region Community
             .AddTransient<GamerSignPage>()
             .AddTransient<GamerSignViewModel>()

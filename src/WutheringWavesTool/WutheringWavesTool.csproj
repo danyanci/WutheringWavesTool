@@ -25,6 +25,7 @@
     <None Remove="Pages\Dialogs\GameResourceDialog.xaml" />
     <None Remove="Pages\Dialogs\SelectDownloadGameDialog.xaml" />
     <None Remove="Pages\Dialogs\SelectWallpaperDialog.xaml" />
+    <None Remove="Pages\GamePages\MainGamePage.xaml" />
   </ItemGroup>
 	<ItemGroup>
 		<RdXmlFile Include="rd.xml" />
@@ -60,9 +61,8 @@
 	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
 	  <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2957.106" />
-	  <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.2.0" />
 	  <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
-	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250108002" />
+	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
 	  <PackageReference Include="Microsoft.Xaml.Behaviors.WinUI.Managed" Version="3.0.0" />
 	  <PackageReference Include="WinUICommunity.Components" Version="7.1.0" />
 	  <PackageReference Include="WinUICommunity.Win2D" Version="7.1.0" />
@@ -275,16 +275,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\GamePages\GlobalGamePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\GamePages\BilibiliGamePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
     <Page Update="Controls\ImageGroupAnimation.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -305,11 +295,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="Pages\GamePages\MainGamePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
     <Page Update="WindowModels\GetGeetWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -326,6 +311,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Record\PlayerRecordPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\GamePages\MainGamePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

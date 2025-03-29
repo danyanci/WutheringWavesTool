@@ -25,10 +25,30 @@ public partial class SelectDownloadGameViewModel : DialogViewModelBase
     public partial bool ShowBar { get; set; } = false;
 
     [ObservableProperty]
+    public partial string UpdateBefore { get; set; }
+
+    [ObservableProperty]
+    public partial string UpdateAfter { get; set; }
+
+    [ObservableProperty]
+    public partial string TipMessage { get; set; }
+
+    [ObservableProperty]
     public partial ObservableCollection<LayerData> BarValues { get; set; }
 
     [ObservableProperty]
+    public partial bool IsDownload { get; set; }
+
+    [ObservableProperty]
     public partial string FolderPath { get; set; }
+
+    public bool GetIsDownload() => IsDownload;
+
+    partial void OnIsDownloadChanged(bool value)
+    {
+        StartDownloadCommand.NotifyCanExecuteChanged();
+    }
+
     public IPickersService PickersService { get; }
     public IGameContext GameContext { get; private set; }
 
@@ -39,6 +59,8 @@ public partial class SelectDownloadGameViewModel : DialogViewModelBase
         var result = await this.PickersService.GetFolderPicker();
         if (result == null)
         {
+            IsLoading = false;
+            IsDownload = false;
             return;
         }
         this.FolderPath = result.Path;
@@ -58,6 +80,7 @@ public partial class SelectDownloadGameViewModel : DialogViewModelBase
         this.IsLoading = false;
         var launcher = await this.GameContext.GetGameLauncherSourceAsync(this.CTS.Token);
         var updateSize = usedSpaceMB + launcher.ResourceDefault.Config.Size / 1024 / 1024 / 1024;
+
         this.BarValues = new ObservableCollection<LayerData>()
         {
             new LayerData()
@@ -76,10 +99,26 @@ public partial class SelectDownloadGameViewModel : DialogViewModelBase
             {
                 Label = "下载后增量",
                 Color = new SolidColorBrush(Colors.Red),
-                Value = usedSpaceMB + launcher.ResourceDefault.Config.Size / 1024 / 1024 / 1024,
+                Value = updateSize,
             },
         };
+        UpdateBefore = $"{Math.Round(usedSpaceMB, 2)}GB";
+        UpdateAfter = $"{Math.Round(updateSize, 2)}GB";
+        if (updateSize > totalSizeMB)
+        {
+            TipMessage = "空间不足，请清理一些文件进行下载";
+            IsDownload = false;
+        }
+        else
+        {
+            TipMessage =
+                $"本次更新大小约为{launcher.ResourceDefault.Config.Size / 1024 / 1024 / 1024}GB";
+            IsDownload = true;
+        }
     }
+
+    [RelayCommand(CanExecute = nameof(GetIsDownload))]
+    void StartDownload() { }
 
     internal void SetData(Type type)
     {

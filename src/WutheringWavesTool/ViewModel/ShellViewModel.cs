@@ -1,4 +1,6 @@
-﻿using WutheringWavesTool.Services.DialogServices;
+﻿using WutheringWavesTool.Pages.GamePages;
+using WutheringWavesTool.Services.DialogServices;
+using WutheringWavesTool.ViewModel.GameViewModels;
 
 namespace WutheringWavesTool.ViewModel;
 
@@ -34,16 +36,21 @@ public sealed partial class ShellViewModel : ViewModelBase
         HomeNavigationService.Navigated += HomeNavigationService_Navigated;
     }
 
+    [RelayCommand]
+    void OpenMain()
+    {
+        this.HomeNavigationService.NavigationTo<MainGameViewModel>(
+            null,
+            new DrillInNavigationTransitionInfo()
+        );
+    }
+
     private void HomeNavigationService_Navigated(
         object sender,
         Microsoft.UI.Xaml.Navigation.NavigationEventArgs e
     )
     {
-        if (
-            e.SourcePageType == typeof(MainGamePage)
-            || e.SourcePageType == typeof(GlobalGamePage)
-            || e.SourcePageType == typeof(BilibiliGamePage)
-        )
+        if (e.SourcePageType == typeof(MainGamePage))
         {
             BlurAnimationHelper.StartBlurAnimation(this.Image, 10, 0, TimeSpan.FromSeconds(0.3));
             OpacityAnimationHelper.StartAnimationHelper(this.BackControl, 0);
@@ -72,10 +79,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    void Loaded()
-    {
-        this.OpenMain();
-    }
+    void Loaded() { }
 
     [RelayCommand]
     void OpenCommunity()
@@ -86,36 +90,6 @@ public sealed partial class ShellViewModel : ViewModelBase
         );
 
         ServerName = "库街区";
-    }
-
-    [RelayCommand]
-    void OpenMain()
-    {
-        this.HomeNavigationService.NavigationTo<MainGameViewModel>(
-            "MainServer",
-            new DrillInNavigationTransitionInfo()
-        );
-        ServerName = "官服";
-    }
-
-    [RelayCommand]
-    void OpenBilibili()
-    {
-        this.HomeNavigationService.NavigationTo<BilibiliGameViewModel>(
-            "Bilibili",
-            new DrillInNavigationTransitionInfo()
-        );
-        ServerName = "B服";
-    }
-
-    [RelayCommand]
-    void OpenGlobal()
-    {
-        this.HomeNavigationService.NavigationTo<GlobalGameViewModel>(
-            "Global",
-            new DrillInNavigationTransitionInfo()
-        );
-        ServerName = "国际服";
     }
 
     [RelayCommand]
