@@ -1,4 +1,5 @@
-﻿using System.Buffers;
+﻿//全部分片一次性检查
+using System.Buffers;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -28,8 +29,6 @@ public partial class GameContextBase
     {
         if (source == null || string.IsNullOrWhiteSpace(folder))
             return;
-
-        // 初始化限速器（默认1MB/s）
         _speedLimiter = new SpeedLimiter(1024 * 1024);
         _downloadCTS = new CancellationTokenSource();
 
@@ -58,9 +57,9 @@ public partial class GameContextBase
 
             Task.Run(() => StartDownloadAsync(folder, resource));
         }
-        catch (Exception ex)
+        catch (IOException ex)
         {
-            // 处理异常...
+            Debug.WriteLine(ex.Message);
         }
     }
 
@@ -80,28 +79,98 @@ public partial class GameContextBase
             {
                 _globalSpeedWatch.Restart();
                 var filePath = BuildFilePath(folder, file);
-                var (invalidChunks, needFullDownload) = await ValidateFileChunks(file, filePath);
-
-                if (invalidChunks.Count > 0)
+                if (File.Exists(filePath))
                 {
-                    await DownloadFileByChunks(
-                        file,
-                        filePath,
-                        invalidChunks,
-                        totalFiles,
-                        totalSize
-                    );
+                    Debug.WriteLine($"开始校验文件:{filePath}");
+                    if (file.ChunkInfos == null)
+                    {
+                        Debug.WriteLine($"开始校验文件:{filePath}");
+                        var checkResult = await VaildateFullFile(file, filePath);
+                        if (checkResult)
+                        {
+                            Debug.WriteLine($"{filePath}需要全量更新");
+                            HttpClientService.BuildClient();
+                            await DownloadFileByFull(
+                                file,
+                                filePath,
+                                new()
+                                {
+                                    Start = 0,
+                                    End = file.Size - 1,
+                                    Md5 = file.Md5,
+                                }
+                            );
+                            Debug.WriteLine($"{filePath}更新结束");
+                            await FinalValidation(file, filePath);
+                        }
+                    }
+                    else
+                    {
+                        var fileName = System.IO.Path.GetFileName(filePath);
+                        Debug.WriteLine($"共计{file.ChunkInfos.Count}个分片待检");
+                        for (int i = 0; i < file.ChunkInfos.Count; i++)
+                        {
+                            var needDownload = await ValidateFileChunks(
+                                file.ChunkInfos[i],
+                                filePath
+                            );
+                            if (needDownload)
+                            {
+                                if (i == file.ChunkInfos.Count - 1)
+                                {
+                                    HttpClientService.BuildClient();
+                                    Debug.WriteLine(
+                                        $"正在更新最后分片{fileName}需要更新，开始下载"
+                                    );
+                                    await DownloadFileByChunks(
+                                        file,
+                                        filePath,
+                                        file.ChunkInfos[i],
+                                        true,
+                                        file.Size
+                                    );
+                                }
+                                else
+                                {
+                                    HttpClientService.BuildClient();
+                                    Debug.WriteLine($"{fileName}需要更新，开始下载分片{i}");
+                                    await DownloadFileByChunks(
+                                        file,
+                                        filePath,
+                                        file.ChunkInfos[i],
+                                        false
+                                    );
+                                }
+
+                                Debug.WriteLine($"分片{i}更新完毕");
+                            }
+                        }
+                    }
+                    Debug.WriteLine($"文件更新结束");
+                    await FinalValidation(file, filePath);
                 }
                 else
                 {
-                    UpdateFileProgress(
-                        currentFile: 0,
-                        totalFiles: totalFiles,
-                        fileSize: file.Size,
-                        totalSize: totalSize
+                    HttpClientService.BuildClient();
+                    Debug.WriteLine($"文件不存在，开始全量更新");
+                    await DownloadFileByChunks(
+                        file,
+                        filePath,
+                        new IndexChunkInfo()
+                        {
+                            Start = 0,
+                            End = file.Size - 1,
+                            Md5 = file.Md5,
+                        }
                     );
+                    Debug.WriteLine($"文件更新完毕");
+                    await FinalValidation(file, filePath);
                 }
             }
+        }
+        catch (IOException ex)
+        {
+            Debug.WriteLine(ex.Message);
         }
         finally
         {
@@ -111,126 +180,286 @@ public partial class GameContextBase
     #endregion
 
     #region 校验逻辑
-    private async Task<(
-        List<IndexChunkInfo> invalidChunks,
-        bool needFullDownload
-    )> ValidateFileChunks(IndexResource file, string filePath)
+    /// <summary>
+    /// 校验
+    /// </summary>
+    /// <param name="file"></param>
+    /// <param name="filePath"></param>
+    /// <returns></returns>
+    private async Task<bool> ValidateFileChunks(IndexChunkInfo file, string filePath)
     {
-        var invalidChunks = new List<IndexChunkInfo>();
-
-        if (!File.Exists(filePath))
-        {
-            return (
-                file.ChunkInfos
-                    ?? new List<IndexChunkInfo>
-                    {
-                        new() { Start = 0, End = file.Size - 1 },
-                    },
-                true
-            );
-        }
-
         using (
             var fs = new FileStream(
                 filePath,
                 FileMode.Open,
-                FileAccess.ReadWrite,
-                FileShare.ReadWrite,
-                81920,
-                true
-            )
-        )
-        {
-            if (fs.Length != file.Size)
-            {
-                var result = (
-                    file.ChunkInfos
-                        ?? new List<IndexChunkInfo>
-                        {
-                            new() { Start = 0, End = file.Size - 1 },
-                        },
-                    true
-                );
-                return result;
-            }
-
-            if (file.ChunkInfos?.Count > 0)
-            {
-                foreach (var chunk in file.ChunkInfos)
-                {
-                    var buffer = new byte[(chunk.End - chunk.Start + 1)];
-                    try
-                    {
-                        fs.Seek(chunk.Start, SeekOrigin.Begin);
-                        var bytesRead = await fs.ReadAsync(
-                            buffer,
-                            0,
-                            (int)(chunk.End - chunk.Start + 1)
-                        );
-                        using (MD5 md5 = MD5.Create())
-                        {
-                            var hash = BitConverter
-                                .ToString(md5.ComputeHash(buffer))
-                                .Replace("-", "")
-                                .ToLower();
-                            var result = hash != chunk.Md5.ToLower() ? chunk : null;
-                            if (result != null)
-                                invalidChunks.Add(result);
-                        }
-                    }
-                    finally { }
-                }
-            }
-            else
-            {
-                var fullHash = await ComputeFullHash(fs);
-                if (fullHash.ToLower() != file.Md5.ToLower())
-                {
-                    invalidChunks.Add(new IndexChunkInfo { Start = 0, End = file.Size - 1 });
-                }
-            }
-            return (MergeAdjacentChunks(invalidChunks), invalidChunks.Count > 0);
-        }
-    }
-    #endregion
-
-    #region 下载逻辑
-    private async Task DownloadFileByChunks(
-        IndexResource file,
-        string filePath,
-        List<IndexChunkInfo> chunks,
-        int totalFiles,
-        long totalSize
-    )
-    {
-        using (
-            var fileStream = new FileStream(
-                filePath,
-                FileMode.OpenOrCreate,
-                FileAccess.ReadWrite,
+                FileAccess.Read,
                 FileShare.Read,
                 81920,
                 true
             )
         )
         {
-            for (int i = 0; i < chunks.Count; i++)
+            try
+            {
+                if (fs.Length < file.End + 1) // 检查文件长度是否足够
+                {
+                    Debug.WriteLine($"文件长度不足: {fs.Length} < {file.End + 1}");
+                    return true;
+                }
+                const int MaxBufferSize = 1 * 1024 * 1024; // 1MB
+                var memoryPool = ArrayPool<byte>.Shared;
+                long offset = file.Start;
+                long remaining = file.End - file.Start + 1;
+                bool isValid = true;
+                using (var md5 = MD5.Create())
+                {
+                    while (remaining > 0 && isValid)
+                    {
+                        var buffer = memoryPool.Rent(MaxBufferSize);
+                        try
+                        {
+                            fs.Seek(offset, SeekOrigin.Begin);
+                            int bytesRead = await fs.ReadAsync(buffer, 0, MaxBufferSize);
+                            if (bytesRead == 0)
+                            {
+                                Debug.WriteLine("提前到达文件末尾");
+                                isValid = false;
+                                break;
+                            }
+                            md5.TransformBlock(buffer, 0, bytesRead, null, 0);
+                            offset += bytesRead;
+                            remaining -= bytesRead;
+                        }
+                        catch (IOException ex) { }
+                        finally
+                        {
+                            memoryPool.Return(buffer);
+                        }
+                    }
+                    md5.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
+                    string hash = BitConverter.ToString(md5.Hash!).Replace("-", "").ToLower();
+                    isValid = hash == file.Md5.ToLower();
+                    return !isValid;
+                }
+            }
+            catch (IOException ex)
+            {
+                return false;
+            }
+        }
+    }
+
+    private async Task<bool> VaildateFullFile(IndexResource file, string filePath)
+    {
+        try
+        {
+            using (
+                var fs = new FileStream(
+                    filePath,
+                    FileMode.Open,
+                    FileAccess.ReadWrite,
+                    FileShare.ReadWrite,
+                    81920,
+                    true
+                )
+            )
+            {
+                var fullHash = await ComputeFullHash(fs);
+                if (fullHash.ToLower() != file.Md5.ToLower())
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+        catch (IOException ex)
+        {
+            return false;
+        }
+    }
+
+    #endregion
+
+    #region 下载逻辑
+    private async Task DownloadFileByChunks(
+        IndexResource file,
+        string filePath,
+        IndexChunkInfo chunk,
+        bool isLast = false,
+        long allSize = 0L
+    )
+    {
+        try
+        {
+            using (
+                var fileStream = new FileStream(
+                    filePath,
+                    FileMode.OpenOrCreate,
+                    FileAccess.ReadWrite,
+                    FileShare.None,
+                    81920,
+                    true
+                )
+            )
             {
                 using var request = new HttpRequestMessage(
                     HttpMethod.Get,
                     _downloadBaseUrl + file.Dest
                 );
-                request.Headers.Range = new RangeHeaderValue(chunks[i].Start, chunks[i].End);
-
+                request.Headers.Range = new RangeHeaderValue(chunk.Start, chunk.End);
                 using var response = await HttpClientService.GameDownloadClient.SendAsync(
                     request,
                     _downloadCTS.Token
                 );
-                using var stream = await response.Content.ReadAsStreamAsync(_downloadCTS.Token);
+                var stream = await response.Content.ReadAsStreamAsync(_downloadCTS.Token);
+                Debug.WriteLine("请求成功，开始写入分片");
+                try
+                {
+                    // 预校验分片范围
+                    if (chunk.Start < 0 || chunk.End < chunk.Start)
+                    {
+                        throw new ArgumentException($"分片范围无效: {chunk.Start}-{chunk.End}");
+                    }
 
-                await WriteChunkWithLock(fileStream, chunks[i], stream, _downloadCTS.Token);
-                await FinalValidation(file, filePath);
+                    long totalWritten = 0;
+                    long chunkTotalSize = chunk.End - chunk.Start + 1;
+                    const int MaxBufferSize = 4096;
+                    var memoryPool = ArrayPool<byte>.Shared;
+                    fileStream.Seek(chunk.Start, SeekOrigin.Begin);
+                    while (totalWritten < chunkTotalSize)
+                    {
+                        int bytesToRead = (int)
+                            Math.Min(MaxBufferSize, chunkTotalSize - totalWritten);
+                        byte[] buffer = memoryPool.Rent(bytesToRead);
+                        try
+                        {
+                            Memory<byte> bufferMemory = buffer.AsMemory(0, bytesToRead);
+                            var bytesRead = await stream.ReadAsync(bufferMemory);
+                            if (bytesRead == 0)
+                            {
+                                throw new IOException(
+                                    $"数据流提前结束，预期 {chunkTotalSize} 字节，已写入 {totalWritten} 字节"
+                                );
+                            }
+                            await fileStream.WriteAsync(buffer, 0, bytesRead); // 或使用同步写入 fileStream.Write(buffer.AsSpan(0, bytesRead));
+                            totalWritten += bytesRead;
+                        }
+                        finally
+                        {
+                            memoryPool.Return(buffer);
+                        }
+                    }
+                    if (totalWritten != chunkTotalSize)
+                    {
+                        throw new IOException($"分片写入不完整: {totalWritten}/{chunkTotalSize}");
+                    }
+                    else
+                    {
+                        if (isLast)
+                        {
+                            fileStream.SetLength(allSize);
+                        }
+                    }
+                }
+                catch (IOException ex)
+                {
+                    Debug.WriteLine($"IO异常: {ex.Message}");
+                    throw;
+                }
+                await fileStream.FlushAsync();
+                stream.Close();
+                await stream.DisposeAsync();
             }
+        }
+        catch (IOException ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task DownloadFileByFull(IndexResource file, string filePath, IndexChunkInfo chunk)
+    {
+        try
+        {
+            using (
+                var fileStream = new FileStream(
+                    filePath,
+                    FileMode.OpenOrCreate,
+                    FileAccess.ReadWrite,
+                    FileShare.None,
+                    81920,
+                    true
+                )
+            )
+            {
+                using var request = new HttpRequestMessage(
+                    HttpMethod.Get,
+                    _downloadBaseUrl + file.Dest
+                );
+                request.Headers.Range = new RangeHeaderValue(chunk.Start, chunk.End);
+                using var response = await HttpClientService.GameDownloadClient.SendAsync(
+                    request,
+                    _downloadCTS.Token
+                );
+                var stream = await response.Content.ReadAsStreamAsync(_downloadCTS.Token);
+                Debug.WriteLine("请求成功，开始写入分片");
+                try
+                {
+                    // 预校验分片范围
+                    if (chunk.Start < 0 || chunk.End < chunk.Start)
+                    {
+                        throw new ArgumentException($"分片范围无效: {chunk.Start}-{chunk.End}");
+                    }
+
+                    long totalWritten = 0;
+                    long chunkTotalSize = chunk.End - chunk.Start + 1;
+                    const int MaxBufferSize = 4096;
+                    var memoryPool = ArrayPool<byte>.Shared;
+                    fileStream.Seek(chunk.Start, SeekOrigin.Begin);
+                    while (totalWritten < chunkTotalSize)
+                    {
+                        int bytesToRead = (int)
+                            Math.Min(MaxBufferSize, chunkTotalSize - totalWritten);
+                        byte[] buffer = memoryPool.Rent(bytesToRead);
+                        try
+                        {
+                            Memory<byte> bufferMemory = buffer.AsMemory(0, bytesToRead);
+                            var bytesRead = await stream.ReadAsync(bufferMemory);
+                            if (bytesRead == 0)
+                            {
+                                throw new IOException(
+                                    $"数据流提前结束，预期 {chunkTotalSize} 字节，已写入 {totalWritten} 字节"
+                                );
+                            }
+                            await fileStream.WriteAsync(buffer, 0, bytesRead); // 或使用同步写入 fileStream.Write(buffer.AsSpan(0, bytesRead));
+                            totalWritten += bytesRead;
+                        }
+                        finally
+                        {
+                            memoryPool.Return(buffer);
+                        }
+                    }
+                    if (totalWritten != chunkTotalSize)
+                    {
+                        throw new IOException($"分片写入不完整: {totalWritten}/{chunkTotalSize}");
+                    }
+                    else
+                    {
+                        fileStream.SetLength(file.Size);
+                    }
+                }
+                catch (IOException ex)
+                {
+                    Debug.WriteLine($"IO异常: {ex.Message}");
+                    throw;
+                }
+                stream.Close();
+                await stream.DisposeAsync();
+            }
+        }
+        catch (IOException ex)
+        {
+            Debug.WriteLine(ex.Message);
         }
     }
 
@@ -239,37 +468,8 @@ public partial class GameContextBase
         IndexChunkInfo chunk,
         Stream dataStream,
         CancellationToken ct
-    )
-    {
-        var buffer = new byte[81920];
-        try
-        {
-            long totalWritten = 0;
-            var speedWatch = Stopwatch.StartNew();
+    ) { }
 
-            while (totalWritten < chunk.End - chunk.Start + 1)
-            {
-                var bytesToRead = (int)
-                    Math.Min(buffer.Length, chunk.End - chunk.Start + 1 - totalWritten);
-                var bytesRead = await dataStream.ReadAsync(buffer, 0, bytesToRead, ct);
-
-                await _speedLimiter.Limit(bytesRead);
-
-                lock (fileStream)
-                {
-                    fileStream.Seek(chunk.Start + totalWritten, SeekOrigin.Begin);
-                    fileStream.Write(buffer, 0, bytesRead);
-                }
-
-                totalWritten += bytesRead;
-                UpdateProgressMetrics(bytesRead, speedWatch);
-            }
-        }
-        finally
-        {
-            await fileStream.FlushAsync();
-        }
-    }
     #endregion
 
     #region 辅助方法
@@ -302,21 +502,32 @@ public partial class GameContextBase
 
     private async Task FinalValidation(IndexResource file, string filePath)
     {
-        using var fs = File.OpenRead(filePath);
-        if (file.ChunkInfos?.Count > 0)
+        try
         {
-            var invalidChunks = await ValidateFileChunks(file, filePath);
-            if (invalidChunks.invalidChunks.Count > 0)
-                throw new Exception(
-                    $"最终校验失败，剩余错误分块：{invalidChunks.invalidChunks.Count}"
-                );
+            using (
+                var fs = new FileStream(
+                    filePath,
+                    FileMode.Open,
+                    FileAccess.Read,
+                    FileShare.Read,
+                    81920,
+                    true
+                )
+            )
+            {
+                var fullHash = await ComputeFullHash(fs);
+                if (fullHash.ToLower() != file.Md5.ToLower())
+                {
+                    Debug.WriteLine($"文件{filePath}检查出错！");
+                }
+                else
+                {
+                    Debug.WriteLine($"文件{filePath}检查成功，算法正确");
+                    await fs.FlushAsync();
+                }
+            }
         }
-        else
-        {
-            var hash = await ComputeFullHash(fs);
-            if (hash.ToLower() != file.Md5.ToLower())
-                throw new Exception("文件整体校验失败");
-        }
+        catch (Exception ex) { }
     }
 
     private void UpdateFileProgress(
@@ -328,7 +539,6 @@ public partial class GameContextBase
     {
         // 严格保持参数不变，fileSize参数按原始逻辑使用
         _totalDownloadedBytes += fileSize; // 新增：实际使用fileSize参数
-
         UpdateDownloadProgress(
             GameContextActionType.Work,
             currentFile: currentFile + 1,
@@ -391,7 +601,10 @@ public partial class GameContextBase
                 }
             );
         }
-        catch (Exception ex) { }
+        catch (IOException ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
     }
 
     private void UpdateProgressMetrics(long bytesRead, Stopwatch speedWatch)
