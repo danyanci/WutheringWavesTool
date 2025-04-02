@@ -52,6 +52,12 @@ public abstract partial class GameContextBase : IGameContext
     {
         Config = config;
         ContextName = contextName;
+        //_downloadProcessor = Task.Run(
+        //    async () => await ProcessChannelAsync(_downloadChannel, GameContextActionType.Download)
+        //);
+        //_verifyProcessor = Task.Run(
+        //    async () => await ProcessChannelAsync(_verifyChannel, GameContextActionType.Verify)
+        //);
     }
 
     public virtual async Task InitAsync()

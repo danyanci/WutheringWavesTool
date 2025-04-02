@@ -36,6 +36,31 @@ public interface IGameContext
         CancellationToken token = default
     );
 
+    /// <summary>
+    /// 开始下载
+    /// </summary>
+    /// <param name="folder"></param>
+    /// <param name="source"></param>
+    /// <returns></returns>
     Task StartDownloadTaskAsync(string folder, GameLauncherSource? source);
+
+    /// <summary>
+    /// 恢复任务
+    /// </summary>
+    /// <returns></returns>
+    Task<bool> ResumeDownloadAsync();
+
+    /// <summary>
+    /// 开始任务
+    /// </summary>
+    /// <returns></returns>
+    Task<bool> PauseDownloadAsync();
+
+    /// <summary>
+    /// 设置限速
+    /// </summary>
+    /// <param name="bytesPerSecond"></param>
+    /// <returns></returns>
+    Task SetSpeedLimitAsync(long bytesPerSecond);
     #endregion
 }

@@ -21,27 +21,6 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
         }
 
         [ObservableProperty]
-        public partial double MaxProgress { get; set; }
-
-        [ObservableProperty]
-        public partial double Progress { get; set; }
-
-        private async Task GameContext_GameContextOutput(object sender, GameContextOutputArgs args)
-        {
-            await AppContext.TryInvokeAsync(() =>
-            {
-                if (args.Type == Waves.Core.Models.Enums.GameContextActionType.Work)
-                {
-                    this.MaxProgress = args.MaxSize;
-                    this.Progress = args.CurrentSize;
-                }
-                Debug.WriteLine(
-                    $"增量检查进度:{args.Progress},{args.CurrentSize}/{args.MaxSize},下载速度:{args.Speed}"
-                );
-            });
-        }
-
-        [ObservableProperty]
         public partial Visibility GameInstallBthVisibility { get; set; }
 
         [ObservableProperty]

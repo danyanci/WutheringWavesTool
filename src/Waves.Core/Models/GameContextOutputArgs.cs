@@ -6,20 +6,14 @@ public class GameContextOutputArgs
 {
     public GameContextActionType Type { get; set; }
 
-    public double Progress { get; internal set; }
+    public long CurrentSize { get; set; }
+    public long TotalSize { get; set; }
 
-    public long MaxFile { get; internal set; }
+    public double DownloadSpeed { get; set; }
 
-    public int CurrentFile { get; internal set; }
+    public double VerifySpeed { get; set; }
 
-    public double MaxSize { get; internal set; }
-
-    public double CurrentSize { get; internal set; }
-
-    public string SpeedString { get; internal set; }
-
-    public double Speed { get; set; }
-    public string RemainingTime { get; internal set; }
-
-    public string ErrorMessage { get; internal set; }
+    // 进度百分比
+    public double ProgressPercentage =>
+        TotalSize > 0 ? Math.Round((CurrentSize * 100.0) / TotalSize, 2) : 0;
 }

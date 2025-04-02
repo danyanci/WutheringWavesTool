@@ -94,7 +94,7 @@ public class AppContext<T> : IAppContext<T>
         await CommunityToolkit.WinUI.DispatcherQueueExtensions.EnqueueAsync(
             this.App.MainWindow.DispatcherQueue,
             action,
-            priority: Microsoft.UI.Dispatching.DispatcherQueuePriority.High
+            priority: Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal
         );
     }
 
