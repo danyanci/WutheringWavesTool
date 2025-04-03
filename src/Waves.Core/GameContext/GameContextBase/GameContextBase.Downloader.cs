@@ -1,7 +1,6 @@
 ﻿//委托
 using System.Buffers;
 using System.Diagnostics;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using SqlSugar;
@@ -22,11 +21,14 @@ public partial class GameContextBase
     #endregion
 
     #region DownloadStatus
-    private long _totalVerifiedBytes; // 新增：累计校验字节数
-    private long _totalDownloadedBytes; // 新增：累计下载字节数
-    private DateTime _lastSpeedUpdateTime; // 新增：最后速度计算时间
-    private double _downloadSpeed; // 新增：当前下载速度（B/s）
-    private double _verifySpeed; // 新增：当前校验速度（B/s）
+    private long _totalVerifiedBytes;
+    private long _totalDownloadedBytes;
+    private DateTime _lastSpeedUpdateTime;
+    private double _downloadSpeed;
+    private double _verifySpeed;
+
+    private DateTime _lastSpeedTime = DateTime.Now;
+    private long _lastSpeedBytes; // 速度计算基准值
     #endregion
 
     #region 速度属性
@@ -34,7 +36,7 @@ public partial class GameContextBase
     public double VerifySpeed => _verifySpeed;
     #endregion
     #region DownloadStatus
-    private DownloadState _downloadState;
+    private DownloadState? _downloadState;
     #endregion
     #region 公开方法
     public async Task StartDownloadTaskAsync(string folder, GameLauncherSource source)
@@ -42,7 +44,8 @@ public partial class GameContextBase
         if (source == null || string.IsNullOrWhiteSpace(folder))
             return;
         _downloadCTS = new CancellationTokenSource();
-
+        _isDownload = true;
+        _totalProgressSize = 0;
         await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.GameLauncherBassFolder, folder);
 
         await GetGameResourceAsync(folder, source);
@@ -188,8 +191,11 @@ public partial class GameContextBase
 
     public async Task<bool> ResumeDownloadAsync()
     {
-        if (_downloadState.IsActive)
+        if (_downloadState.IsPaused)
+        {
+            _lastSpeedTime = DateTime.Now;
             return await _downloadState.ResumeAsync();
+        }
         return false;
     }
 
@@ -211,7 +217,7 @@ public partial class GameContextBase
                 FileAccess.Read,
                 FileShare.Read,
                 262144,
-                FileOptions.Asynchronous | FileOptions.WriteThrough
+                true
             )
         )
         {
@@ -222,11 +228,13 @@ public partial class GameContextBase
                     Debug.WriteLine($"文件长度不足: {fs.Length} < {file.End + 1}");
                     return true;
                 }
+                const long UpdateThreshold = 1048576; // 1MB进度更新阈值
                 const int MaxBufferSize = 1 * 1024 * 1024; // 1MB
                 var memoryPool = ArrayPool<byte>.Shared;
                 long offset = file.Start;
                 long remaining = file.End - file.Start + 1;
                 bool isValid = true;
+                fs.Seek(offset, SeekOrigin.Begin);
                 using (var md5 = MD5.Create())
                 {
                     while (remaining > 0 && isValid)
@@ -237,7 +245,6 @@ public partial class GameContextBase
                         var buffer = memoryPool.Rent(MaxBufferSize);
                         try
                         {
-                            fs.Seek(offset, SeekOrigin.Begin);
                             int bytesRead = await fs.ReadAsync(buffer, 0, MaxBufferSize)
                                 .ConfigureAwait(false);
                             if (bytesRead == 0)
@@ -247,7 +254,6 @@ public partial class GameContextBase
                                 break;
                             }
                             md5.TransformBlock(buffer, 0, bytesRead, null, 0);
-                            offset += bytesRead;
                             remaining -= bytesRead;
                             await UpdateFileProgress(GameContextActionType.Verify, bytesRead)
                                 .ConfigureAwait(false);
@@ -276,18 +282,17 @@ public partial class GameContextBase
         const int bufferSize = 262144; // 80KB缓冲区
         using var md5 = MD5.Create();
         var memoryPool = ArrayPool<byte>.Shared;
-
+        const long UpdateThreshold = 1048576; // 1MB进度更新阈值
         try
         {
-            // 使用更安全的文件访问模式
             using (
                 var fs = new FileStream(
                     filePath,
                     FileMode.Open,
-                    FileAccess.Read, // 只读模式
-                    FileShare.Read, // 允许其他进程读取
+                    FileAccess.Read,
+                    FileShare.Read,
                     bufferSize: bufferSize,
-                    FileOptions.Asynchronous | FileOptions.WriteThrough
+                    true
                 )
             )
             {
@@ -314,6 +319,7 @@ public partial class GameContextBase
                     }
                 }
             }
+
             md5.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
             string hash = BitConverter.ToString(md5.Hash!).Replace("-", "").ToLower();
             return !(hash == file.Md5);
@@ -350,13 +356,12 @@ public partial class GameContextBase
                     FileAccess.ReadWrite,
                     FileShare.Read,
                     262144,
-                    FileOptions.Asynchronous | FileOptions.WriteThrough
+                    true
                 )
             )
             {
                 const int MaxBufferSize = 65536; // 64KB缓冲区
                 const long UpdateThreshold = 1048576; // 1MB进度更新阈值
-                long accumulatedBytes = 0;
                 using var request = new HttpRequestMessage(
                     HttpMethod.Get,
                     _downloadBaseUrl + file.Dest
@@ -383,6 +388,9 @@ public partial class GameContextBase
                     fileStream.Seek(chunk.Start, SeekOrigin.Begin);
                     while (totalWritten < chunkTotalSize)
                     {
+                        await _downloadState
+                            .PauseToken.WaitIfPausedAsync(() => _downloadState.IsPaused)
+                            .ConfigureAwait(false); // 暂停检查也异步化
                         int bytesToRead = (int)
                             Math.Min(MaxBufferSize, chunkTotalSize - totalWritten);
                         byte[] buffer = ArrayPool<byte>.Shared.Rent(bytesToRead);
@@ -396,23 +404,13 @@ public partial class GameContextBase
                             if (bytesRead == 0)
                                 break;
 
-                            // ✅ 正确调用异步写入方法
                             await fileStream
                                 .WriteAsync(buffer.AsMemory(0, bytesRead), _downloadCTS.Token)
                                 .ConfigureAwait(false);
 
                             totalWritten += bytesRead;
-                            accumulatedBytes += bytesRead;
-
-                            if (accumulatedBytes >= UpdateThreshold)
-                            {
-                                await UpdateFileProgress(
-                                        GameContextActionType.Download,
-                                        accumulatedBytes
-                                    )
-                                    .ConfigureAwait(false);
-                                accumulatedBytes = 0;
-                            }
+                            await UpdateFileProgress(GameContextActionType.Download, bytesRead)
+                                .ConfigureAwait(false);
                         }
                         finally
                         {
@@ -420,14 +418,8 @@ public partial class GameContextBase
                         }
                     }
 
-                    // 更新剩余进度
-                    if (accumulatedBytes > 0)
-                    {
-                        await UpdateFileProgress(GameContextActionType.Download, accumulatedBytes)
-                            .ConfigureAwait(false);
-                    }
-
-                    // ✅ 正确调用异步刷新
+                    if (isLast)
+                        fileStream.SetLength(allSize);
                     await fileStream.FlushAsync(_downloadCTS.Token);
                 }
                 catch (IOException ex)
@@ -455,7 +447,6 @@ public partial class GameContextBase
     {
         const int MaxBufferSize = 65536; // 64KB缓冲区（原4KB）
         const long UpdateThreshold = 1048576; // 1MB进度更新阈值
-        long accumulatedBytes = 0;
 
         try
         {
@@ -466,7 +457,7 @@ public partial class GameContextBase
                     FileAccess.ReadWrite,
                     FileShare.None,
                     262144,
-                    FileOptions.Asynchronous | FileOptions.WriteThrough
+                    true
                 )
             ) // 明确启用异步IO
             {
@@ -512,37 +503,23 @@ public partial class GameContextBase
                         int bytesToRead = (int)
                             Math.Min(MaxBufferSize, chunkTotalSize - totalWritten);
                         byte[] buffer = memoryPool.Rent(bytesToRead);
-
                         try
                         {
                             int bytesRead = await stream
                                 .ReadAsync(buffer.AsMemory(0, bytesToRead), _downloadCTS.Token)
                                 .ConfigureAwait(false);
-
                             if (bytesRead == 0)
                             {
                                 throw new IOException(
                                     $"数据流提前结束，预期 {chunkTotalSize} 字节，已写入 {totalWritten} 字节"
                                 );
                             }
-
-                            // ✅ 使用Memory<T>重载 + 取消令牌
                             await fileStream
                                 .WriteAsync(buffer.AsMemory(0, bytesRead), _downloadCTS.Token)
                                 .ConfigureAwait(false);
                             totalWritten += bytesRead;
-                            accumulatedBytes += bytesRead;
-
-                            // 批量更新进度
-                            if (accumulatedBytes >= UpdateThreshold)
-                            {
-                                await UpdateFileProgress(
-                                        GameContextActionType.Download,
-                                        accumulatedBytes
-                                    )
-                                    .ConfigureAwait(false);
-                                accumulatedBytes = 0;
-                            }
+                            await UpdateFileProgress(GameContextActionType.Download, bytesRead)
+                                .ConfigureAwait(false);
                         }
                         finally
                         {
@@ -550,17 +527,12 @@ public partial class GameContextBase
                         }
                     }
 
-                    // 处理剩余未更新进度
-                    if (accumulatedBytes > 0)
-                    {
-                        await UpdateFileProgress(GameContextActionType.Download, accumulatedBytes)
-                            .ConfigureAwait(false);
-                    }
-
                     if (totalWritten != chunkTotalSize)
                     {
                         throw new IOException($"分片写入不完整: {totalWritten}/{chunkTotalSize}");
                     }
+                    fileStream.SetLength(file.Size);
+                    await fileStream.FlushAsync();
                 }
                 catch (OperationCanceledException)
                 {
@@ -595,7 +567,7 @@ public partial class GameContextBase
                     FileAccess.Read,
                     FileShare.Read,
                     262144,
-                    FileOptions.Asynchronous | FileOptions.WriteThrough
+                    true
                 )
             )
             {
@@ -629,16 +601,15 @@ public partial class GameContextBase
         {
             _downloadSpeed = _totalDownloadedBytes / elapsed;
             _verifySpeed = _totalVerifiedBytes / elapsed;
-
             // 重置计数器和时间
             Interlocked.Exchange(ref _totalDownloadedBytes, 0);
             Interlocked.Exchange(ref _totalVerifiedBytes, 0);
+            var currentBytes = Interlocked.Read(ref _totalDownloadedBytes);
+            _lastSpeedBytes = currentBytes;
             _lastSpeedUpdateTime = DateTime.Now;
         }
         _totalProgressSize += fileSize;
-        this._downloadState.CurrentSize = _totalProgressSize;
-        this._downloadState.TotalSize = this._totalfileSize;
-        this.gameContextOutputDelegate?.Invoke(
+        await this.gameContextOutputDelegate?.Invoke(
             this,
             new GameContextOutputArgs()
             {
@@ -647,8 +618,21 @@ public partial class GameContextBase
                 TotalSize = _totalfileSize,
                 DownloadSpeed = _downloadSpeed,
                 VerifySpeed = VerifySpeed,
+                RemainingTime = this.RemainingTime,
             }
         );
+    }
+
+    public TimeSpan RemainingTime
+    {
+        get
+        {
+            if (DownloadSpeed <= 0 || _totalDownloadedBytes >= _totalfileSize)
+                return TimeSpan.Zero;
+
+            var remainingBytes = _totalfileSize - _totalProgressSize;
+            return TimeSpan.FromSeconds(remainingBytes / DownloadSpeed);
+        }
     }
 
     #endregion

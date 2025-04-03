@@ -34,6 +34,8 @@ public partial class SelectDownloadGameViewModel : DialogViewModelBase
     [ObservableProperty]
     public partial string TipMessage { get; set; }
 
+    public bool IsRead { get; private set; }
+
     [ObservableProperty]
     public partial ObservableCollection<LayerData> BarValues { get; set; }
 
@@ -111,6 +113,7 @@ public partial class SelectDownloadGameViewModel : DialogViewModelBase
         if (updateSize > totalSizeMB)
         {
             TipMessage = "空间不足，请清理一些文件进行下载";
+
             IsDownload = false;
         }
         else
@@ -124,6 +127,7 @@ public partial class SelectDownloadGameViewModel : DialogViewModelBase
     [RelayCommand(CanExecute = nameof(GetIsDownload))]
     void StartDownload()
     {
+        this.Result = ContentDialogResult.Primary;
         this.Close();
     }
 

@@ -2,7 +2,7 @@
 
 namespace WutheringWavesTool.ViewModel.GameViewModels
 {
-    public abstract partial class GameContextViewModelBase : ViewModelBase
+    public abstract partial class GameContextViewModelBase : ViewModelBase, IDisposable
     {
         public IGameContext GameContext { get; }
         public IDialogManager DialogManager { get; }
@@ -20,19 +20,39 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
             GameContext.GameContextOutput += GameContext_GameContextOutput;
         }
 
-        [ObservableProperty]
-        public partial Visibility GameInstallBthVisibility { get; set; }
-
-        [ObservableProperty]
-        public partial string BthContent { get; set; }
-
-        [ObservableProperty]
-        public partial string BthIcon { get; set; }
+        #region MyRegion
 
         /// <summary>
-        /// 按钮类型,1为安装游戏,2为继续下载游戏,3为开始游戏
+        /// 选择下载路径显示
+        /// </summary>
+        [ObservableProperty]
+        public partial Visibility GameInstallBthVisibility { get; set; } = Visibility.Collapsed;
+
+        /// <summary>
+        /// 定位游戏路径显示
+        /// </summary>
+        [ObservableProperty]
+        public partial Visibility GameInputFolderBthVisibility { get; set; } = Visibility.Collapsed;
+
+        /// <summary>
+        /// 游戏下载中
+        /// </summary>
+        [ObservableProperty]
+        public partial Visibility GameDownloadingBthVisibility { get; set; } = Visibility.Collapsed;
+
+        #endregion
+
+        [ObservableProperty]
+        public partial string PauseIcon { get; set; }
+
+        [ObservableProperty]
+        public partial string BottomBarContent { get; set; }
+
+        /// <summary>
+        /// 按钮类型,1为安装游戏,2为下载游戏,3为开始游戏
         /// </summary>
         private int _bthType = 0;
+        private bool disposedValue;
 
         [RelayCommand]
         async Task Loaded()
@@ -42,9 +62,25 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
             {
                 ShowSelectInstallBth();
             }
-            else if (status.IsGameExists && !status.IsGameInstalled)
+            if (status.IsGameExists && !status.IsGameInstalled)
             {
                 ShowGameDownloadBth();
+            }
+            if (
+                status.IsGameExists
+                && !status.IsGameInstalled
+                && (status.IsPause || status.IsAction)
+            )
+            {
+                ShowGameDownloadingBth();
+                if (status.IsPause)
+                {
+                    this.PauseIcon = "\uE768";
+                }
+                else
+                {
+                    this.PauseIcon = "\uE769";
+                }
             }
             await LoadAfter();
         }
@@ -57,6 +93,10 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
                 var result = await DialogManager.ShowSelectInstallFolderAsync(
                     this.GameContext.ContextType
                 );
+                if (result.Result == ContentDialogResult.None)
+                {
+                    return;
+                }
                 await this.GameContext.StartDownloadTaskAsync(
                     result.InstallFolder,
                     result.Launcher
@@ -80,8 +120,20 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
         private void ShowSelectInstallBth()
         {
             _bthType = 1;
-            BthContent = "安装游戏";
-            BthIcon = "\uE896";
+            GameInputFolderBthVisibility = Visibility.Visible;
+            GameInstallBthVisibility = Visibility.Visible;
+            BottomBarContent = "游戏文件不存在，请找到窗口右下角选择游戏下载路径或定位游戏";
+        }
+
+        private void ShowGameDownloadingBth()
+        {
+            _bthType = 2;
+            if (GameDownloadingBthVisibility == Visibility.Visible)
+                return;
+            GameInputFolderBthVisibility = Visibility.Collapsed;
+            GameInstallBthVisibility = Visibility.Collapsed;
+            GameDownloadingBthVisibility = Visibility.Visible;
+            PauseIcon = "\uE769";
         }
 
         /// <summary>
@@ -90,10 +142,29 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
         private void ShowGameDownloadBth()
         {
             _bthType = 2;
-            BthContent = "继续安装";
-            BthIcon = "\uE896";
+            GameInputFolderBthVisibility = Visibility.Collapsed;
+            GameInstallBthVisibility = Visibility.Visible;
+            BottomBarContent = "请点击右下角继续更新游戏";
         }
 
         public abstract Task LoadAfter();
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    GameContext.GameContextOutput -= GameContext_GameContextOutput;
+                }
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

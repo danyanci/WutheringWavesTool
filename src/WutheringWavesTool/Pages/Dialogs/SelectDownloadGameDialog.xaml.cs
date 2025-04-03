@@ -22,7 +22,12 @@ public sealed partial class SelectDownloadGameDialog
 
     public SelectDownloadFolderResult GetResult()
     {
-        return new() { InstallFolder = ViewModel.FolderPath, Launcher = ViewModel.Launcher };
+        return new()
+        {
+            InstallFolder = ViewModel.FolderPath,
+            Launcher = ViewModel.Launcher,
+            Result = ViewModel.Result,
+        };
     }
 
     public void SetData(object data)

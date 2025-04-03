@@ -23,14 +23,12 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}">
-                            <Border Clip="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.ClipRect}" CornerRadius="5">
+                            <Border>
                                 <Grid Height="{TemplateBinding MinHeight}">
                                     <Rectangle
                                         x:Name="ProgressBarTrack"
                                         Width="{TemplateBinding Width}"
-                                        Fill="{ThemeResource ControlAltFillColorTransparent}"
-                                        RadiusX="5"
-                                        RadiusY="5">
+                                        Fill="{ThemeResource ControlAltFillColorTransparent}">
                                         <Rectangle.RenderTransform>
                                             <CompositeTransform />
                                         </Rectangle.RenderTransform>
@@ -38,16 +36,12 @@
                                     <Rectangle
                                         x:Name="DeterminateProgressBarIndicator"
                                         HorizontalAlignment="Left"
-                                        Fill="{TemplateBinding Foreground}"
-                                        RadiusX="5"
-                                        RadiusY="5" />
+                                        Fill="{TemplateBinding Foreground}" />
                                     <Rectangle
                                         x:Name="IndeterminateProgressBarIndicator"
                                         HorizontalAlignment="Left"
                                         Fill="{TemplateBinding Foreground}"
-                                        Opacity="0"
-                                        RadiusX="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopLeftCornerRadiusDoubleValueConverter}}"
-                                        RadiusY="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BottomRightCornerRadiusDoubleValueConverter}}">
+                                        Opacity="0">
                                         <Rectangle.RenderTransform>
                                             <CompositeTransform />
                                         </Rectangle.RenderTransform>
@@ -56,9 +50,7 @@
                                         x:Name="IndeterminateProgressBarIndicator2"
                                         HorizontalAlignment="Left"
                                         Fill="{TemplateBinding Foreground}"
-                                        Opacity="0"
-                                        RadiusX="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource TopLeftCornerRadiusDoubleValueConverter}}"
-                                        RadiusY="{Binding CornerRadius, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BottomRightCornerRadiusDoubleValueConverter}}">
+                                        Opacity="0">
                                         <Rectangle.RenderTransform>
                                             <CompositeTransform />
                                         </Rectangle.RenderTransform>

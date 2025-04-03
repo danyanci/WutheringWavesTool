@@ -2,7 +2,7 @@
 
 namespace WutheringWavesTool.Common.Bases;
 
-public partial class DialogViewModelBase : ViewModelBase
+public abstract partial class DialogViewModelBase : ViewModelBase
 {
     public DialogViewModelBase(
         [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager
@@ -11,11 +11,20 @@ public partial class DialogViewModelBase : ViewModelBase
         DialogManager = dialogManager;
     }
 
+    public ContentDialogResult? Result { get; set; }
     public IDialogManager DialogManager { get; }
 
     [RelayCommand]
     protected void Close()
     {
+        if (Result == null)
+            this.Result = ContentDialogResult.None;
+        BeforeClose();
         DialogManager.CloseDialog();
+        AfterClose();
     }
+
+    public virtual void BeforeClose() { }
+
+    public virtual void AfterClose() { }
 }

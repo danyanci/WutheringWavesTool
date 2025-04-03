@@ -18,10 +18,7 @@ public abstract partial class GameContextBase : IGameContext
 
     private bool isLimtSpeed;
     private CancellationTokenSource _downloadCTS;
-    private CancellationTokenSource _prodDowloadCTS;
-    private CancellationTokenSource _clearCTS;
-    private CancellationTokenSource verifyCts;
-    private CancellationTokenSource _installProdCTS;
+    private bool _isDownload;
     #endregion
 
     #region Property
@@ -52,12 +49,6 @@ public abstract partial class GameContextBase : IGameContext
     {
         Config = config;
         ContextName = contextName;
-        //_downloadProcessor = Task.Run(
-        //    async () => await ProcessChannelAsync(_downloadChannel, GameContextActionType.Download)
-        //);
-        //_verifyProcessor = Task.Run(
-        //    async () => await ProcessChannelAsync(_verifyChannel, GameContextActionType.Verify)
-        //);
     }
 
     public virtual async Task InitAsync()
@@ -94,7 +85,7 @@ public abstract partial class GameContextBase : IGameContext
         {
             status.IsGameExists = false;
         }
-        else if (string.IsNullOrWhiteSpace(gameBaseFolder) != null && File.Exists(gameProgramFile))
+        else if (Directory.Exists(gameBaseFolder) && File.Exists(gameProgramFile))
         {
             status.IsGameExists = true;
             status.IsGameInstalled = true;
@@ -103,6 +94,11 @@ public abstract partial class GameContextBase : IGameContext
         {
             status.IsGameExists = true;
             status.IsGameInstalled = false;
+        }
+        if (_downloadState != null)
+        {
+            status.IsPause = this._downloadState.IsPaused;
+            status.IsAction = this._downloadState.IsActive;
         }
         return status;
     }

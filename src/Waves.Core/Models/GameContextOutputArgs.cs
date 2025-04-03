@@ -13,6 +13,8 @@ public class GameContextOutputArgs
 
     public double VerifySpeed { get; set; }
 
+    public TimeSpan RemainingTime { get; set; }
+
     // 进度百分比
     public double ProgressPercentage =>
         TotalSize > 0 ? Math.Round((CurrentSize * 100.0) / TotalSize, 2) : 0;

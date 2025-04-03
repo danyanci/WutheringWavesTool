@@ -11,4 +11,8 @@ public class GameContextStatus
     /// 游戏是否下载完毕
     /// </summary>
     public bool IsGameInstalled { get; internal set; }
+
+    public bool IsPause { get; internal set; }
+
+    public bool IsAction { get; internal set; }
 }

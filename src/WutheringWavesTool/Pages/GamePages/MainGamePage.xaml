@@ -7,65 +7,188 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:WutheringWavesTool.Pages.GamePages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:wuc="using:WinUICommunity"
     mc:Ignorable="d">
+    <Page.Resources />
     <i:Interaction.Behaviors>
         <i:EventTriggerBehavior EventName="Loaded">
             <i:InvokeCommandAction Command="{x:Bind ViewModel.LoadedCommand}" />
         </i:EventTriggerBehavior>
     </i:Interaction.Behaviors>
-    <Grid>
+    <Grid x:Name="backGrid">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition Height="50" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <StackPanel
-            Grid.Row="1"
-            Grid.Column="1"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Bottom"
-            Orientation="Vertical">
-            <StackPanel>
-                <TextBlock Text="{x:Bind ViewModel.UpdateString, Mode=OneWay}" />
-                <ProgressBar
-                    Margin="0,10,0,0"
-                    HorizontalAlignment="Stretch"
-                    Maximum="{x:Bind ViewModel.MaxProgressValue, Mode=OneWay}"
-                    Value="{x:Bind ViewModel.CurrentProgressValue, Mode=OneWay}" />
-            </StackPanel>
-            <SplitButton
-                Width="180"
-                Height="60"
-                Margin="10"
-                Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
-                Command="{x:Bind ViewModel.ShowSelectInstallFolderCommand}"
-                FontFamily="{ThemeResource DefaultFont}"
-                FontSize="20"
-                Style="{ThemeResource AcrylicBackgroundSplitButton}"
-                Visibility="{x:Bind ViewModel.GameInstallBthVisibility, Mode=OneWay}">
-                <StackPanel Orientation="Horizontal">
+        <!--  下载游戏  -->
+        <Grid
+            Grid.Row="2"
+            Grid.ColumnSpan="2"
+            Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="col1" />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <ProgressBar
+                Grid.ColumnSpan="3"
+                MinHeight="5"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                Background="Transparent"
+                Maximum="{x:Bind ViewModel.MaxProgressValue, Mode=OneWay}"
+                Style="{ThemeResource FillHeightProgressBar}"
+                Value="{x:Bind ViewModel.CurrentProgressValue, Mode=OneWay}" />
+            <Grid Margin="5,0,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Button
+                    Width="40"
+                    Height="40"
+                    Padding="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Style="{ThemeResource TransparentButtonStyle}"
+                    Visibility="{x:Bind ViewModel.GameDownloadingBthVisibility, Mode=OneWay}">
+                    <FontIcon
+                        FontFamily="Segoe UI Emoji"
+                        FontSize="15"
+                        Glyph="&#x1F914;" />
+                    <Button.Flyout>
+                        <Flyout ShouldConstrainToRootBounds="False">
+                            <Grid Width="400">
+                                <RichTextBlock
+                                    FontFamily="{ThemeResource DefaultFont}"
+                                    LineHeight="20"
+                                    LineStackingStrategy="BlockLineHeight"
+                                    TextWrapping="Wrap">
+                                    <Paragraph>
+                                        <!--  优化文字层级  -->
+
+                                        <Run
+                                            FontSize="14"
+                                            FontWeight="SemiBold"
+                                            Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                            Text="使用注意事项" />
+
+                                        <LineBreak />
+                                        <LineBreak />
+
+                                        <!--  分点符号  -->
+                                        <Run FontSize="12" Text="• 增量更新机制" />
+                                        <LineBreak />
+                                        <Run FontSize="12" Text="   - 剩余时间计算排除合并操作耗时，仅供参考" />
+
+                                        <LineBreak />
+                                        <LineBreak />
+
+                                        <Run FontSize="12" Text="• 暂停与网络恢复" />
+                                        <LineBreak />
+                                        <Run FontSize="12" Text="   - 暂停期间断网将会退出下载状态" />
+
+                                        <LineBreak />
+                                        <LineBreak />
+
+                                        <Run FontSize="12" Text="• 进度持久化" />
+                                        <LineBreak />
+                                        <Run FontSize="12" Text="   - 意外退出需重新校验，建议保持程序前台运行" />
+
+                                        <LineBreak />
+                                        <LineBreak />
+
+                                        <Run FontSize="12" Text="• 硬件兼容性" />
+                                        <LineBreak />
+                                        <Run FontSize="12" Text="   - 机械硬盘校验效率约为SSD的1/3～1/5" />
+                                    </Paragraph>
+                                </RichTextBlock>
+                            </Grid>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+                <wuc:AutoScrollView
+                    Grid.Column="1"
+                    Margin="5,0,0,0"
+                    VerticalAlignment="Center"
+                    IsPlaying="True"
+                    ScrollingPixelsPreSecond="40">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontFamily="{ThemeResource DefaultFont}"
+                        Text="{x:Bind ViewModel.BottomBarContent, Mode=OneWay}" />
+                </wuc:AutoScrollView>
+            </Grid>
+
+            <StackPanel
+                Grid.Column="2"
+                Margin="0,0,5,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Button
+                    Width="40"
+                    Height="40"
+                    Padding="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Command="{x:Bind ViewModel.PauseDownloadTaskCommand}"
+                    Style="{ThemeResource TransparentButtonStyle}"
+                    Visibility="{x:Bind ViewModel.GameDownloadingBthVisibility, Mode=OneWay}">
                     <FontIcon
                         FontFamily="Segoe Fluent Icons"
-                        FontWeight="Bold"
-                        Glyph="{x:Bind ViewModel.BthIcon, Mode=OneWay}" />
-                    <TextBlock Margin="5,0,0,0" Text="{x:Bind ViewModel.BthContent, Mode=OneWay}" />
-                </StackPanel>
-                <SplitButton.Flyout>
-                    <MenuFlyout>
-                        <MenuFlyoutItem Text="定位已经安装的路径">
-                            <MenuFlyoutItem.Icon>
-                                <FontIcon
-                                    FontFamily="Segoe Fluent Icons"
-                                    FontSize="16"
-                                    Glyph="&#xE838;" />
-                            </MenuFlyoutItem.Icon>
-                        </MenuFlyoutItem>
-                    </MenuFlyout>
-                </SplitButton.Flyout>
-            </SplitButton>
-        </StackPanel>
+                        FontSize="15"
+                        Glyph="{x:Bind ViewModel.PauseIcon, Mode=OneWay}" />
+                </Button>
+                <Button
+                    Width="40"
+                    Height="40"
+                    Padding="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Style="{ThemeResource TransparentButtonStyle}"
+                    Visibility="{x:Bind ViewModel.GameDownloadingBthVisibility, Mode=OneWay}">
+                    <FontIcon
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="15"
+                        Glyph="&#xE71A;" />
+                </Button>
+
+                <Button
+                    Width="40"
+                    Height="40"
+                    Padding="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Command="{x:Bind ViewModel.ShowSelectInstallFolderCommand}"
+                    Style="{ThemeResource TransparentButtonStyle}"
+                    Visibility="{x:Bind ViewModel.GameInstallBthVisibility, Mode=OneWay}">
+                    <FontIcon
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="15"
+                        Glyph="&#xE896;" />
+                </Button>
+                <Button
+                    Width="40"
+                    Height="40"
+                    Padding="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Style="{ThemeResource TransparentButtonStyle}"
+                    Visibility="{x:Bind ViewModel.GameInputFolderBthVisibility, Mode=OneWay}">
+                    <FontIcon
+                        FontFamily="Segoe Fluent Icons"
+                        FontSize="15"
+                        Glyph="&#xE8D5;" />
+                </Button>
+            </StackPanel>
+        </Grid>
+
     </Grid>
 </Page>
