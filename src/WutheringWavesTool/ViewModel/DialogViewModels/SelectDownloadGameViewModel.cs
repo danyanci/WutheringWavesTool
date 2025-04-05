@@ -16,9 +16,6 @@ public partial class SelectDownloadGameViewModel : DialogViewModelBase
     }
 
     [ObservableProperty]
-    public partial double MaxValue { get; set; }
-
-    [ObservableProperty]
     public partial bool IsLoading { get; set; }
     public GameLauncherSource? Launcher { get; private set; }
 
@@ -38,6 +35,9 @@ public partial class SelectDownloadGameViewModel : DialogViewModelBase
 
     [ObservableProperty]
     public partial ObservableCollection<LayerData> BarValues { get; set; }
+
+    [ObservableProperty]
+    public partial double MaxValue { get; set; }
 
     [ObservableProperty]
     public partial bool IsDownload { get; set; }

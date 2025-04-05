@@ -15,6 +15,10 @@ public class GameContextOutputArgs
 
     public TimeSpan RemainingTime { get; set; }
 
+    public bool IsAction { get; set; }
+
+    public bool IsPause { get; set; }
+
     // 进度百分比
     public double ProgressPercentage =>
         TotalSize > 0 ? Math.Round((CurrentSize * 100.0) / TotalSize, 2) : 0;

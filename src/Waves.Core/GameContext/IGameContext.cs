@@ -19,7 +19,6 @@ public interface IGameContext
     Task<FileVersion> GetLocalDLSSAsync();
     Task<FileVersion> GetLocalDLSSGenerateAsync();
     Task<FileVersion> GetLocalXeSSGenerateAsync();
-
     public Type ContextType { get; }
 
     #region Launcher
@@ -49,6 +48,12 @@ public interface IGameContext
     /// </summary>
     /// <returns></returns>
     Task<bool> ResumeDownloadAsync();
+
+    /// <summary>
+    /// 取消下载
+    /// </summary>
+    /// <returns></returns>
+    Task<bool> StopDownloadAsync();
 
     /// <summary>
     /// 开始任务

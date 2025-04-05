@@ -28,13 +28,13 @@ public class SpeedLimiter
         }
     }
 
-    public async Task Limit(int bytesTransferred)
+    public async Task LimitAsync(int bytesTransferred)
     {
+        if (_bytesPerSecond == 0)
+            return;
         await _sync.WaitAsync();
         try
         {
-            if (_bytesPerSecond == 0)
-                return;
             var now = DateTime.UtcNow;
             var elapsedSeconds = (now - _lastUpdate).TotalSeconds;
 

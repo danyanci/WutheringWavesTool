@@ -1,4 +1,6 @@
-﻿using Waves.Core.Services;
+﻿using CommunityToolkit.WinUI;
+using Microsoft.UI.Dispatching;
+using Waves.Core.Services;
 using WavesLauncher.Core.Contracts;
 
 namespace WutheringWavesTool.Services;
@@ -89,13 +91,37 @@ public class AppContext<T> : IAppContext<T>
         Process.GetCurrentProcess().Kill();
     }
 
-    public async Task TryInvokeAsync(Action action)
+    public async Task TryInvokeAsync(Func<Task> action)
     {
-        await CommunityToolkit.WinUI.DispatcherQueueExtensions.EnqueueAsync(
-            this.App.MainWindow.DispatcherQueue,
-            action,
-            priority: Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal
-        );
+        await SafeInvokeAsync(
+                this.App.MainWindow.DispatcherQueue,
+                action,
+                priority: Microsoft.UI.Dispatching.DispatcherQueuePriority.Normal
+            )
+            .ConfigureAwait(false);
+    }
+
+    async Task SafeInvokeAsync(
+        DispatcherQueue dispatcher,
+        Func<Task> action,
+        DispatcherQueuePriority priority = DispatcherQueuePriority.Normal
+    )
+    {
+        try
+        {
+            if (dispatcher.HasThreadAccess)
+            {
+                await action().ConfigureAwait(false);
+            }
+            else
+            {
+                await dispatcher.EnqueueAsync(action, priority).ConfigureAwait(false);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"UI操作失败: {ex.Message}");
+        }
     }
 
     public ElementTheme CurrentElement { get; set; }
@@ -107,5 +133,10 @@ public class AppContext<T> : IAppContext<T>
             fe.RequestedTheme = theme;
             this.CurrentElement = theme;
         }
+    }
+
+    public void TryInvoke(Action action)
+    {
+        this.App.MainWindow.DispatcherQueue.TryEnqueue(() => action.Invoke());
     }
 }

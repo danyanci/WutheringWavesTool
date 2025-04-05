@@ -3,6 +3,11 @@
 public enum GameContextActionType
 {
     /// <summary>
+    /// 无状态
+    /// </summary>
+    None,
+
+    /// <summary>
     /// 校验中
     /// </summary>
     Verify,

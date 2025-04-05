@@ -15,7 +15,7 @@ public sealed partial class MainGamePage : Page, IPage
     protected override void OnNavigatedFrom(NavigationEventArgs e)
     {
         this.ViewModel.Dispose();
-        GC.Collect();
+        this.Bindings.StopTracking();
     }
 
     public Type PageType => typeof(MainGamePage);

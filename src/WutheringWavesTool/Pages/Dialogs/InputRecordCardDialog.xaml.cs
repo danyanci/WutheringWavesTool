@@ -23,6 +23,6 @@ public sealed partial class InputRecordCardDialog : ContentDialog, IDialog
             Link = null,
             Cache = e.ClickedItem as RecordCacheDetily,
         };
-        this.ViewModel.DialogManager.Close();
+        this.ViewModel.DialogManager.CloseDialog();
     }
 }

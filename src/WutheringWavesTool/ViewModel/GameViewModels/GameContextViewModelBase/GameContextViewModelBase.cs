@@ -72,15 +72,16 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
                 && (status.IsPause || status.IsAction)
             )
             {
-                ShowGameDownloadingBth();
-                if (status.IsPause)
+                if (status.IsAction && status.IsPause)
                 {
+                    this.BottomBarContent = "下载已经暂停";
                     this.PauseIcon = "\uE768";
                 }
                 else
                 {
                     this.PauseIcon = "\uE769";
                 }
+                ShowGameDownloadingBth();
             }
             await LoadAfter();
         }
@@ -91,6 +92,35 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
             if (_bthType == 1)
             {
                 var result = await DialogManager.ShowSelectInstallFolderAsync(
+                    this.GameContext.ContextType
+                );
+                if (result.Result == ContentDialogResult.None)
+                {
+                    return;
+                }
+                await this.GameContext.StartDownloadTaskAsync(
+                    result.InstallFolder,
+                    result.Launcher
+                );
+            }
+            else
+            {
+                var launcher = await GameContext.GetGameLauncherSourceAsync(this.CTS.Token);
+                await this.GameContext.StartDownloadTaskAsync(
+                    await GameContext.GameLocalConfig.GetConfigAsync(
+                        GameLocalSettingName.GameLauncherBassFolder
+                    ),
+                    launcher
+                );
+            }
+        }
+
+        [RelayCommand]
+        async Task ShowSelectGameFolder()
+        {
+            if (_bthType == 1)
+            {
+                var result = await DialogManager.ShowSelectGameFolderAsync(
                     this.GameContext.ContextType
                 );
                 if (result.Result == ContentDialogResult.None)
@@ -133,7 +163,6 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
             GameInputFolderBthVisibility = Visibility.Collapsed;
             GameInstallBthVisibility = Visibility.Collapsed;
             GameDownloadingBthVisibility = Visibility.Visible;
-            PauseIcon = "\uE769";
         }
 
         /// <summary>
@@ -144,6 +173,7 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
             _bthType = 2;
             GameInputFolderBthVisibility = Visibility.Collapsed;
             GameInstallBthVisibility = Visibility.Visible;
+            GameDownloadingBthVisibility = Visibility.Collapsed;
             BottomBarContent = "请点击右下角继续更新游戏";
         }
 

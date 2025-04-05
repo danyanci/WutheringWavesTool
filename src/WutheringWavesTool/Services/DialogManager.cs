@@ -8,13 +8,6 @@ public abstract class DialogManager : IDialogManager
     ContentDialog _dialog = null;
     public XamlRoot Root { get; private set; }
 
-    public void Close()
-    {
-        if (_dialog == null)
-            return;
-        _dialog.Hide();
-    }
-
     public void RegisterRoot(XamlRoot root)
     {
         this.Root = root;
@@ -96,4 +89,7 @@ public abstract class DialogManager : IDialogManager
 
     public async Task<SelectDownloadFolderResult> ShowSelectInstallFolderAsync(Type type) =>
         await GetDialogResultAsync<SelectDownloadGameDialog, SelectDownloadFolderResult>(type);
+
+    public async Task<SelectDownloadFolderResult> ShowSelectGameFolderAsync(Type type) =>
+        await GetDialogResultAsync<SelectGameFolderDialog, SelectDownloadFolderResult>(type);
 }

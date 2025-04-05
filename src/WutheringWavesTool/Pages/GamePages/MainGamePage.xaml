@@ -50,69 +50,110 @@
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Button
-                    Width="40"
-                    Height="40"
-                    Padding="0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Style="{ThemeResource TransparentButtonStyle}"
-                    Visibility="{x:Bind ViewModel.GameDownloadingBthVisibility, Mode=OneWay}">
-                    <FontIcon
-                        FontFamily="Segoe UI Emoji"
-                        FontSize="15"
-                        Glyph="&#x1F914;" />
-                    <Button.Flyout>
-                        <Flyout ShouldConstrainToRootBounds="False">
-                            <Grid Width="400">
-                                <RichTextBlock
-                                    FontFamily="{ThemeResource DefaultFont}"
-                                    LineHeight="20"
-                                    LineStackingStrategy="BlockLineHeight"
-                                    TextWrapping="Wrap">
-                                    <Paragraph>
-                                        <!--  优化文字层级  -->
+                <StackPanel Orientation="Horizontal" Visibility="{x:Bind ViewModel.GameDownloadingBthVisibility, Mode=OneWay}">
+                    <Button
+                        Width="40"
+                        Height="40"
+                        Padding="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Style="{ThemeResource TransparentButtonStyle}">
+                        <FontIcon
+                            FontFamily="Segoe UI Emoji"
+                            FontSize="15"
+                            Glyph="&#x1F914;" />
+                        <Button.Flyout>
+                            <Flyout ShouldConstrainToRootBounds="False">
+                                <Grid Width="400">
+                                    <RichTextBlock
+                                        FontFamily="{ThemeResource DefaultFont}"
+                                        LineHeight="20"
+                                        LineStackingStrategy="BlockLineHeight"
+                                        TextWrapping="Wrap">
+                                        <Paragraph>
+                                            <!--  优化文字层级  -->
 
-                                        <Run
-                                            FontSize="14"
-                                            FontWeight="SemiBold"
-                                            Foreground="{ThemeResource TextFillColorPrimaryBrush}"
-                                            Text="使用注意事项" />
+                                            <Run
+                                                FontSize="14"
+                                                FontWeight="SemiBold"
+                                                Foreground="{ThemeResource TextFillColorPrimaryBrush}"
+                                                Text="使用注意事项" />
 
-                                        <LineBreak />
-                                        <LineBreak />
+                                            <LineBreak />
+                                            <LineBreak />
 
-                                        <!--  分点符号  -->
-                                        <Run FontSize="12" Text="• 增量更新机制" />
-                                        <LineBreak />
-                                        <Run FontSize="12" Text="   - 剩余时间计算排除合并操作耗时，仅供参考" />
+                                            <!--  分点符号  -->
+                                            <Run FontSize="12" Text="• 增量更新机制" />
+                                            <LineBreak />
+                                            <Run FontSize="12" Text="   - 剩余时间计算排除合并操作耗时，仅供参考" />
 
-                                        <LineBreak />
-                                        <LineBreak />
+                                            <LineBreak />
+                                            <LineBreak />
 
-                                        <Run FontSize="12" Text="• 暂停与网络恢复" />
-                                        <LineBreak />
-                                        <Run FontSize="12" Text="   - 暂停期间断网将会退出下载状态" />
+                                            <Run FontSize="12" Text="• 暂停与网络恢复" />
+                                            <LineBreak />
+                                            <Run FontSize="12" Text="   - 暂停期间断网将会退出下载状态" />
 
-                                        <LineBreak />
-                                        <LineBreak />
+                                            <LineBreak />
+                                            <LineBreak />
 
-                                        <Run FontSize="12" Text="• 进度持久化" />
-                                        <LineBreak />
-                                        <Run FontSize="12" Text="   - 意外退出需重新校验，建议保持程序前台运行" />
+                                            <Run FontSize="12" Text="• 进度持久化" />
+                                            <LineBreak />
+                                            <Run FontSize="12" Text="   - 意外退出需重新校验，建议保持程序前台运行" />
 
-                                        <LineBreak />
-                                        <LineBreak />
+                                            <LineBreak />
+                                            <LineBreak />
 
-                                        <Run FontSize="12" Text="• 硬件兼容性" />
-                                        <LineBreak />
-                                        <Run FontSize="12" Text="   - 机械硬盘校验效率约为SSD的1/3～1/5" />
-                                    </Paragraph>
-                                </RichTextBlock>
-                            </Grid>
-                        </Flyout>
-                    </Button.Flyout>
-                </Button>
+                                            <Run FontSize="12" Text="• 硬件兼容性" />
+                                            <LineBreak />
+                                            <Run FontSize="12" Text="   - 机械硬盘校验效率约为SSD的1/3～1/5" />
+                                        </Paragraph>
+                                    </RichTextBlock>
+                                </Grid>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                    <Button
+                        Width="40"
+                        Height="40"
+                        Margin="5,0,0,0"
+                        Padding="0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Style="{ThemeResource TransparentButtonStyle}">
+                        <FontIcon
+                            FontFamily="Segoe Fluent Icons"
+                            FontSize="16"
+                            Glyph="&#xF8B0;" />
+                        <Button.Flyout>
+                            <Flyout>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox
+                                        Width="120"
+                                        VerticalAlignment="Center"
+                                        PlaceholderText="下载限速(mb/s)"
+                                        Text="{x:Bind ViewModel.DownloadSpeedValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        ToolTipService.ToolTip="默认为0，意为不限速" />
+                                    <Button
+                                        Grid.Column="1"
+                                        Margin="5,0,0,0"
+                                        VerticalAlignment="Center"
+                                        Command="{x:Bind ViewModel.SetDownloadSpeedCommand}"
+                                        Style="{ThemeResource AccentButtonStyle}">
+                                        <FontIcon
+                                            FontFamily="Segoe Fluent Icons"
+                                            FontSize="15"
+                                            Glyph="&#xE8FB;" />
+                                    </Button>
+                                </Grid>
+                            </Flyout>
+                        </Button.Flyout>
+                    </Button>
+                </StackPanel>
                 <wuc:AutoScrollView
                     Grid.Column="1"
                     Margin="5,0,0,0"
@@ -152,6 +193,7 @@
                     Padding="0"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
+                    Command="{x:Bind ViewModel.CancelDownloadTaskCommand}"
                     Style="{ThemeResource TransparentButtonStyle}"
                     Visibility="{x:Bind ViewModel.GameDownloadingBthVisibility, Mode=OneWay}">
                     <FontIcon
@@ -160,33 +202,45 @@
                         Glyph="&#xE71A;" />
                 </Button>
 
-                <Button
-                    Width="40"
-                    Height="40"
-                    Padding="0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Command="{x:Bind ViewModel.ShowSelectInstallFolderCommand}"
-                    Style="{ThemeResource TransparentButtonStyle}"
-                    Visibility="{x:Bind ViewModel.GameInstallBthVisibility, Mode=OneWay}">
-                    <FontIcon
-                        FontFamily="Segoe Fluent Icons"
-                        FontSize="15"
-                        Glyph="&#xE896;" />
-                </Button>
-                <Button
-                    Width="40"
-                    Height="40"
-                    Padding="0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Style="{ThemeResource TransparentButtonStyle}"
-                    Visibility="{x:Bind ViewModel.GameInputFolderBthVisibility, Mode=OneWay}">
-                    <FontIcon
-                        FontFamily="Segoe Fluent Icons"
-                        FontSize="15"
-                        Glyph="&#xE8D5;" />
-                </Button>
+                <StackPanel Orientation="Horizontal">
+                    <Button
+                        Height="40"
+                        Margin="0,0,5,0"
+                        Padding="10"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Command="{x:Bind ViewModel.ShowSelectInstallFolderCommand}"
+                        Style="{ThemeResource TransparentButtonStyle}"
+                        ToolTipService.ToolTip="选择下载路径"
+                        Visibility="{x:Bind ViewModel.GameInstallBthVisibility, Mode=OneWay}">
+                        <FontIcon
+                            FontFamily="Segoe Fluent Icons"
+                            FontSize="15"
+                            Glyph="&#xE896;" />
+                    </Button>
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        FontWeight="Bold"
+                        Text="/"
+                        Visibility="{x:Bind ViewModel.GameInputFolderBthVisibility, Mode=OneWay}" />
+                    <Button
+                        Height="40"
+                        Margin="5,0,0,0"
+                        Padding="10"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Command="{x:Bind ViewModel.ShowSelectGameFolderCommand}"
+                        Style="{ThemeResource TransparentButtonStyle}"
+                        ToolTipService.ToolTip="定位游戏位置"
+                        Visibility="{x:Bind ViewModel.GameInputFolderBthVisibility, Mode=OneWay}">
+                        <FontIcon
+                            FontFamily="Segoe Fluent Icons"
+                            FontSize="15"
+                            Glyph="&#xE8D5;" />
+                    </Button>
+
+                </StackPanel>
+
             </StackPanel>
         </Grid>
 

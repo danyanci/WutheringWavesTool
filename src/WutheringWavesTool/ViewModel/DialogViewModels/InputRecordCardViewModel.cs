@@ -35,7 +35,7 @@ public partial class InputRecordCardViewModel : ObservableObject
     {
         this.Args = null;
         TipShow.ShowMessage("抽卡链接为空", Microsoft.UI.Xaml.Controls.Symbol.Clear);
-        this.DialogManager.Close();
+        this.DialogManager.CloseDialog();
     }
 
     [RelayCommand(CanExecute = nameof(GetIsInvoke))]
@@ -57,7 +57,7 @@ public partial class InputRecordCardViewModel : ObservableObject
                 Cache = this.SelectItem,
             };
         }
-        this.DialogManager.Close();
+        this.DialogManager.CloseDialog();
     }
 
     [RelayCommand(CanExecute = nameof(GetIsInvoke))]
@@ -68,7 +68,7 @@ public partial class InputRecordCardViewModel : ObservableObject
             Link = this.Link,
             Cache = null,
         };
-        this.DialogManager.Close();
+        this.DialogManager.CloseDialog();
     }
 
     public IServiceScope Scope { get; }

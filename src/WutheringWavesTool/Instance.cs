@@ -1,4 +1,5 @@
-﻿using WutheringWavesTool.Services.DialogServices;
+﻿using WutheringWavesTool.Models.Dialogs;
+using WutheringWavesTool.Services.DialogServices;
 using WutheringWavesTool.ViewModel.GameViewModels;
 
 namespace WutheringWavesTool;
@@ -49,6 +50,8 @@ public static class Instance
             .AddTransient<SelectWallpaperViewModel>()
             .AddTransient<SelectDownloadGameDialog>()
             .AddTransient<SelectDownloadGameViewModel>()
+            .AddTransient<SelectGameFolderDialog>()
+            .AddTransient<SelectGameFolderViewModel>()
             #endregion
             #endregion
             #region Navigation

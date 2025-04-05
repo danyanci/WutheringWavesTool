@@ -3,121 +3,60 @@ using Waves.Core.Models.Downloader;
 
 namespace Waves.Core.Common;
 
-/// <summary>
-/// 下载状态机
-/// </summary>
 public sealed class DownloadState
 {
-    private readonly SemaphoreSlim _pauseLock = new(1, 1);
-    private readonly SemaphoreSlim _speedLimiterSemaphore = new(1, 1);
+    public volatile bool _isPaused;
     private long _currentBytes;
 
-    public SpeedLimiter SpeedLimiter { get; set; }
+    public IndexGameResource Resources { get; }
+    public SpeedLimiter SpeedLimiter { get; private set; }
+    public bool IsActive { get; set; }
+    public CancellationToken CancelToken { get; set; }
+    public PauseToken PauseToken => new PauseToken(this);
 
     public DownloadState(IndexGameResource resources)
     {
         Resources = resources;
         SpeedLimiter = new SpeedLimiter();
+        _isPaused = false;
     }
 
-    public async Task SetSpeedLimitAsync(long byteSecond)
+    public bool IsPaused => _isPaused;
+
+    public async Task SetSpeedLimitAsync(long bytesPerSecond)
     {
-        await _speedLimiterSemaphore.WaitAsync();
-        try
-        {
-            var newLimiter = new SpeedLimiter();
-            await newLimiter.SetBytesPerSecondAsync(byteSecond);
-            SpeedLimiter = newLimiter;
-        }
-        finally
-        {
-            _speedLimiterSemaphore.Release();
-        }
+        var newLimiter = new SpeedLimiter();
+        await newLimiter.SetBytesPerSecondAsync(bytesPerSecond);
+        SpeedLimiter = newLimiter;
     }
 
-    public IndexGameResource Resources { get; }
-    public long TotalSize { get; set; }
-    public long CurrentSize { get; set; }
-    public bool IsPaused { get; private set; }
-    public bool IsActive { get; set; }
-
-    /// <summary>
-    /// 取消信号
-    /// </summary>
-    public CancellationToken CancelToken { get; set; }
-
-    public PauseToken PauseToken => new(_pauseLock);
-
-    /// <summary>
-    /// 异步暂停（基于信号量）
-    /// </summary>
-    /// <returns></returns>
-    public async Task<bool> PauseAsync()
+    public Task<bool> PauseAsync()
     {
-        await _pauseLock.WaitAsync();
-        try
-        {
-            IsPaused = true;
-            return true;
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-        finally
-        {
-            _pauseLock.Release();
-        }
+        Volatile.Write(ref _isPaused, true);
+        return Task.FromResult(true);
     }
 
-    /// <summary>
-    /// 异步恢复（基于信号量）
-    /// </summary>
-    /// <returns></returns>
-    public async Task<bool> ResumeAsync()
+    public Task<bool> ResumeAsync()
     {
-        await _pauseLock.WaitAsync();
-        try
-        {
-            IsPaused = false;
-            return true;
-        }
-        catch (Exception)
-        {
-            return false;
-        }
-        finally
-        {
-            _pauseLock.Release();
-        }
+        Volatile.Write(ref _isPaused, false);
+        return Task.FromResult(true);
     }
 }
 
 public readonly struct PauseToken
 {
-    private readonly SemaphoreSlim _semaphore;
+    private readonly DownloadState _state;
 
-    public PauseToken(SemaphoreSlim semaphore) => _semaphore = semaphore;
+    public PauseToken(DownloadState state) => _state = state;
 
     /// <summary>
-    /// 异步阻塞等待信号
+    /// 异步等待暂停状态结束（无锁轮询）
     /// </summary>
-    /// <param name="isPaused"></param>
-    /// <returns></returns>
-    public async Task WaitIfPausedAsync(Func<bool> isPaused)
+    public async ValueTask WaitIfPausedAsync()
     {
-        while (isPaused())
+        while (Volatile.Read(ref _state._isPaused))
         {
-            await _semaphore.WaitAsync();
-            try
-            {
-                if (isPaused())
-                    await Task.Delay(500);
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
+            await Task.Delay(100, _state.CancelToken); // 低延迟轮询
         }
     }
 }

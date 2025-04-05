@@ -7,7 +7,9 @@ public interface IAppContext<T>
 
     public Task LauncherAsync(T app);
 
-    public Task TryInvokeAsync(Action action);
+    public Task TryInvokeAsync(Func<Task> action);
+
+    public void TryInvoke(Action action);
 
     public ElementTheme CurrentElement { get; set; }
 
