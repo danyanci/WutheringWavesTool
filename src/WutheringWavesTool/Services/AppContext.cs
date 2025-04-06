@@ -78,16 +78,12 @@ public class AppContext<T> : IAppContext<T>
         var mainContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
             nameof(MainGameContext)
         );
-        //mainContext.CancelDownloadAsync().GetAwaiter().GetResult();
-
         var biliContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
             nameof(BilibiliGameContext)
         );
-        // biliContext.CancelDownloadAsync().GetAwaiter().GetResult();
         var globalContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
             nameof(GlobalGameContext)
         );
-        //globalContext.CancelDownloadAsync().GetAwaiter().GetResult();
         Process.GetCurrentProcess().Kill();
     }
 

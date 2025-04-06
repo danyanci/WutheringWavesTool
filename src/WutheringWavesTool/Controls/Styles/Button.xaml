@@ -35,7 +35,7 @@
                         Content="{TemplateBinding Content}"
                         ContentTemplate="{TemplateBinding ContentTemplate}"
                         ContentTransitions="{TemplateBinding ContentTransitions}"
-                        CornerRadius="{ThemeResource ControlCornerRadius}">
+                        CornerRadius="{TemplateBinding CornerRadius}">
                         <ContentPresenter.BackgroundTransition>
                             <BrushTransition Duration="0:0:0.083" />
                         </ContentPresenter.BackgroundTransition>

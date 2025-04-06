@@ -34,6 +34,10 @@ public interface IGameContext
         ResourceDefault ResourceDefault,
         CancellationToken token = default
     );
+    Task<PatchIndexGameResource?> GetPatchGameResourceAsync(
+        string url,
+        CancellationToken token = default
+    );
 
     /// <summary>
     /// 开始下载
@@ -67,5 +71,8 @@ public interface IGameContext
     /// <param name="bytesPerSecond"></param>
     /// <returns></returns>
     Task SetSpeedLimitAsync(long bytesPerSecond);
+
+    Task StartGameAsync();
+    Task UpdateGameAsync();
     #endregion
 }

@@ -43,13 +43,18 @@ partial class GameContextViewModelBase
                     else
                     {
                         this.BottomBarContent =
-                            $"下载速度:{Math.Round(args.DownloadSpeed / 1024 / 1024, 2)}MB，剩余时间"
-                            + $"{(int)args.RemainingTime.TotalHours:00}:{args.RemainingTime.Minutes:00}:{args.RemainingTime.Seconds:00}";
+                            $"下载速度:{Math.Round(args.DownloadSpeed / 1024 / 1024, 2)}MB";
                     }
                 }
                 ShowGameDownloadingBth();
             }
-
+            if (args.Type == Waves.Core.Models.Enums.GameContextActionType.DeleteFile)
+            {
+                ShowGameDownloadingBth();
+                this.MaxProgressValue = args.FileTotal;
+                this.CurrentProgressValue = args.CurrentFile;
+                this.BottomBarContent = args.DeleteString;
+            }
             if (args.Type == Waves.Core.Models.Enums.GameContextActionType.None)
             {
                 var status = await this.GameContext.GetGameContextStatusAsync(this.CTS.Token);
@@ -60,6 +65,10 @@ partial class GameContextViewModelBase
                 if (status.IsGameExists && !status.IsGameInstalled)
                 {
                     ShowGameDownloadBth();
+                }
+                if (status.IsLauncher)
+                {
+                    ShowGameLauncherBth(status.IsUpdate, status.DisplayVersion);
                 }
                 if (
                     status.IsGameExists
@@ -79,6 +88,19 @@ partial class GameContextViewModelBase
                 }
             }
         });
+    }
+
+    [RelayCommand]
+    async Task UpdateGameAsync()
+    {
+        if (_bthType == 3)
+        {
+            await GameContext.StartGameAsync();
+        }
+        else if (_bthType == 4)
+        {
+            await GameContext.UpdateGameAsync();
+        }
     }
 
     [RelayCommand]

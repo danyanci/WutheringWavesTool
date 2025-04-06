@@ -16,4 +16,9 @@ public enum GameContextActionType
     /// 下载中
     /// </summary>
     Download,
+
+    /// <summary>
+    /// 删除文件
+    /// </summary>
+    DeleteFile,
 }

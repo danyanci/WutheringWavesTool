@@ -37,4 +37,26 @@ partial class GameContextBase
         );
         return launcherIndex;
     }
+
+    public async Task<PatchIndexGameResource?> GetPatchGameResourceAsync(
+        string url,
+        CancellationToken token = default
+    )
+    {
+        try
+        {
+            var result = await HttpClientService.HttpClient.GetAsync(url, token);
+            result.EnsureSuccessStatusCode();
+            var jsonStr = await result.Content.ReadAsStringAsync();
+            var pathIndexSource = JsonSerializer.Deserialize<PatchIndexGameResource>(
+                jsonStr,
+                PathIndexGameResourceContext.Default.PatchIndexGameResource
+            );
+            return pathIndexSource;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
 }

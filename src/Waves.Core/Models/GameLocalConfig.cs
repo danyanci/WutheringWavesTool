@@ -17,14 +17,11 @@ public class GameLocalSettingName
     public const string GameLauncherBassProgram = nameof(GameLauncherBassProgram);
 
     /// <summary>
-    /// 本地游戏资源版本
-    /// </summary>
-    public const string LocalGameResourceVersion = nameof(LocalGameResourceVersion);
-
-    /// <summary>
     /// 本地游戏版本
     /// </summary>
     public const string LocalGameVersion = nameof(LocalGameVersion);
+
+    public const string LocalGameUpdateing = nameof(LocalGameUpdateing);
 
     /// <summary>
     /// 下载速度

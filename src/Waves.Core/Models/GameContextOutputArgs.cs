@@ -5,7 +5,15 @@ namespace Waves.Core.Models;
 public class GameContextOutputArgs
 {
     public GameContextActionType Type { get; set; }
+    #region 文件进度
+    public int FileTotal { get; set; }
 
+    public int CurrentFile { get; set; }
+
+    public string DeleteString { get; set; }
+    #endregion
+
+    #region 字节进度
     public long CurrentSize { get; set; }
     public long TotalSize { get; set; }
 
@@ -14,6 +22,7 @@ public class GameContextOutputArgs
     public double VerifySpeed { get; set; }
 
     public TimeSpan RemainingTime { get; set; }
+    #endregion
 
     public bool IsAction { get; set; }
 

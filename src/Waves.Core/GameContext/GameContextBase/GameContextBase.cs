@@ -75,11 +75,18 @@ public abstract partial class GameContextBase : IGameContext
     )
     {
         GameContextStatus status = new GameContextStatus();
+        var localVersion = await GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.LocalGameVersion
+        );
+        var indexSource = await this.GetGameLauncherSourceAsync();
         var gameBaseFolder = await GameLocalConfig.GetConfigAsync(
             GameLocalSettingName.GameLauncherBassFolder
         );
         var gameProgramFile = await GameLocalConfig.GetConfigAsync(
             GameLocalSettingName.GameLauncherBassProgram
+        );
+        var updateing = await GameLocalConfig.GetConfigAsync(
+            GameLocalSettingName.LocalGameUpdateing
         );
         if (string.IsNullOrWhiteSpace(gameBaseFolder))
         {
@@ -89,11 +96,28 @@ public abstract partial class GameContextBase : IGameContext
         {
             status.IsGameExists = true;
             status.IsGameInstalled = true;
+            if (!string.IsNullOrWhiteSpace(localVersion))
+            {
+                status.IsLauncher = true;
+            }
         }
         else
         {
             status.IsGameExists = true;
             status.IsGameInstalled = false;
+        }
+        if (localVersion != indexSource.ResourceDefault.Version)
+        {
+            status.IsUpdate = true;
+            status.DisplayVersion = indexSource.ResourceDefault.Version;
+        }
+        else
+        {
+            status.DisplayVersion = localVersion;
+        }
+        if (!string.IsNullOrWhiteSpace(updateing) && bool.TryParse(updateing, out var updateResult))
+        {
+            status.IsUpdateing = updateResult;
         }
         if (_downloadState != null)
         {
