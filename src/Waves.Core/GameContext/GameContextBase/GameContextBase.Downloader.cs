@@ -266,6 +266,7 @@ public partial class GameContextBase
                 fs.Seek(offset, SeekOrigin.Begin);
                 using (var md5 = MD5.Create())
                 {
+                    long accumulatedBytes = 0L;
                     while (remaining > 0 && isValid)
                     {
                         await this._downloadState.PauseToken.WaitIfPausedAsync();
@@ -281,14 +282,27 @@ public partial class GameContextBase
                             }
                             md5.TransformBlock(buffer, 0, bytesRead, null, 0);
                             remaining -= bytesRead;
-                            await UpdateFileProgress(GameContextActionType.Verify, bytesRead)
-                                .ConfigureAwait(false);
+                            accumulatedBytes += bytesRead;
+                            if (accumulatedBytes >= UpdateThreshold)
+                            {
+                                await UpdateFileProgress(
+                                        GameContextActionType.Verify,
+                                        accumulatedBytes
+                                    )
+                                    .ConfigureAwait(false);
+                                accumulatedBytes = 0;
+                            }
                         }
                         catch (IOException ex) { }
                         finally
                         {
                             memoryPool.Return(buffer);
                         }
+                    }
+                    if (accumulatedBytes > 0 && accumulatedBytes < UpdateThreshold)
+                    {
+                        await UpdateFileProgress(GameContextActionType.Verify, accumulatedBytes)
+                            .ConfigureAwait(false);
                     }
                     md5.TransformFinalBlock(Array.Empty<byte>(), 0, 0);
                     string hash = BitConverter.ToString(md5.Hash!).Replace("-", "").ToLower();
@@ -322,6 +336,7 @@ public partial class GameContextBase
                 )
             )
             {
+                long accumulatedBytes = 0L;
                 while (true)
                 {
                     //暂停锁
@@ -334,13 +349,23 @@ public partial class GameContextBase
                         if (bytesRead == 0)
                             break;
                         md5.TransformBlock(buffer, 0, bytesRead, null, 0);
-                        await UpdateFileProgress(GameContextActionType.Verify, bytesRead)
-                            .ConfigureAwait(false);
+                        accumulatedBytes += bytesRead; // 添加此行以累加字节数
+                        if (accumulatedBytes >= UpdateThreshold)
+                        {
+                            await UpdateFileProgress(GameContextActionType.Verify, accumulatedBytes)
+                                .ConfigureAwait(false);
+                            accumulatedBytes = 0;
+                        }
                     }
                     finally
                     {
                         memoryPool.Return(buffer);
                     }
+                }
+                if (accumulatedBytes < UpdateThreshold)
+                {
+                    await UpdateFileProgress(GameContextActionType.Verify, accumulatedBytes)
+                        .ConfigureAwait(false);
                 }
             }
 
@@ -649,7 +674,7 @@ public partial class GameContextBase
         Interlocked.Add(ref _totalProgressSize, fileSize);
         Debug.WriteLine($"处理字节总数:{_totalProgressSize}/{_totalfileSize}");
         var elapsed = (DateTime.Now - _lastSpeedUpdateTime).TotalSeconds;
-        if (elapsed >= 0.5)
+        if (elapsed >= 1)
         {
             _downloadSpeed = _totalDownloadedBytes / elapsed;
             _verifySpeed = _totalVerifiedBytes / elapsed;

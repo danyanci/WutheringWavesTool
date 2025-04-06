@@ -8,7 +8,7 @@
     xmlns:itemWrapper="using:WutheringWavesTool.Models.Wrapper"
     xmlns:local="using:WutheringWavesTool.Pages.Record"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:wuc="using:WinUICommunity"
+    xmlns:wuc="using:DevWinUI"
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
         <i:EventTriggerBehavior EventName="Loaded">

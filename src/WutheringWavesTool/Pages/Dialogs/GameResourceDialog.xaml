@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentDialog
     x:Class="WutheringWavesTool.Pages.Dialogs.GameResourceDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -7,7 +7,7 @@
     xmlns:i="using:Microsoft.Xaml.Interactivity"
     xmlns:local="using:WutheringWavesTool.Pages.Dialogs"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:ui="using:WinUICommunity"
+    xmlns:ui="using:DevWinUI"
     CornerRadius="5"
     RequestedTheme="Dark"
     mc:Ignorable="d">

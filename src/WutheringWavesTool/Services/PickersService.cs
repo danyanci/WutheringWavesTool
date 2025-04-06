@@ -1,4 +1,6 @@
-﻿namespace WutheringWavesTool.Services;
+﻿using FolderPicker = Windows.Storage.Pickers.FolderPicker;
+
+namespace WutheringWavesTool.Services;
 
 public class PickersService : IPickersService
 {

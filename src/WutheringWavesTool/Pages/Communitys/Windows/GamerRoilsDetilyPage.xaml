@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Page
     x:Class="WutheringWavesTool.Pages.Communitys.Windows.GamerRoilsDetilyPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -11,7 +11,7 @@
     xmlns:selector="using:WutheringWavesTool.Controls.Selector"
     xmlns:ui="using:WutheringWavesTool.Controls"
     xmlns:wrapper="using:WutheringWavesTool.Models.Wrapper.WindowRoils"
-    xmlns:wuc="using:WinUICommunity"
+    xmlns:wuc="using:DevWinUI"
     xmlns:wui="using:CommunityToolkit.WinUI"
     mc:Ignorable="d">
     <Page.Resources>

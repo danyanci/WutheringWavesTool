@@ -8,7 +8,7 @@ public partial class WindowModelBase : WindowEx
 
     public WindowModelBase()
     {
-        this.SystemBackdrop = new WinUICommunity.AcrylicSystemBackdrop(
+        this.SystemBackdrop = new DevWinUI.AcrylicSystemBackdrop(
             Microsoft.UI.Composition.SystemBackdrops.DesktopAcrylicKind.Default
         );
         if (Overlapped != null)

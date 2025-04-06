@@ -8,7 +8,7 @@
     xmlns:local="using:WutheringWavesTool.Pages.GamePages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="using:CommunityToolkit.WinUI"
-    xmlns:wuc="using:WinUICommunity"
+    xmlns:wuc="using:DevWinUI"
     mc:Ignorable="d">
     <Page.Resources />
     <i:Interaction.Behaviors>

@@ -5,7 +5,7 @@ public interface IWallpaperService
     public string NowHexValue { get; }
     public Task<bool> SetWrallpaper(string path);
 
-    public Task RegisterImageHostAsync(ImageEx image);
+    public Task RegisterImageHostAsync(Controls.ImageEx image);
 
     public void RegisterHostPath(string folder);
 

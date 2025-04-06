@@ -12,7 +12,7 @@ public class WallpaperService : IWallpaperService
     }
 
     public string BaseFolder { get; private set; }
-    public ImageEx ImageHost { get; private set; }
+    public Controls.ImageEx ImageHost { get; private set; }
     public ITipShow TipShow { get; }
     public string NowHexValue { get; private set; }
 
@@ -21,7 +21,7 @@ public class WallpaperService : IWallpaperService
         this.BaseFolder = folder;
     }
 
-    public async Task RegisterImageHostAsync(ImageEx image)
+    public async Task RegisterImageHostAsync(Controls.ImageEx image)
     {
         this.ImageHost = image;
         if (!string.IsNullOrWhiteSpace(AppSettings.WallpaperPath))

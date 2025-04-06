@@ -1,4 +1,5 @@
-﻿using WutheringWavesTool.Pages.GamePages;
+﻿using CommunityToolkit.WinUI.Animations;
+using WutheringWavesTool.Pages.GamePages;
 using WutheringWavesTool.Services.DialogServices;
 using WutheringWavesTool.ViewModel.GameViewModels;
 
@@ -17,7 +18,7 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     [ObservableProperty]
     public partial Visibility BackVisibility { get; set; }
-    public ImageEx Image { get; set; }
+    public Controls.ImageEx Image { get; set; }
     public Border BackControl { get; internal set; }
 
     public ShellViewModel(
@@ -33,7 +34,7 @@ public sealed partial class ShellViewModel : ViewModelBase
         AppContext = appContext;
         WallpaperService = wallpaperService;
         DialogManager = dialogManager;
-        HomeNavigationService.Navigated += HomeNavigationService_Navigated;
+        //HomeNavigationService.Navigated += HomeNavigationService_Navigated;
     }
 
     [RelayCommand]
@@ -50,16 +51,8 @@ public sealed partial class ShellViewModel : ViewModelBase
         Microsoft.UI.Xaml.Navigation.NavigationEventArgs e
     )
     {
-        if (e.SourcePageType == typeof(MainGamePage))
-        {
-            BlurAnimationHelper.StartBlurAnimation(this.Image, 10, 0, TimeSpan.FromSeconds(0.3));
-            OpacityAnimationHelper.StartAnimationHelper(this.BackControl, 0);
-        }
-        else
-        {
-            BlurAnimationHelper.StartBlurAnimation(this.Image, 0, 10, TimeSpan.FromSeconds(0.3));
-            OpacityAnimationHelper.StartAnimationHelper(this.BackControl, 0.5);
-        }
+        if (e.SourcePageType == typeof(MainGamePage)) { }
+        else { }
         if (HomeNavigationService.CanGoBack)
         {
             this.BackVisibility = Visibility.Visible;
