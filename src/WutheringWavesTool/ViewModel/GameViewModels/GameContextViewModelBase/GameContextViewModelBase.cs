@@ -231,6 +231,8 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
 
         public abstract Task LoadAfter();
 
+        public abstract void DisposeAfter();
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -238,6 +240,7 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
                 if (disposing)
                 {
                     GameContext.GameContextOutput -= GameContext_GameContextOutput;
+                    DisposeAfter();
                 }
                 disposedValue = true;
             }

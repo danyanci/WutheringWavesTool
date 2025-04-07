@@ -1,4 +1,5 @@
-﻿using WutheringWavesTool.Services.DialogServices;
+﻿using System.Collections.ObjectModel;
+using WutheringWavesTool.Services.DialogServices;
 
 namespace WutheringWavesTool.ViewModel.GameViewModels;
 
@@ -11,8 +12,71 @@ public sealed partial class MainGameViewModel : GameContextViewModelBase
     )
         : base(gameContext, dialogManager, appContext) { }
 
-    public override Task LoadAfter()
+    [ObservableProperty]
+    public partial ObservableCollection<Slideshow> SlideShows { get; set; }
+    #region Datas
+    public Notice Notice { get; private set; }
+    public News News { get; private set; }
+    public Waves.Api.Models.Activity Activity { get; private set; }
+    #endregion
+
+    [ObservableProperty]
+    public partial bool IsOpen { get; set; } = true;
+
+    [ObservableProperty]
+    public partial bool TabLoad { get; set; }
+
+    [ObservableProperty]
+    public partial ObservableCollection<Content> Contents { get; set; } = new();
+
+    public override async Task LoadAfter()
     {
-        return Task.CompletedTask;
+        TabLoad = false;
+        var starter = await this.GameContext.GetLauncherStarterAsync(this.CTS.Token);
+        if (starter == null)
+            return;
+        this.SlideShows = starter.Slideshow.ToObservableCollection();
+        this.Notice = starter.Guidance.Notice;
+        this.News = starter.Guidance.News;
+        this.Activity = starter.Guidance.Activity;
+
+        TabLoad = true;
+    }
+
+    [RelayCommand]
+    async Task CardLoaded()
+    {
+        await Task.Delay(500);
+        IsOpen = false;
+    }
+
+    internal void SelectTab(string text)
+    {
+        this.Contents.Clear();
+        switch (text)
+        {
+            case "活动":
+                this.Contents = this.Activity.Contents.ToObservableCollection();
+                break;
+            case "公告":
+                this.Contents = this.Notice.Contents.ToObservableCollection();
+                break;
+            case "新闻":
+                this.Contents = this.News.Contents.ToObservableCollection();
+                break;
+        }
+    }
+
+    public override void DisposeAfter()
+    {
+        this.Contents.Clear();
+        this.Activity.Contents.Clear();
+        this.Notice.Contents.Clear();
+        this.News.Contents.Clear();
+        this.Activity.Contents = null;
+        this.Notice.Contents = null;
+        this.News.Contents = null;
+        this.SlideShows.Clear();
+        this.SlideShows = null;
     }
 }

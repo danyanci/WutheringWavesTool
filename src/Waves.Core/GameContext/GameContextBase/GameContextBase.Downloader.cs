@@ -17,7 +17,6 @@ namespace Waves.Core.GameContext;
 public partial class GameContextBase
 {
     #region 常量
-
     const int MaxBufferSize = 65536; // 64KB缓冲区
     const long UpdateThreshold = 1048576; // 1MB进度更新阈值
     #endregion
@@ -213,36 +212,34 @@ public partial class GameContextBase
         _downloadState.IsActive = true;
         await UpdateFileProgress(GameContextActionType.Verify, 0);
         #region 下载逻辑
-
         try
         {
-            foreach (var file in resource.Resource)
+            for (int j = 0; j < resource.Resource.Count; j++)
             {
-                var index = resource.Resource.IndexOf(file);
-                this._totalProgressTotal = index;
-                Debug.WriteLine($"开始处理文件[{index}/{resource.Resource.Count}]");
+                //this._totalProgressTotal = j + 1;
+                Debug.WriteLine($"开始处理文件[{resource.Resource[j]}/{resource.Resource.Count}]");
                 if (_downloadCTS?.IsCancellationRequested ?? true)
                 {
                     this._downloadState.IsActive = false;
                     await SetNoneStatusAsync().ConfigureAwait(false);
                     return;
                 }
-                var filePath = BuildFilePath(folder, file);
+                var filePath = BuildFilePath(folder, resource.Resource[j]);
                 if (File.Exists(filePath))
                 {
-                    if (file.ChunkInfos == null)
+                    if (resource.Resource[j].ChunkInfos == null)
                     {
-                        var checkResult = await VaildateFullFile(file, filePath);
+                        var checkResult = await VaildateFullFile(resource.Resource[j], filePath);
                         if (checkResult)
                         {
                             await DownloadFileByFull(
-                                file,
+                                resource.Resource[j],
                                 filePath,
                                 new()
                                 {
                                     Start = 0,
-                                    End = file.Size - 1,
-                                    Md5 = file.Md5,
+                                    End = resource.Resource[j].Size - 1,
+                                    Md5 = resource.Resource[j].Md5,
                                 }
                             );
                             //await FinalValidation(file, filePath);
@@ -251,32 +248,32 @@ public partial class GameContextBase
                     else
                     {
                         var fileName = System.IO.Path.GetFileName(filePath);
-                        for (int i = 0; i < file.ChunkInfos.Count; i++)
+                        for (int i = 0; i < resource.Resource[j].ChunkInfos.Count; i++)
                         {
                             var needDownload = await ValidateFileChunks(
-                                file.ChunkInfos[i],
+                                resource.Resource[j].ChunkInfos[i],
                                 filePath
                             );
                             if (needDownload)
                             {
-                                if (i == file.ChunkInfos.Count - 1)
+                                if (i == resource.Resource[j].ChunkInfos.Count - 1)
                                 {
                                     HttpClientService.BuildClient();
                                     await DownloadFileByChunks(
-                                        file,
+                                        resource.Resource[j],
                                         filePath,
-                                        file.ChunkInfos[i],
+                                        resource.Resource[j].ChunkInfos[i],
                                         true,
-                                        file.Size
+                                        resource.Resource[j].Size
                                     );
                                 }
                                 else
                                 {
                                     HttpClientService.BuildClient();
                                     await DownloadFileByChunks(
-                                        file,
+                                        resource.Resource[j],
                                         filePath,
-                                        file.ChunkInfos[i],
+                                        resource.Resource[j].ChunkInfos[i],
                                         false
                                     );
                                 }
@@ -288,13 +285,13 @@ public partial class GameContextBase
                 else
                 {
                     await DownloadFileByFull(
-                        file,
+                        resource.Resource[j],
                         filePath,
                         new IndexChunkInfo()
                         {
                             Start = 0,
-                            End = file.Size - 1,
-                            Md5 = file.Md5,
+                            End = resource.Resource[j].Size - 1,
+                            Md5 = resource.Resource[j].Md5,
                         }
                     );
                     //await FinalValidation(file, filePath);
@@ -352,7 +349,6 @@ public partial class GameContextBase
             {
                 await _downloadCTS.CancelAsync().ConfigureAwait(false);
             }
-
             Interlocked.Exchange(ref _totalProgressSize, 0L);
             Interlocked.Exchange(ref _totalfileSize, 0L);
             Interlocked.Exchange(ref _totalVerifiedBytes, 0L);
@@ -787,12 +783,13 @@ public partial class GameContextBase
         if (type == GameContextActionType.Download)
         {
             Interlocked.Add(ref _totalDownloadedBytes, fileSize);
+            Interlocked.Add(ref _totalProgressSize, fileSize);
         }
         else if (type == GameContextActionType.Verify)
         {
             Interlocked.Add(ref _totalVerifiedBytes, fileSize);
+            Interlocked.Add(ref _totalProgressSize, fileSize);
         }
-        Interlocked.Add(ref _totalProgressSize, fileSize);
         var elapsed = (DateTime.Now - _lastSpeedUpdateTime).TotalSeconds;
         if (elapsed >= 1)
         {
@@ -814,10 +811,10 @@ public partial class GameContextBase
                 new GameContextOutputArgs
                 {
                     Type = type,
-                    //CurrentSize = _totalProgressSize,
-                    //TotalSize = _totalfileSize,
-                    CurrentSize = _totalProgressTotal,
-                    TotalSize = _totalFileTotal,
+                    CurrentSize = _totalProgressSize,
+                    TotalSize = _totalfileSize,
+                    //CurrentSize = _totalProgressTotal,
+                    //TotalSize = _totalFileTotal,
                     DownloadSpeed = _downloadSpeed,
                     VerifySpeed = _verifySpeed,
                     RemainingTime = RemainingTime,

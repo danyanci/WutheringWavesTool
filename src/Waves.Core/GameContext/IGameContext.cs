@@ -23,6 +23,8 @@ public interface IGameContext
 
     #region Launcher
     Task<GameLauncherSource?> GetGameLauncherSourceAsync(CancellationToken token = default);
+
+    Task<GameLauncherStarter?> GetLauncherStarterAsync(CancellationToken token = default);
     #endregion
 
     #region Core

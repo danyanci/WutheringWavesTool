@@ -59,4 +59,28 @@ partial class GameContextBase
             return null;
         }
     }
+
+    public async Task<GameLauncherStarter?> GetLauncherStarterAsync(
+        CancellationToken token = default
+    )
+    {
+        try
+        {
+            var result = await HttpClientService.HttpClient.GetAsync(
+                this.Config.Starter_Source,
+                token
+            );
+            result.EnsureSuccessStatusCode();
+            var jsonStr = await result.Content.ReadAsStringAsync();
+            var pathIndexSource = JsonSerializer.Deserialize<GameLauncherStarter>(
+                jsonStr,
+                GameLauncherStarterContext.Default.GameLauncherStarter
+            );
+            return pathIndexSource;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
 }
