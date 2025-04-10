@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <RootNamespace>WutheringWavesTool</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -21,7 +21,11 @@
   <ItemGroup>
     <None Remove="Assets\Fonts\gamerRoilDetilyFont.ttf" />
     <None Remove="Assets\RolePage\weapon.svg" />
+    <None Remove="Controls\Styles\NavigationView.xaml" />
+    <None Remove="Controls\Styles\StarPipsPager.xaml" />
     <None Remove="Controls\Styles\UI.xaml" />
+    <None Remove="MainWindow.xaml" />
+    <None Remove="NavigationView.xaml" />
     <None Remove="Pages\Communitys\Windows\GamerRoilsDetilyPage.xaml" />
     <None Remove="Pages\Dialogs\GameResourceDialog.xaml" />
     <None Remove="Pages\Dialogs\SelectDownloadGameDialog.xaml" />
@@ -167,6 +171,26 @@
     <Content Update="Assets\RolePage\weapon.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\Styles\NavigationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="NavigationView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Controls\Styles\StarPipsPager.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\Styles\UI.xaml">

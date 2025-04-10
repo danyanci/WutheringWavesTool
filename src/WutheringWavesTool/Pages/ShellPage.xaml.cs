@@ -12,6 +12,7 @@ public sealed partial class ShellPage : Page
         this.Loaded += ShellPage_Loaded;
         this.ViewModel.HomeNavigationService.Navigated += HomeNavigationService_Navigated;
         this.ViewModel.HomeNavigationService.RegisterView(this.frame);
+        this.ViewModel.HomeNavigationViewService.Register(this.navigationView);
         this.ViewModel.TipShow.Owner = this.panel;
         this.ViewModel.Image = this.image;
         this.ViewModel.BackControl = this.backControl;
@@ -35,6 +36,7 @@ public sealed partial class ShellPage : Page
         {
             this.ViewModel.BackVisibility = Visibility.Collapsed;
         }
+        ViewModel.SetSelectItem(e.SourcePageType);
         GC.Collect();
     }
 

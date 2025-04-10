@@ -11,8 +11,10 @@
     xmlns:launcheModel="using:Waves.Api.Models"
     xmlns:local="using:WutheringWavesTool.Pages.GamePages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:media="using:CommunityToolkit.WinUI.Media"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:wuc="using:DevWinUI"
+    Background="Transparent"
     mc:Ignorable="d">
     <Page.Resources />
     <i:Interaction.Behaviors>
@@ -206,7 +208,6 @@
                         FontSize="15"
                         Glyph="&#xE71A;" />
                 </Button>
-
                 <StackPanel Orientation="Horizontal">
                     <Button
                         Height="40"
@@ -253,6 +254,13 @@
                     CornerRadius="4"
                     Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
                     Visibility="{x:Bind ViewModel.GameLauncherBthVisibility, Mode=OneWay}">
+                    <ui:Effects.Shadow>
+                        <media:AttachedCardShadow
+                            BlurRadius="6"
+                            Opacity="0.2"
+                            Offset="0"
+                            Color="{ThemeResource TextFillColorPrimary}" />
+                    </ui:Effects.Shadow>
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -320,7 +328,15 @@
                     x:Name="fileView"
                     Grid.Row="0"
                     Background="Transparent"
-                    ItemsSource="{x:Bind ViewModel.SlideShows, Mode=OneWay}">
+                    ItemsSource="{x:Bind ViewModel.SlideShows, Mode=OneWay}"
+                    Style="{ThemeResource DefaultFlipViewStyle}">
+
+                    <ui:Effects.Shadow>
+                        <media:AttachedCardShadow
+                            Opacity="0.1"
+                            Offset="0"
+                            Color="{ThemeResource TextFillColorPrimary}" />
+                    </ui:Effects.Shadow>
                     <i:Interaction.Behaviors>
                         <bs:FilpViewAutoPlayBehavior IsPlay="True" Duration="0:0:8" />
                     </i:Interaction.Behaviors>
@@ -345,18 +361,36 @@
                     </FlipView.ItemTemplate>
                 </FlipView>
                 <Border
+                    Padding="10,0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}"
                     CornerRadius="5 0 0 0">
                     <PipsPager
                         x:Name="FlipViewPipsPager"
-                        CornerRadius="5 5 5 5"
+                        FontFamily="Segoe Fluent Icons"
                         NumberOfPages="{x:Bind ViewModel.SlideShows.Count, Mode=OneWay}"
-                        SelectedPageIndex="{x:Bind Path=fileView.SelectedIndex, Mode=TwoWay}" />
+                        SelectedPageIndex="{x:Bind Path=fileView.SelectedIndex, Mode=TwoWay}">
+                        <PipsPager.SelectedPipStyle>
+                            <Style BasedOn="{StaticResource PipsPagerButtonBaseStyle}" TargetType="Button">
+                                <Setter Property="Content" Value="&#xE735;" />
+                                <Setter Property="FontSize" Value="9" />
+                                <Setter Property="Margin" Value="0,0" />
+                            </Style>
+                        </PipsPager.SelectedPipStyle>
+                        <PipsPager.NormalPipStyle>
+                            <Style BasedOn="{StaticResource PipsPagerButtonBaseStyle}" TargetType="Button">
+                                <!--<Setter Property="FontFamily" Value="Segoe Fluent Icons" />-->
+                                <Setter Property="Content" Value="&#xE734;" />
+                                <Setter Property="FontSize" Value="9" />
+                                <Setter Property="Margin" Value="0,0" />
+                            </Style>
+                        </PipsPager.NormalPipStyle>
+                    </PipsPager>
                 </Border>
                 <Grid Grid.Row="1" Margin="0,10,0,0">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
@@ -378,16 +412,18 @@
                             FontSize="13"
                             Text="新闻" />
                     </SelectorBar>
-                    <ScrollView Grid.Row="1">
+                    <NavigationViewItemSeparator Grid.Row="1" HorizontalAlignment="Stretch" />
+                    <ScrollView Grid.Row="2">
                         <ItemsRepeater ItemsSource="{x:Bind ViewModel.Contents, Mode=OneWay}">
                             <ItemsRepeater.ItemTemplate>
                                 <DataTemplate x:DataType="launcheModel:Content">
                                     <HyperlinkButton
                                         HorizontalAlignment="Stretch"
                                         HorizontalContentAlignment="Left"
-                                        Content="{x:Bind TContent}"
                                         FontSize="12"
-                                        NavigateUri="{x:Bind JumpUrl}" />
+                                        NavigateUri="{x:Bind JumpUrl}">
+                                        <TextBlock Text="{x:Bind TContent}" TextTrimming="CharacterEllipsis" />
+                                    </HyperlinkButton>
                                 </DataTemplate>
                             </ItemsRepeater.ItemTemplate>
                         </ItemsRepeater>

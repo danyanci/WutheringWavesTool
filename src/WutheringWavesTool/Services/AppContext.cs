@@ -31,20 +31,16 @@ public class AppContext<T> : IAppContext<T>
             .Service!.GetRequiredKeyedService<IGameContext>(nameof(GlobalGameContext))
             .InitAsync();
         this.App = app;
-        var win = new WinUIEx.WindowEx();
+        var win = new MainWindow();
         var page = Instance.Service!.GetRequiredService<ShellPage>();
         page.titlebar.Window = win;
         win.Content = page;
-        win.SystemBackdrop = new MicaBackdrop()
-        {
-            Kind = Microsoft.UI.Composition.SystemBackdrops.MicaKind.BaseAlt,
-        };
-        var winManager = WindowManager.Get(win);
-        winManager.MaxWidth = 1090;
-        winManager.MaxHeight = 670;
-        winManager.IsResizable = false;
-        winManager.IsMaximizable = false;
+        win.MaxWidth = 1090;
+        win.MaxHeight = 670;
+        win.IsResizable = false;
+        win.IsMaximizable = false;
         this.App.MainWindow = win;
+
         win.Activate();
 
         if (win.Content is FrameworkElement fe)

@@ -67,7 +67,7 @@ public sealed class ControlOffsetButtonAnimationBehaviors : Behavior<Button>
                     To = $"{OpenOffset.Value.X},{OpenOffset.Value.Y},{OpenOffset.Value.Z}",
                     EasingMode = EasingMode.EaseInOut,
                     EasingType = EasingType.Cubic,
-                    Duration = TimeSpan.FromSeconds(0.5),
+                    Duration = this.Duration,
                 }
             );
             this.AssociatedObject.Content = CloseIcon;
@@ -82,10 +82,10 @@ public sealed class ControlOffsetButtonAnimationBehaviors : Behavior<Button>
                     new OffsetAnimation()
                     {
                         To =
-                            $"{Owner.ActualOffset.X - Owner.ActualWidth + this.AssociatedObject.ActualWidth - 10},{Owner.ActualOffset.Y},{Owner.ActualOffset.Z}",
+                            $"{Owner.ActualOffset.X - Owner.ActualWidth + this.AssociatedObject.ActualWidth - Offset},{Owner.ActualOffset.Y},{Owner.ActualOffset.Z}",
                         EasingMode = EasingMode.EaseInOut,
                         EasingType = EasingType.Cubic,
-                        Duration = TimeSpan.FromSeconds(0.5),
+                        Duration = this.Duration,
                     }
                 );
                 sets.Start(this.Owner);
@@ -97,10 +97,10 @@ public sealed class ControlOffsetButtonAnimationBehaviors : Behavior<Button>
                     new OffsetAnimation()
                     {
                         To =
-                            $"{Owner.ActualOffset.X},{Owner.ActualOffset.Y - Owner.ActualHeight + -this.AssociatedObject.ActualWidth - 10},{Owner.ActualOffset.Z}",
+                            $"{Owner.ActualOffset.X},{Owner.ActualOffset.Y - Owner.ActualHeight + -this.AssociatedObject.ActualWidth - Offset},{Owner.ActualOffset.Z}",
                         EasingMode = EasingMode.EaseInOut,
                         EasingType = EasingType.Cubic,
-                        Duration = TimeSpan.FromSeconds(0.5),
+                        Duration = this.Duration,
                     }
                 );
                 sets.Start(this.Owner);
@@ -143,6 +143,20 @@ public sealed class ControlOffsetButtonAnimationBehaviors : Behavior<Button>
         typeof(FrameworkElement),
         typeof(ControlOffsetButtonAnimationBehaviors),
         new PropertyMetadata(null)
+    );
+
+    public TimeSpan Duration
+    {
+        get { return (TimeSpan)GetValue(DurationProperty); }
+        set { SetValue(DurationProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for Duration.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty DurationProperty = DependencyProperty.Register(
+        "Duration",
+        typeof(TimeSpan),
+        typeof(ControlOffsetButtonAnimationBehaviors),
+        new PropertyMetadata(TimeSpan.FromSeconds(0.3))
     );
 
     public Orientation Orientation

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.WinUI.Animations;
 using WutheringWavesTool.Pages.GamePages;
 using WutheringWavesTool.Services.DialogServices;
+using WutheringWavesTool.Services.Navigations.NavigationViewServices;
 using WutheringWavesTool.ViewModel.GameViewModels;
 
 namespace WutheringWavesTool.ViewModel;
@@ -8,6 +9,7 @@ namespace WutheringWavesTool.ViewModel;
 public sealed partial class ShellViewModel : ViewModelBase
 {
     public INavigationService HomeNavigationService { get; }
+    public INavigationViewService HomeNavigationViewService { get; }
     public ITipShow TipShow { get; }
     public IAppContext<App> AppContext { get; }
     public IWallpaperService WallpaperService { get; }
@@ -18,11 +20,16 @@ public sealed partial class ShellViewModel : ViewModelBase
 
     [ObservableProperty]
     public partial Visibility BackVisibility { get; set; }
+
+    [ObservableProperty]
+    public partial object SelectItem { get; set; }
     public Controls.ImageEx Image { get; set; }
     public Border BackControl { get; internal set; }
 
     public ShellViewModel(
         [FromKeyedServices(nameof(HomeNavigationService))] INavigationService homeNavigationService,
+        [FromKeyedServices(nameof(HomeNavigationViewService))]
+            INavigationViewService homeNavigationViewService,
         ITipShow tipShow,
         IAppContext<App> appContext,
         IWallpaperService wallpaperService,
@@ -30,6 +37,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     )
     {
         HomeNavigationService = homeNavigationService;
+        HomeNavigationViewService = homeNavigationViewService;
         TipShow = tipShow;
         AppContext = appContext;
         WallpaperService = wallpaperService;
@@ -44,24 +52,6 @@ public sealed partial class ShellViewModel : ViewModelBase
             null,
             new DrillInNavigationTransitionInfo()
         );
-    }
-
-    private void HomeNavigationService_Navigated(
-        object sender,
-        Microsoft.UI.Xaml.Navigation.NavigationEventArgs e
-    )
-    {
-        if (e.SourcePageType == typeof(MainGamePage)) { }
-        else { }
-        if (HomeNavigationService.CanGoBack)
-        {
-            this.BackVisibility = Visibility.Visible;
-        }
-        else
-        {
-            this.BackVisibility = Visibility.Collapsed;
-        }
-        GC.Collect();
     }
 
     [RelayCommand]
@@ -101,5 +91,11 @@ public sealed partial class ShellViewModel : ViewModelBase
             "Setting",
             new DrillInNavigationTransitionInfo()
         );
+    }
+
+    internal void SetSelectItem(Type sourcePageType)
+    {
+        var page = this.HomeNavigationViewService.GetSelectItem(sourcePageType);
+        SelectItem = page;
     }
 }

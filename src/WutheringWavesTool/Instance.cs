@@ -1,5 +1,6 @@
 ﻿using WutheringWavesTool.Models.Dialogs;
 using WutheringWavesTool.Services.DialogServices;
+using WutheringWavesTool.Services.Navigations.NavigationViewServices;
 using WutheringWavesTool.ViewModel.GameViewModels;
 
 namespace WutheringWavesTool;
@@ -75,6 +76,9 @@ public static class Instance
             #region Navigation
             .AddKeyedSingleton<INavigationService, HomeNavigationService>(
                 nameof(HomeNavigationService)
+            )
+            .AddKeyedSingleton<INavigationViewService, HomeNavigationViewService>(
+                nameof(HomeNavigationViewService)
             )
             .AddKeyedTransient<INavigationService, CommunityNavigationService>(
                 nameof(CommunityNavigationService)
