@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Waves.Core;
-using WutheringWaves.Core.Contracts;
-using WutheringWaves.Core.GameContext;
+using Waves.Core.GameContext;
+using Waves.Core.GameContext.Contexts;
 
 namespace Project.Test;
 
@@ -24,8 +24,7 @@ public class NewCoreTest
     {
         InitService();
         var mainGame = Provider!.GetRequiredKeyedService<IGameContext>(nameof(MainGameContext));
-        await mainGame.InitializeAsync();
-        var result = await mainGame.GetGameLauncherAsync();
-        mainGame.InitializeLauncher(result);
+        await mainGame.InitAsync();
+        var result = await mainGame.GetGameLauncherSourceAsync();
     }
 }

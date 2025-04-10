@@ -28,24 +28,24 @@ public static class Waves
                     return context;
                 }
             )
-            .AddKeyedSingleton<IGameContext, BilibiliGameContext>(
-                nameof(BilibiliGameContext),
-                (provider, c) =>
-                {
-                    var context = GameContextFactory.GetBilibiliGameContext();
-                    context.HttpClientService = provider.GetRequiredService<IHttpClientService>();
-                    return context;
-                }
-            )
-            .AddKeyedSingleton<IGameContext, GlobalGameContext>(
-                nameof(GlobalGameContext),
-                (provider, c) =>
-                {
-                    var context = GameContextFactory.GetGlobalGameContext();
-                    context.HttpClientService = provider.GetRequiredService<IHttpClientService>();
-                    return context;
-                }
-            )
+            //.AddKeyedSingleton<IGameContext, BilibiliGameContext>(
+            //    nameof(BilibiliGameContext),
+            //    (provider, c) =>
+            //    {
+            //        var context = GameContextFactory.GetBilibiliGameContext();
+            //        context.HttpClientService = provider.GetRequiredService<IHttpClientService>();
+            //        return context;
+            //    }
+            //)
+            //.AddKeyedSingleton<IGameContext, GlobalGameContext>(
+            //    nameof(GlobalGameContext),
+            //    (provider, c) =>
+            //    {
+            //        var context = GameContextFactory.GetGlobalGameContext();
+            //        context.HttpClientService = provider.GetRequiredService<IHttpClientService>();
+            //        return context;
+            //    }
+            //)
             .AddTransient<IHttpClientService, HttpClientService>();
         services.AddHttpClient();
         return services;

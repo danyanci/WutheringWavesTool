@@ -32,14 +32,14 @@ public sealed partial class BindGameDataViewModel : DialogViewModelBase, IDispos
                 );
                 break;
             case "Global":
-                this.GameContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
-                    nameof(GlobalGameContext)
-                );
+                //this.GameContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
+                //    nameof(GlobalGameContext)
+                //);
                 break;
             case "Bilibili":
-                this.GameContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
-                    nameof(BilibiliGameContext)
-                );
+                //this.GameContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
+                //    nameof(BilibiliGameContext)
+                //);
                 break;
         }
     }

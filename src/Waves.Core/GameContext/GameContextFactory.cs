@@ -9,22 +9,22 @@ public static class GameContextFactory
 {
     public static string GameBassPath { get; set; }
 
-    internal static BilibiliGameContext GetBilibiliGameContext() =>
-        new BilibiliGameContext(GameApiContextConfig.BiliBili)
-        {
-            GamerConfigPath = GameContextFactory.GameBassPath + "\\BiliBiliConfig",
-            IsLimitSpeed = false,
-        };
+    //internal static BilibiliGameContext GetBilibiliGameContext() =>
+    //    new BilibiliGameContext(GameApiContextConfig.BiliBili)
+    //    {
+    //        GamerConfigPath = GameContextFactory.GameBassPath + "\\BiliBiliConfig",
+    //        IsLimitSpeed = false,
+    //    };
 
-    internal static GlobalGameContext GetGlobalGameContext() =>
-        new GlobalGameContext(GameApiContextConfig.Global)
-        {
-            GamerConfigPath = GameContextFactory.GameBassPath + "\\GlobalConfig",
-            IsLimitSpeed = false,
-        };
+    //internal static GlobalGameContext GetGlobalGameContext() =>
+    //    new GlobalGameContext(GameApiContextConfig.Global)
+    //    {
+    //        GamerConfigPath = GameContextFactory.GameBassPath + "\\GlobalConfig",
+    //        IsLimitSpeed = false,
+    //    };
 
     internal static MainGameContext GetMainGameContext() =>
-        new MainGameContext(GameApiContextConfig.Main)
+        new MainGameContext(GameAPIConfig.MainAPiConfig)
         {
             GamerConfigPath = GameContextFactory.GameBassPath + "\\MainConfig",
             IsLimitSpeed = false,

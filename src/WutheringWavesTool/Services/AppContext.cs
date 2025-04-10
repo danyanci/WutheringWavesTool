@@ -24,19 +24,19 @@ public class AppContext<T> : IAppContext<T>
         await Instance
             .Service!.GetRequiredKeyedService<IGameContext>(nameof(MainGameContext))
             .InitAsync();
-        await Instance
-            .Service!.GetRequiredKeyedService<IGameContext>(nameof(BilibiliGameContext))
-            .InitAsync();
-        await Instance
-            .Service!.GetRequiredKeyedService<IGameContext>(nameof(GlobalGameContext))
-            .InitAsync();
+        //await Instance
+        //    .Service!.GetRequiredKeyedService<IGameContext>(nameof(BilibiliGameContext))
+        //    .InitAsync();
+        //await Instance
+        //    .Service!.GetRequiredKeyedService<IGameContext>(nameof(GlobalGameContext))
+        //    .InitAsync();
         this.App = app;
         var win = new MainWindow();
         var page = Instance.Service!.GetRequiredService<ShellPage>();
         page.titlebar.Window = win;
         win.Content = page;
-        win.MaxWidth = 1090;
-        win.MaxHeight = 670;
+        win.MaxWidth = 1100;
+        win.MaxHeight = 700;
         win.IsResizable = false;
         win.IsMaximizable = false;
         this.App.MainWindow = win;
@@ -74,12 +74,12 @@ public class AppContext<T> : IAppContext<T>
         var mainContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
             nameof(MainGameContext)
         );
-        var biliContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
-            nameof(BilibiliGameContext)
-        );
-        var globalContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
-            nameof(GlobalGameContext)
-        );
+        //var biliContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
+        //    nameof(BilibiliGameContext)
+        //);
+        //var globalContext = Instance.Service!.GetRequiredKeyedService<IGameContext>(
+        //    nameof(GlobalGameContext)
+        //);
         Process.GetCurrentProcess().Kill();
     }
 

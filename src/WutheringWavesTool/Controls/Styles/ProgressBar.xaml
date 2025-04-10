@@ -19,7 +19,7 @@
                     <Grid x:Name="LayoutRoot">
                         <Border
                             x:Name="ProgressBarRoot"
-                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                            Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="{TemplateBinding CornerRadius}">

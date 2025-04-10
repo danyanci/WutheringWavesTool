@@ -1,4 +1,6 @@
-﻿namespace WutheringWavesTool.Common;
+﻿using System.Collections.ObjectModel;
+
+namespace WutheringWavesTool.Common;
 
 public static class Extentions
 {
@@ -6,7 +8,12 @@ public static class Extentions
     {
         if (ts == null)
             return new ObservableCollection<T>();
-        return new ObservableCollection<T>(ts);
+        ObservableCollection<T> result = new();
+        foreach (var t in ts)
+        {
+            result.Add(t);
+        }
+        return result;
     }
 
     public static CardItemObservableCollection<T> ToCardItemObservableCollection<T>(

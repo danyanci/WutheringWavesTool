@@ -9,7 +9,6 @@ namespace WutheringWavesTool
         public MainWindow()
         {
             this.InitializeComponent();
-            this.SystemBackdrop = new DevWinUI.AcrylicSystemBackdrop(DesktopAcrylicKind.Base);
         }
     }
 }

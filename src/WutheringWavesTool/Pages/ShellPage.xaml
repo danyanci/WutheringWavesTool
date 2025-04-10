@@ -45,7 +45,7 @@
                 </MenuFlyout>
             </tb:TaskbarIcon.ContextFlyout>
         </tb:TaskbarIcon>
-        <Border Grid.RowSpan="1" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" />
+        <Border Grid.RowSpan="1"  />
         <ui:TitleBar
             x:Name="titlebar"
             x:FieldModifier="public"
@@ -60,7 +60,7 @@
                         </TransitionCollection>
                     </StackPanel.ChildrenTransitions>
                     <Button
-                        Margin="10,10,0,0"
+                        Margin="5,5,0,0"
                         Padding="20,10"
                         Command="{x:Bind ViewModel.BackPageCommand}"
                         CornerRadius="5"
@@ -133,7 +133,6 @@
         <Grid x:Name="panel" Grid.Row="1">
             <NavigationView
                 x:Name="navigationView"
-                Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                 PaneDisplayMode="Left"
                 SelectedItem="{x:Bind ViewModel.SelectItem, Mode=OneWay}"
                 Style="{ThemeResource MainNavigationViewStyle}">
@@ -148,16 +147,25 @@
                             <ImageIcon Source="ms-appx:///Assets/kLogo.png" />
                         </NavigationViewItem.Icon>
                     </NavigationViewItem>
-                    <NavigationViewItem property:NavigationItemClickHelper.NavigationKey="WutheringWavesTool.ViewModel.SettingViewModel" Content="设置">
-                        <NavigationViewItem.Icon>
-                            <FontIcon
-                                FontFamily="Segoe Fluent Icons"
-                                FontSize="17"
-                                Glyph="&#xE713;" />
-                        </NavigationViewItem.Icon>
-                    </NavigationViewItem>
+
                 </NavigationView.MenuItems>
-                <NavigationView.FooterMenuItems />
+                <NavigationView.PaneFooter>
+                    <Button
+                        MinHeight="{ThemeResource RailNavigationViewItemOnLeftMinHeight}"
+                        Padding="18,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Background="Transparent"
+                        Command="{x:Bind ViewModel.OpenSettingCommand}"
+                        Control.IsTemplateFocusTarget="True"
+                        CornerRadius="5"
+                        Style="{ThemeResource TransparentButtonStyle}">
+                        <FontIcon
+                            FontFamily="Segoe Fluent Icons"
+                            FontSize="14"
+                            Glyph="&#xE713;" />
+                    </Button>
+                </NavigationView.PaneFooter>
                 <Grid>
                     <ui:ImageEx
                         x:Name="image"

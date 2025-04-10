@@ -23,7 +23,7 @@ public abstract partial class GameContextBase : IGameContext
 
     #region Property
     public IHttpClientService HttpClientService { get; set; }
-    public GameApiContextConfig Config { get; private set; }
+    public GameAPIConfig Config { get; private set; }
     public string ContextName { get; }
     public string GamerConfigPath { get; set; }
 
@@ -45,7 +45,7 @@ public abstract partial class GameContextBase : IGameContext
     #endregion
 
 
-    internal GameContextBase(GameApiContextConfig config, string contextName)
+    internal GameContextBase(GameAPIConfig config, string contextName)
     {
         Config = config;
         ContextName = contextName;

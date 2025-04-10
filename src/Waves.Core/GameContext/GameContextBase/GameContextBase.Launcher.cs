@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Waves.Api.Models;
+using Waves.Core.Models;
 using Waves.Core.Models.Downloader;
 
 namespace Waves.Core.GameContext;
@@ -10,9 +11,9 @@ partial class GameContextBase
         CancellationToken token = default
     )
     {
-        var result = await HttpClientService.GameDownloadClient.GetAsync(
-            this.Config.Launcher_Source
-        );
+        var url =
+            $"{GameAPIConfig.BaseAddress[0]}/launcher/game/{Config.GameID}/{Config.AppId}_{Config.AppKey}/index.json?_t={DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
+        var result = await HttpClientService.GameDownloadClient.GetAsync(url);
         var jsonStr = await result.Content.ReadAsStringAsync();
         var launcherIndex = JsonSerializer.Deserialize<GameLauncherSource>(
             jsonStr,
@@ -66,10 +67,9 @@ partial class GameContextBase
     {
         try
         {
-            var result = await HttpClientService.HttpClient.GetAsync(
-                this.Config.Starter_Source,
-                token
-            );
+            var url =
+                $"{GameAPIConfig.BaseAddress[0]}/launcher/{this.Config.AppId}_{this.Config.AppKey}/{this.Config.GameID}/information/{this.Config.Language}.json?_t={DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
+            var result = await HttpClientService.HttpClient.GetAsync(url, token);
             result.EnsureSuccessStatusCode();
             var jsonStr = await result.Content.ReadAsStringAsync();
             var pathIndexSource = JsonSerializer.Deserialize<GameLauncherStarter>(
@@ -78,7 +78,7 @@ partial class GameContextBase
             );
             return pathIndexSource;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             return null;
         }

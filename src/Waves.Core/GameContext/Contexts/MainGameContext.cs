@@ -4,7 +4,7 @@ namespace Waves.Core.GameContext.Contexts;
 
 public class MainGameContext : GameContextBase
 {
-    internal MainGameContext(GameApiContextConfig config)
+    internal MainGameContext(GameAPIConfig config)
         : base(config, nameof(MainGameContext)) { }
 
     public override Type ContextType => typeof(MainGameContext);

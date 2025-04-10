@@ -21,6 +21,12 @@ namespace Waves.Api.Models
         [JsonPropertyName("contents")]
         public List<Content> Contents { get; set; }
 
+        [JsonPropertyName("sort")]
+        public int Sort { get; set; }
+
+        [JsonPropertyName("functionSwitch")]
+        public int FunctionSwitch { get; set; }
+
         [JsonPropertyName("title")]
         public string Title { get; set; }
     }
