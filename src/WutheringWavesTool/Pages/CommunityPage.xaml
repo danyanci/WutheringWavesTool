@@ -146,8 +146,6 @@
                             Glyph="&#xE712;" />
                         <Button.Flyout>
                             <MenuFlyout Placement="Bottom">
-                                <MenuFlyoutItem Command="{x:Bind ViewModel.OpenPlayerRecordWindowCommand}" Text="抽卡分析" />
-                                <MenuFlyoutSeparator />
                                 <MenuFlyoutItem Command="{x:Bind ViewModel.UnLoginCommand}" Text="退出登录" />
                             </MenuFlyout>
 

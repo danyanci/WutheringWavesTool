@@ -31,6 +31,7 @@ public partial class WindowModelBase : WindowEx
             {
                 this.Content = null;
                 GC.Collect();
+                GC.WaitForPendingFinalizers();
                 WindowExtension.EnableWindow(baseHwnd, true);
             };
         }

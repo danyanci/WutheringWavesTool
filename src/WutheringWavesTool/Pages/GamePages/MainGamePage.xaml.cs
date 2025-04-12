@@ -6,16 +6,10 @@ namespace WutheringWavesTool.Pages.GamePages;
 
 public sealed partial class MainGamePage : Page, IPage
 {
-    DispatcherTimer timer = new();
-
     public MainGamePage()
     {
         this.InitializeComponent();
         this.ViewModel = Instance.Service.GetRequiredService<MainGameViewModel>();
-
-        timer = new DispatcherTimer();
-        timer.Interval = TimeSpan.FromSeconds(5);
-        timer.Start();
     }
 
     public MainGameViewModel ViewModel { get; }

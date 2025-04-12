@@ -14,6 +14,7 @@ public sealed partial class ShellViewModel : ViewModelBase
     public IAppContext<App> AppContext { get; }
     public IWallpaperService WallpaperService { get; }
     public IDialogManager DialogManager { get; }
+    public IViewFactorys ViewFactorys { get; }
 
     [ObservableProperty]
     public partial string ServerName { get; set; }
@@ -33,7 +34,8 @@ public sealed partial class ShellViewModel : ViewModelBase
         ITipShow tipShow,
         IAppContext<App> appContext,
         IWallpaperService wallpaperService,
-        [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager
+        [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager,
+        IViewFactorys viewFactorys
     )
     {
         HomeNavigationService = homeNavigationService;
@@ -42,6 +44,7 @@ public sealed partial class ShellViewModel : ViewModelBase
         AppContext = appContext;
         WallpaperService = wallpaperService;
         DialogManager = dialogManager;
+        ViewFactorys = viewFactorys;
         //HomeNavigationService.Navigated += HomeNavigationService_Navigated;
     }
 
@@ -91,6 +94,16 @@ public sealed partial class ShellViewModel : ViewModelBase
             "Setting",
             new DrillInNavigationTransitionInfo()
         );
+    }
+
+    [RelayCommand]
+    void OpenPlayerRecordWindow()
+    {
+        var win = ViewFactorys.ShowPlayerRecordWindow();
+        (win.AppWindow.Presenter as OverlappedPresenter)!.IsMaximizable = false;
+        (win.AppWindow.Presenter as OverlappedPresenter)!.IsMinimizable = false;
+        win.SystemBackdrop = new MicaBackdrop();
+        win.AppWindowApp.Show();
     }
 
     internal void SetSelectItem(Type sourcePageType)

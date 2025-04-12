@@ -8,15 +8,15 @@
   IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="3210a31c-e9bd-4e49-9c1a-ae6e28290f1d"
+    Name="84C1F4B7-E2B8-49F7-A82A-CE5026C92B44"
     Publisher="CN=30140"
-    Version="1.2.1.0" />
+    Version="1.2.3.0" />
 
   <mp:PhoneIdentity PhoneProductId="3210a31c-e9bd-4e49-9c1a-ae6e28290f1d" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>鸣潮启动器</DisplayName>
-    <PublisherDisplayName>30140</PublisherDisplayName>
+    <PublisherDisplayName>Blame</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -34,7 +34,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="鸣潮启动器"
+        DisplayName="鸣潮启动器-Dev"
         Description="鸣潮增强型启动器"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"

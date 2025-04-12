@@ -16,11 +16,6 @@ public class HomeNavigationService : NavigationServiceBase
             return false;
         if (RootFrame.Content is IPage OrginpageType)
         {
-            //if (RootFrame.Content is CommunityPage cpage)
-            //{
-            //    cpage.Dispose();
-            //    GC.Collect();
-            //}
             if (
                 RootFrame != null
                 && (OrginpageType.PageType != pageType || args != null && !args.Equals(Paramter))

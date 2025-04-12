@@ -20,6 +20,7 @@ public sealed partial class CommunityPage : Page, IPage, IDisposable
         }
         this.Dispose();
         GC.Collect();
+        GC.WaitForPendingFinalizers();
         base.OnNavigatedFrom(e);
     }
 

@@ -339,7 +339,7 @@
                             IsPaneOpen="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsPaneOpen, Mode=TwoWay}"
                             IsTabStop="False"
                             OpenPaneLength="{TemplateBinding OpenPaneLength}"
-                            PaneBackground="{ThemeResource RailNavigationViewDefaultPaneBackground}"
+                            PaneBackground="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                             Style="{StaticResource MainNavSplitViewStyle}">
                             <SplitView.Pane>
                                 <Grid
@@ -466,7 +466,6 @@
                                 <Grid
                                     x:Name="ContentGrid"
                                     Margin="{ThemeResource NavigationViewContentMargin}"
-                                    Background="{ThemeResource NavigationViewContentBackground}"
                                     BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}"
                                     BorderThickness="{ThemeResource NavigationViewContentGridBorderThickness}"
                                     CornerRadius="{ThemeResource NavigationViewContentGridCornerRadius}">
@@ -509,7 +508,7 @@
                                 <VisualState x:Name="Compact" />
                                 <VisualState x:Name="Expanded">
                                     <VisualState.Setters>
-                                        <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource RailNavigationViewExpandedPaneBackground}" />
+                                        <Setter Target="RootSplitView.PaneBackground" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Minimal">
@@ -737,36 +736,17 @@
                                 BorderBrush="{ThemeResource NavigationViewSelectionIndicatorForeground}"
                                 BorderThickness="0"
                                 CornerRadius="5"
-                                UseLayoutRounding="False">
-                                <!--<Rectangle
-                                    x:Name="SelectionIndicator"
-                                    Width="4"
-                                    Height="24"
-                                    Fill="{ThemeResource NavigationViewSelectionIndicatorForeground}"
-                                    Opacity="0.0"
-                                    RadiusX="2"
-                                    RadiusY="2"
-                                    Visibility="Collapsed" />-->
-                            </Border>
+                                UseLayoutRounding="False" />
                             <Grid
                                 x:Name="ContentGrid"
                                 MinHeight="{ThemeResource RailNavigationViewItemOnLeftMinHeight}"
                                 RowSpacing="4">
-                                <!--  Store: Added Grid.RowDefinitions & Removed Grid.ColumnDefinitions  -->
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
                                     <RowDefinition />
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <!--<Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>-->
-
-                                <!--  Store: Removed  -->
-                                <!--<Border x:Name="IconColumn" Width="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=TemplateSettings.LatestIconColumnWidth}">-->
                                 <ContentPresenter
                                     x:Name="Icon"
                                     Grid.Row="1"
@@ -778,8 +758,6 @@
                                     AnimatedIcon.State="NormalOff"
                                     Content="{TemplateBinding Icon}"
                                     Foreground="{ThemeResource RailNavigationIconForegroundBrush}" />
-                                <!--</Border>-->
-
                                 <Viewbox
                                     x:Name="UnselectedIconBox"
                                     Grid.Row="1"
@@ -814,6 +792,7 @@
                                         x:Name="ContentPresenter"
                                         HorizontalAlignment="Center"
                                         AutomationProperties.AccessibilityView="Raw"
+                                        FontSize="12"
                                         Foreground="{ThemeResource TextFillColorSecondaryBrush}"
                                         MaxLines="2"
                                         Text="{TemplateBinding Content}"
@@ -988,7 +967,7 @@
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="OpenPaneLength" Value="{ThemeResource SplitViewOpenPaneThemeLength}" />
         <Setter Property="CompactPaneLength" Value="{ThemeResource SplitViewCompactPaneThemeLength}" />
-        <Setter Property="PaneBackground" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
+        <Setter Property="PaneBackground" Value="{ThemeResource AcrylicInAppFillColorDefaultBrush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="SplitView">

@@ -10,5 +10,12 @@ public sealed partial class SettingPage : Page, IPage
 
     public Type PageType => typeof(SettingPage);
 
+    protected override void OnNavigatedFrom(NavigationEventArgs e)
+    {
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        base.OnNavigatedFrom(e);
+    }
+
     public SettingViewModel ViewModel { get; }
 }

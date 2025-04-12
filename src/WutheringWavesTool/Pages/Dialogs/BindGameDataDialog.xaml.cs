@@ -28,5 +28,6 @@ public sealed partial class BindGameDataDialog : ContentDialog, IDialog
         this.ViewModel.Dispose();
         this.ViewModel = null;
         GC.Collect();
+        GC.WaitForPendingFinalizers();
     }
 }

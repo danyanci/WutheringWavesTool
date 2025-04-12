@@ -37,7 +37,9 @@ public sealed partial class ShellPage : Page
             this.ViewModel.BackVisibility = Visibility.Collapsed;
         }
         ViewModel.SetSelectItem(e.SourcePageType);
+        this.ViewModel.HomeNavigationService.ClearHistory();
         GC.Collect();
+        GC.WaitForPendingFinalizers();
     }
 
     public ShellViewModel ViewModel { get; }

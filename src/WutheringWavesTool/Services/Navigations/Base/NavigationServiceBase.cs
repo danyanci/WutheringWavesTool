@@ -94,6 +94,8 @@ public class NavigationServiceBase : INavigationService
 
     public void ClearHistory()
     {
+        if (RootFrame == null)
+            return;
         RootFrame.BackStack.Clear();
         RootFrame.ForwardStack.Clear();
     }
