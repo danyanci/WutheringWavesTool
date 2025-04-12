@@ -20,7 +20,7 @@
 
         <Border
             Padding="20"
-            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+            Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
             BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
             BorderThickness="1"
             CornerRadius="5">
@@ -128,84 +128,79 @@
             CornerRadius="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
-                <RowDefinition Height="332" />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Border
-                Margin="5,0,0,0"
+                Margin="10,0,0,0"
                 Padding="10"
-                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                Background="{ThemeResource AcrylicInAppFillColorDefaultBrush}"
                 CornerRadius="5">
-                <TextBlock Margin="10,0,0,0" VerticalAlignment="Center">
+                <TextBlock Margin="0,0,0,0" VerticalAlignment="Center">
                     <Run Text="声骸收集进度：" />
                     <Run Text="{x:Bind ViewModel.GamerCalabash.UnlockCount, Mode=OneWay}" />
                     <Run Text="/" />
                     <Run Text="{x:Bind ViewModel.GamerCalabash.MaxCount, Mode=OneWay}" />
                 </TextBlock>
             </Border>
-            <Border
-                Grid.Row="1"
-                Margin="5,5,0,0"
-                CornerRadius="5">
-                <ScrollView>
-                    <ItemsRepeater ItemsSource="{x:Bind ViewModel.GamerPhantoms, Mode=OneWay}">
-                        <ItemsRepeater.ItemTemplate>
-                            <DataTemplate x:DataType="wrapper:DataCenterPhantomItemWrapper">
-                                <Border
-                                    Margin="2,2"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                                    BorderBrush="{ThemeResource CardStrokeColorDefaultSolid}"
-                                    BorderThickness="1"
-                                    CornerRadius="5">
+            <ScrollView Grid.Row="1" Margin="5,5,0,0">
+                <ItemsRepeater ItemsSource="{x:Bind ViewModel.GamerPhantoms, Mode=OneWay}">
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate x:DataType="wrapper:DataCenterPhantomItemWrapper">
+                            <Border
+                                Margin="2,2"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultSolid}"
+                                BorderThickness="1"
+                                CornerRadius="5">
 
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition Height="auto" />
-                                        </Grid.RowDefinitions>
-                                        <Border
-                                            Grid.RowSpan="3"
-                                            Padding="0"
-                                            VerticalAlignment="Stretch"
-                                            CornerRadius="5">
-                                            <Image Source="{x:Bind Cover}" Stretch="Uniform" />
-                                        </Border>
-                                        <Border Grid.Row="1" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}">
-                                            <StackPanel VerticalAlignment="Center" Orientation="Vertical">
-                                                <TextBlock
-                                                    Grid.Row="1 "
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    FontSize="12">
-                                                    <Run Text="{x:Bind Name}" />
-                                                </TextBlock>
-                                                <Viewbox Height="15">
-                                                    <RatingControl
-                                                        IsClearEnabled="False"
-                                                        IsReadOnly="True"
-                                                        MaxRating="{x:Bind MaxStar}"
-                                                        Value="{x:Bind Star}" />
-                                                </Viewbox>
-                                            </StackPanel>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+                                    <Border
+                                        Grid.RowSpan="3"
+                                        Padding="0"
+                                        VerticalAlignment="Stretch"
+                                        CornerRadius="5">
+                                        <Image Source="{x:Bind Cover}" Stretch="Uniform" />
+                                    </Border>
+                                    <Border Grid.Row="1" Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}">
+                                        <StackPanel VerticalAlignment="Center" Orientation="Vertical">
+                                            <TextBlock
+                                                Grid.Row="1 "
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                FontSize="12">
+                                                <Run Text="{x:Bind Name}" />
+                                            </TextBlock>
+                                            <Viewbox Height="15">
+                                                <RatingControl
+                                                    IsClearEnabled="False"
+                                                    IsReadOnly="True"
+                                                    MaxRating="{x:Bind MaxStar}"
+                                                    Value="{x:Bind Star}" />
+                                            </Viewbox>
+                                        </StackPanel>
 
-                                        </Border>
-                                    </Grid>
+                                    </Border>
+                                </Grid>
 
-                                </Border>
-                            </DataTemplate>
-                        </ItemsRepeater.ItemTemplate>
-                        <ItemsRepeater.Layout>
-                            <UniformGridLayout
-                                ItemsJustification="Start"
-                                ItemsStretch="Uniform"
-                                MinColumnSpacing="2"
-                                MinItemHeight="120"
-                                MinItemWidth="100" />
-                        </ItemsRepeater.Layout>
-                    </ItemsRepeater>
-                </ScrollView>
-            </Border>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                    <ItemsRepeater.Layout>
+                        <UniformGridLayout
+                            ItemsJustification="Start"
+                            ItemsStretch="Uniform"
+                            MinColumnSpacing="2"
+                            MinItemHeight="130"
+                            MinItemWidth="100" />
+                    </ItemsRepeater.Layout>
+                </ItemsRepeater>
+            </ScrollView>
         </Grid>
     </Grid>
 </Page>

@@ -117,6 +117,7 @@ public class AppContext<T> : IAppContext<T>
     }
 
     public ElementTheme CurrentElement { get; set; }
+    public Controls.TitleBar MainTitle { get; private set; }
 
     public void SetElementTheme(ElementTheme theme)
     {
@@ -125,6 +126,11 @@ public class AppContext<T> : IAppContext<T>
             fe.RequestedTheme = theme;
             this.CurrentElement = theme;
         }
+    }
+
+    public void SetTitleControl(Controls.TitleBar titleBar)
+    {
+        this.MainTitle = titleBar;
     }
 
     public void TryInvoke(Action action)

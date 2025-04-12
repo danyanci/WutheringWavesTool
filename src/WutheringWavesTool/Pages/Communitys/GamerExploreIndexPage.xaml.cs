@@ -21,7 +21,6 @@ public sealed partial class GamerExploreIndexPage : Page, IPage, IDisposable
     {
         this.Dispose();
         GC.Collect();
-        GC.WaitForPendingFinalizers();
         base.OnNavigatedFrom(e);
     }
 

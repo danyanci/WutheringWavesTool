@@ -16,6 +16,8 @@
     xmlns:sound="using:WutheringWavesTool.Controls.Behaviors"
     xmlns:tb="using:H.NotifyIcon"
     xmlns:ui="using:WutheringWavesTool.Controls"
+    xmlns:wrapper="using:WutheringWavesTool.Models.Wrapper"
+    xmlns:wuc="using:DevWinUI"
     mc:Ignorable="d">
     <i:Interaction.Behaviors>
         <i:EventTriggerBehavior EventName="Loaded">
@@ -27,10 +29,8 @@
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Border
-            x:Name="backControl"
-            Grid.RowSpan="2"
-            Opacity="0.0" />
+
+        <!--  登录  -->
         <tb:TaskbarIcon
             ContextMenuMode="SecondWindow"
             IconSource="/Assets/logo.ico"
@@ -49,6 +49,7 @@
         <ui:TitleBar
             x:Name="titlebar"
             x:FieldModifier="public"
+            Canvas.ZIndex="2"
             FooterVerticalAlignment="Center"
             IsExtendsContentIntoTitleBar="True"
             TitleMode="Tall">
@@ -83,6 +84,99 @@
                         Text="{x:Bind ViewModel.ServerName, Mode=OneWay}" />
                 </StackPanel>
             </ui:TitleBar.Title>
+            <ui:TitleBar.Header>
+                <StackPanel
+                    x:Name="userControl"
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Left"
+                    Orientation="Horizontal">
+                    <StackPanel.Transitions>
+                        <TransitionCollection>
+                            <ContentThemeTransition />
+                        </TransitionCollection>
+                    </StackPanel.Transitions>
+                    <Button
+                        VerticalAlignment="Center"
+                        Command="{x:Bind ViewModel.LoginCommand}"
+                        CornerRadius="5"
+                        Style="{ThemeResource DefaultAcrylicButtonStyle}"
+                        ToolTipService.ToolTip="登录"
+                        Visibility="{x:Bind ViewModel.LoginBthVisibility, Mode=OneWay}">
+                        <FontIcon
+                            FontFamily="Segoe Fluent Icons"
+                            FontSize="14"
+                            Glyph="&#xE631;" />
+                    </Button>
+                    <ComboBox
+                        VerticalAlignment="Center"
+                        ItemsSource="{x:Bind ViewModel.Roles, Mode=OneWay}"
+                        SelectedItem="{x:Bind ViewModel.SelectRoles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        SizeChanged="ComboBox_SizeChanged"
+                        Visibility="{x:Bind ViewModel.GamerRoleListsVisibility, Mode=OneWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate x:DataType="wrapper:GameRoilDataWrapper">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Border CornerRadius="5">
+                                        <Image
+                                            Width="18"
+                                            Height="18"
+                                            Source="{x:Bind GameHeadUrl}" />
+                                    </Border>
+                                    <Grid Grid.Column="1" Margin="10,0,0,0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{x:Bind RoleName}" />
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            FontSize="10">
+                                            <Run Text="-" />
+                                            <Run Text="{x:Bind Id}" />
+                                        </TextBlock>
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button
+                        Margin="5,0,0,0"
+                        Padding="5"
+                        VerticalAlignment="Center"
+                        CornerRadius="3"
+                        Style="{ThemeResource DefaultAcrylicButtonStyle}"
+                        Visibility="{x:Bind ViewModel.GamerRoleListsVisibility, Mode=OneWay}">
+                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE712;" />
+                        <Button.Flyout>
+                            <MenuFlyout Placement="Bottom">
+                                <MenuFlyoutItem Command="{x:Bind ViewModel.OpenSignWindowCommand}" Text="签到">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE929;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                                <MenuFlyoutSeparator />
+                                <MenuFlyoutItem
+                                    Command="{x:Bind ViewModel.UnLoginCommand}"
+                                    Foreground="{ThemeResource SystemFillColorCriticalBrush}"
+                                    Text="退出登录">
+                                    <MenuFlyoutItem.Icon>
+                                        <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF3B1;" />
+                                    </MenuFlyoutItem.Icon>
+                                </MenuFlyoutItem>
+                            </MenuFlyout>
+                        </Button.Flyout>
+                    </Button>
+                </StackPanel>
+            </ui:TitleBar.Header>
             <ui:TitleBar.Footer>
                 <StackPanel Orientation="Horizontal">
                     <Button CornerRadius="5" Style="{ThemeResource DefaultAcrylicButtonStyle}">
@@ -124,7 +218,6 @@
                         EasingMode="EaseOut"
                         EasingType="Linear"
                         Target="{x:Bind ImageBlurEffect}"
-                        From="0"
                         To="15"
                         Duration="0:0:0.5" />
                 </ani:AnimationSet>
@@ -133,7 +226,6 @@
                         EasingMode="EaseOut"
                         EasingType="Linear"
                         Target="{x:Bind ImageBlurEffect}"
-                        From="15"
                         To="0"
                         Duration="0:0:0.5" />
                 </ani:AnimationSet>
@@ -151,7 +243,10 @@
                             <ImageIcon Source="ms-appx:///Assets/GameIcons/global.ico" />
                         </NavigationViewItem.Icon>
                     </NavigationViewItem>
-                    <NavigationViewItem property:NavigationItemClickHelper.NavigationKey="WutheringWavesTool.ViewModel.CommunityViewModel" Content="库街区">
+                    <NavigationViewItem
+                        property:NavigationItemClickHelper.NavigationKey="WutheringWavesTool.ViewModel.CommunityViewModel"
+                        Content="库街区"
+                        Visibility="{x:Bind ViewModel.CommunitySelectItemVisiblity, Mode=OneWay}">
                         <NavigationViewItem.Icon>
                             <ImageIcon Source="ms-appx:///Assets/kLogo.png" />
                         </NavigationViewItem.Icon>
@@ -176,51 +271,11 @@
                     </Button>
                 </NavigationView.PaneFooter>
                 <Grid>
-
-                    <Grid
-                        x:Name="topControl"
-                        Width="240"
-                        Height="150"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Top"
-                        Visibility="Collapsed">
-                        <Grid.RowDefinitions>
-                            <RowDefinition />
-                            <RowDefinition Height="auto" />
-                        </Grid.RowDefinitions>
-                        <Grid Background="{ThemeResource AcrylicBackgroundFillColorDefaultBrush}" CornerRadius="0 0 5 5" />
-                        <Button
-                            Grid.Row="1"
-                            HorizontalAlignment="Center"
-                            CornerRadius="0 0 5 5"
-                            Style="{ThemeResource DefaultAcrylicButtonStyle}">
-                            <i:Interaction.Behaviors>
-                                <bs:ControlOffsetButtonAnimationBehaviors
-                                    IsOpen="False"
-                                    Orientation="Vertical"
-                                    Owner="{x:Bind topControl, Mode=OneWay}"
-                                    Offset="-68">
-                                    <bs:ControlOffsetButtonAnimationBehaviors.OpenIcon>
-                                        <FontIcon
-                                            FontFamily="Segoe Fluent Icons"
-                                            FontSize="14"
-                                            Glyph="&#xE96E;" />
-                                    </bs:ControlOffsetButtonAnimationBehaviors.OpenIcon>
-                                    <bs:ControlOffsetButtonAnimationBehaviors.CloseIcon>
-                                        <FontIcon
-                                            FontFamily="Segoe Fluent Icons"
-                                            FontSize="14"
-                                            Glyph="&#xE96D;" />
-
-                                    </bs:ControlOffsetButtonAnimationBehaviors.CloseIcon>
-                                </bs:ControlOffsetButtonAnimationBehaviors>
-                            </i:Interaction.Behaviors>
-                        </Button>
-                    </Grid>
                     <Frame x:Name="frame" />
                 </Grid>
             </NavigationView>
 
         </Grid>
+
     </Grid>
 </Page>

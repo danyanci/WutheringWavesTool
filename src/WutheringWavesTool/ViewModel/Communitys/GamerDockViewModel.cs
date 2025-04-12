@@ -18,6 +18,12 @@ public partial class GamerDockViewModel : ViewModelBase, IDisposable
     {
         WavesClient = wavesClient;
         TipShow = tipShow;
+        WeakReferenceMessenger.Default.Register<SwitchRoleMessager>(this, SwitchRoleMethod);
+    }
+
+    private async void SwitchRoleMethod(object recipient, SwitchRoleMessager message)
+    {
+        await RefreshDataAsync(message.Data.Item);
     }
 
     private async Task RefreshDataAsync(GameRoilDataItem item)
@@ -58,6 +64,7 @@ public partial class GamerDockViewModel : ViewModelBase, IDisposable
         {
             if (disposing)
             {
+                WeakReferenceMessenger.Default.UnregisterAll(this);
                 GamerPhantoms.RemoveAll();
                 GamerCalabash = null;
                 GameRoil = null;

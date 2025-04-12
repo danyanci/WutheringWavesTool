@@ -7,6 +7,7 @@ public sealed partial class WavesClient : IWavesClient
     public long Id => long.Parse(AppSettings.TokenId ?? "0");
 
     public IHttpClientService HttpClientService { get; }
+    public GameRoilDataWrapper CurrentRoil { get; set; }
 
     public WavesClient(IHttpClientService httpClientService)
     {
@@ -213,13 +214,13 @@ public sealed partial class WavesClient : IWavesClient
         }
     }
 
-    public async Task<bool> IsLoginAsync()
+    public async Task<bool> IsLoginAsync(CancellationToken token = default)
     {
         if (string.IsNullOrWhiteSpace(Token) || Id <= 0)
         {
             return false;
         }
-        var mine = await GetWavesMineAsync(Id);
+        var mine = await GetWavesMineAsync(Id, token);
         if (mine != null)
         {
             if (mine.Code == 200)

@@ -64,7 +64,6 @@ public abstract class DialogManager : IDialogManager
             return;
         _dialog.Hide();
         GC.Collect();
-        GC.WaitForPendingFinalizers();
     }
 
     public async Task ShowWallpaperDialogAsync()

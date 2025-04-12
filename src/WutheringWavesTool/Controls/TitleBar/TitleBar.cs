@@ -110,20 +110,55 @@ public partial class TitleBar : ContentControl
         LeftPaddingColumn.Width = new GridLength(
             Window.AppWindow.TitleBar.LeftInset / ScaleAdjustment
         );
+        #region Header —— Title
+        //左侧拖动
+        //Windows.Graphics.RectInt32 dragRectL = new();
+        //右侧拖动
+        //Windows.Graphics.RectInt32 dragRectR = new();
+        //dragRectL.X = (int)(
+        //    (LeftPaddingColumn.ActualWidth + HeaderColumn.ActualWidth) * ScaleAdjustment
+        //);
+        //dragRectL.Y = 0;
+        //dragRectL.Height = (int)(this.ActualHeight * ScaleAdjustment);
+        //dragRectL.Width = (int)(
+        //    (IconTitleDropColumn.ActualWidth + LeftDropColumn.ActualWidth) * ScaleAdjustment
+        //);
 
+        //dragRectR.X = (int)(
+        //    (
+        //        LeftPaddingColumn.ActualWidth
+        //        + HeaderColumn.ActualWidth
+        //        + IconTitleDropColumn.ActualWidth
+        //        + LeftDropColumn.ActualWidth
+        //        + CenterContentColumn.ActualWidth
+        //    ) * ScaleAdjustment
+        //);
+        //dragRectR.Y = 0;
+        //dragRectR.Height = (int)(this.ActualHeight * ScaleAdjustment);
+        //dragRectR.Width = (int)((RightDropColumn.ActualWidth) * ScaleAdjustment);
+        #endregion
+        #region Title -- Header
         //左侧拖动
         Windows.Graphics.RectInt32 dragRectL = new();
+        Windows.Graphics.RectInt32 dragRectL2 = new();
         //右侧拖动
         Windows.Graphics.RectInt32 dragRectR = new();
-        dragRectL.X = (int)(
-            (LeftPaddingColumn.ActualWidth + HeaderColumn.ActualWidth) * ScaleAdjustment
-        );
+        dragRectL.X = 0;
         dragRectL.Y = 0;
         dragRectL.Height = (int)(this.ActualHeight * ScaleAdjustment);
         dragRectL.Width = (int)(
-            (IconTitleDropColumn.ActualWidth + LeftDropColumn.ActualWidth) * ScaleAdjustment
+            (this.LeftPaddingColumn.ActualWidth + IconTitleDropColumn.ActualWidth) * ScaleAdjustment
         );
-
+        dragRectL2.X = (int)(
+            (
+                this.LeftPaddingColumn.ActualWidth
+                + IconTitleDropColumn.ActualWidth
+                + HeaderColumn.ActualWidth
+            ) * ScaleAdjustment
+        );
+        dragRectL2.Height = (int)(this.ActualHeight * ScaleAdjustment);
+        dragRectL2.Y = 0;
+        dragRectL2.Width = (int)(LeftDropColumn.ActualWidth * ScaleAdjustment);
         dragRectR.X = (int)(
             (
                 LeftPaddingColumn.ActualWidth
@@ -136,7 +171,9 @@ public partial class TitleBar : ContentControl
         dragRectR.Y = 0;
         dragRectR.Height = (int)(this.ActualHeight * ScaleAdjustment);
         dragRectR.Width = (int)((RightDropColumn.ActualWidth) * ScaleAdjustment);
+        #endregion
         dragRectsList.Add(dragRectL);
+        dragRectsList.Add(dragRectL2);
         dragRectsList.Add(dragRectR);
         if (this.ContentRects != null)
             dragRectsList.AddRange(this.ContentRects);

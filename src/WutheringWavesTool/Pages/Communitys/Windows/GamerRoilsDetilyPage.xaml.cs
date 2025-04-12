@@ -43,7 +43,6 @@ public sealed partial class GamerRoilsDetilyPage : Page, IWindowPage
         this.Loaded -= this.Page_Loaded;
         this.ViewModel.Dispose();
         GC.Collect();
-        GC.WaitForPendingFinalizers();
     }
 
     private void Button_Click(object sender, RoutedEventArgs e)

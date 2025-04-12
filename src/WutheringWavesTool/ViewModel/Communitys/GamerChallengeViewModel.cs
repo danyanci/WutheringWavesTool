@@ -9,6 +9,13 @@ public sealed partial class GamerChallengeViewModel : ViewModelBase, IDisposable
         Countrys = new();
         WavesClient = wavesClient;
         TipShow = tipShow;
+        WeakReferenceMessenger.Default.Register<SwitchRoleMessager>(this, SwitchRoleMethod);
+    }
+
+    private async void SwitchRoleMethod(object recipient, SwitchRoleMessager message)
+    {
+        this.RoilItem = message.Data.Item;
+        await Loaded();
     }
 
     public IWavesClient WavesClient { get; }
@@ -70,6 +77,8 @@ public sealed partial class GamerChallengeViewModel : ViewModelBase, IDisposable
     async Task Loaded()
     {
         var challData = await WavesClient.GetGamerChallengeIndexDataAsync(RoilItem, this.CTS.Token);
+        if (challData == null)
+            return;
         this.orginCountrys = challData.ChallengeList;
         foreach (var item in orginCountrys)
         {
@@ -83,6 +92,7 @@ public sealed partial class GamerChallengeViewModel : ViewModelBase, IDisposable
 
     public void Dispose()
     {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
         this.Countrys.RemoveAll();
         this.orginCountrys.Clear();
         foreach (var item in Items)

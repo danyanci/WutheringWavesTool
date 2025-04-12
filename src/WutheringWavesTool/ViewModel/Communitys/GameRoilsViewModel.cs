@@ -13,6 +13,12 @@ public sealed partial class GameRoilsViewModel : ViewModelBase, ICommunityViewMo
     {
         WavesClient = wavesClient;
         TipShow = tipShow;
+        WeakReferenceMessenger.Default.Register<SwitchRoleMessager>(this, SwitchRoleMethod);
+    }
+
+    private async void SwitchRoleMethod(object recipient, SwitchRoleMessager message)
+    {
+        await SetDataAsync(message.Data.Item);
     }
 
     public async Task SetDataAsync(GameRoilDataItem item)
@@ -101,6 +107,7 @@ public sealed partial class GameRoilsViewModel : ViewModelBase, ICommunityViewMo
         {
             if (disposing)
             {
+                WeakReferenceMessenger.Default.UnregisterAll(this);
                 RoleDatas.RemoveAll();
                 GamerFilter.RemoveAll();
                 cacheRoils.RemoveAll();

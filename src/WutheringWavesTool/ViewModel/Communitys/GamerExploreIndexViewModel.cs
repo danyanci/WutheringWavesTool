@@ -20,6 +20,13 @@ public partial class GamerExploreIndexViewModel : ViewModelBase, IDisposable
     {
         WavesClient = wavesClient;
         TipShow = tipShow;
+        WeakReferenceMessenger.Default.Register<SwitchRoleMessager>(this, SwitchRoleMethod);
+    }
+
+    private async void SwitchRoleMethod(object recipient, SwitchRoleMessager message)
+    {
+        this._roilData = message.Data.Item;
+        await RefreshDataAsync();
     }
 
     internal async Task SetDataAsync(GameRoilDataItem item)
@@ -33,6 +40,7 @@ public partial class GamerExploreIndexViewModel : ViewModelBase, IDisposable
         {
             if (disposing)
             {
+                WeakReferenceMessenger.Default.UnregisterAll(this);
                 if (Explores != null)
                 {
                     foreach (var item in this.Explores)
@@ -91,6 +99,6 @@ public partial class GamerExploreIndexViewModel : ViewModelBase, IDisposable
         {
             total += progress.CountryProgress;
         }
-        TotalProgress =  Math.Round(total / Explores.Count);
+        TotalProgress = Math.Round(total / Explores.Count);
     }
 }

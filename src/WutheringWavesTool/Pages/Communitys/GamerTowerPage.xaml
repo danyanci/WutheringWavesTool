@@ -26,7 +26,7 @@
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="wrapper:DataCenterTowerDifficultyWrapper">
                         <wc:SettingsExpander
-                            Margin="5"
+                            Margin="0,5"
                             Header="{x:Bind DisplayName}"
                             ItemContainerStyleSelector="{x:Null}"
                             ItemsSource="{x:Bind Areas}">

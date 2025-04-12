@@ -6,7 +6,7 @@ public interface IWavesClient
 
     public long Id { get; }
 
-    public Task<bool> IsLoginAsync();
+    public Task<bool> IsLoginAsync(CancellationToken token = default);
 
     public IHttpClientService HttpClientService { get; }
 
@@ -35,6 +35,8 @@ public interface IWavesClient
     public Task<AccountMine?> GetWavesMineAsync(long id, CancellationToken token = default);
 
     public Task<PlayerReponse?> GetPlayerReponseAsync(PlayerCard card);
+
+    public GameRoilDataWrapper CurrentRoil { get; set; }
 
     #region 数据终端
     Task<GamerBassData?> GetGamerBassDataAsync(

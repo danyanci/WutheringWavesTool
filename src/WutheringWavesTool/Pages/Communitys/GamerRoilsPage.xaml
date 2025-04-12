@@ -128,8 +128,8 @@
                         ItemsJustification="Start"
                         ItemsStretch="Uniform"
                         MinColumnSpacing="2"
-                        MinItemHeight="150"
-                        MinItemWidth="110" />
+                        MinItemHeight="130"
+                        MinItemWidth="100" />
                 </ItemsRepeater.Layout>
                 <ItemsRepeater.ItemTransitionProvider>
                     <LinedFlowLayoutItemCollectionTransitionProvider />

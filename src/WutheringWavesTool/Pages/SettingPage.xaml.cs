@@ -13,7 +13,6 @@ public sealed partial class SettingPage : Page, IPage
     protected override void OnNavigatedFrom(NavigationEventArgs e)
     {
         GC.Collect();
-        GC.WaitForPendingFinalizers();
         base.OnNavigatedFrom(e);
     }
 

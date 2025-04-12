@@ -16,6 +16,13 @@ public sealed partial class GamerSkinViewModel : ObservableObject, IDisposable
     {
         WavesClient = wavesClient;
         TipShow = tipShow;
+        WeakReferenceMessenger.Default.Register<SwitchRoleMessager>(this, SwitchRoleMethod);
+    }
+
+    private async void SwitchRoleMethod(object recipient, SwitchRoleMessager message)
+    {
+        this.roil = message.Data.Item;
+        await Loaded();
     }
 
     public void SetData(GameRoilDataItem item)
@@ -38,6 +45,7 @@ public sealed partial class GamerSkinViewModel : ObservableObject, IDisposable
 
     public void Dispose()
     {
+        WeakReferenceMessenger.Default.UnregisterAll(this);
         this.RoleSkins.RemoveAll();
         this.WeaponSkins.RemoveAll();
     }

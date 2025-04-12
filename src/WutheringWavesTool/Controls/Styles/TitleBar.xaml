@@ -24,9 +24,9 @@
                             <!--  左侧系统预留拖动区域  -->
                             <ColumnDefinition x:Name="LeftPaddingColumn" Width="0" />
                             <!--  左侧交互功能区  -->
-                            <ColumnDefinition x:Name="HeaderColumn" Width="auto" />
-                            <!--  图标和Title拖动区域  -->
                             <ColumnDefinition x:Name="IconTitleDropColumn" Width="auto" />
+                            <!--  图标和Title拖动区域  -->
+                            <ColumnDefinition x:Name="HeaderColumn" Width="auto" />
                             <!--  左侧拖动区域  -->
                             <ColumnDefinition x:Name="LeftDropColumn" Width="*" />
                             <!--  中心交互功能区  -->
@@ -38,29 +38,34 @@
                             <!--  右侧系统预留拖动区域  -->
                             <ColumnDefinition x:Name="RightPaddingColumn" Width="0" />
                         </Grid.ColumnDefinitions>
+
                         <ContentControl
                             Grid.Column="1"
-                            VerticalAlignment="{TemplateBinding HeadVerticalAlignment}"
-                            HorizontalContentAlignment="{TemplateBinding HeadHorizontalAlignment}"
-                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                            Content="{TemplateBinding Header}" />
-                        <ContentControl
-                            Grid.Column="2"
                             VerticalAlignment="{TemplateBinding TitleVerticalAlignment}"
                             HorizontalContentAlignment="{TemplateBinding TitleHorizontalAlignment}"
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Background="Red"
                             Content="{TemplateBinding Title}" />
+                        <ContentControl
+                            Grid.Column="2"
+                            VerticalAlignment="{TemplateBinding HeadVerticalAlignment}"
+                            HorizontalContentAlignment="{TemplateBinding HeadHorizontalAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Background="Green"
+                            Content="{TemplateBinding Header}" />
                         <ContentControl
                             Grid.Column="4"
                             VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                             HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                             VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                            Background="Blue"
                             Content="{TemplateBinding Content}" />
                         <ContentControl
                             Grid.Column="6"
                             HorizontalAlignment="Right"
                             VerticalAlignment="{TemplateBinding FooterVerticalAlignment}"
                             HorizontalContentAlignment="{TemplateBinding FooterHorizontalAlignment}"
+                            Background="Pink"
                             Content="{TemplateBinding Footer}" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="DisplayStates">

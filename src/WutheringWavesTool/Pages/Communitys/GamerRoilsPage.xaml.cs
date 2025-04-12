@@ -24,7 +24,6 @@ public sealed partial class GamerRoilsPage : Page, IPage, IDisposable
     {
         this.Dispose();
         GC.Collect();
-        GC.WaitForPendingFinalizers();
         base.OnNavigatedFrom(e);
     }
 

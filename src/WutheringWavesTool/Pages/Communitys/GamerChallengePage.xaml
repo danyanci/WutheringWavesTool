@@ -125,10 +125,13 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <ScrollView Margin="10">
+        <ScrollView>
             <ItemsControl ItemsSource="{x:Bind ViewModel.Items, Mode=OneWay}">
                 <ItemsControl.ItemContainerTransitions>
-                    <RepositionThemeTransition />
+                    <TransitionCollection>
+
+                        <RepositionThemeTransition />
+                    </TransitionCollection>
                 </ItemsControl.ItemContainerTransitions>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate x:DataType="wrapper:DataCenterChallengeBossItemWrapper">

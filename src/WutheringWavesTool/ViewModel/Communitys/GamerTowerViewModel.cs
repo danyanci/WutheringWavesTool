@@ -7,6 +7,7 @@ public sealed partial class GamerTowerViewModel : ViewModelBase, IDisposable
     public GamerTowerViewModel(IWavesClient wavesClient)
     {
         WavesClient = wavesClient;
+        WeakReferenceMessenger.Default.Register<SwitchRoleMessager>(this, SwitchRoleMethod);
     }
 
     [ObservableProperty]
@@ -18,6 +19,11 @@ public sealed partial class GamerTowerViewModel : ViewModelBase, IDisposable
     internal void SetData(GameRoilDataItem item)
     {
         this.RoilData = item;
+    }
+
+    private void SwitchRoleMethod(object recipient, SwitchRoleMessager message)
+    {
+        this.SetData(message.Data.Item);
     }
 
     [RelayCommand]
@@ -47,6 +53,7 @@ public sealed partial class GamerTowerViewModel : ViewModelBase, IDisposable
         {
             if (disposing)
             {
+                WeakReferenceMessenger.Default.UnregisterAll(this);
                 foreach (var item in this.Difficulties)
                 {
                     foreach (var item2 in item.Areas)
