@@ -13,6 +13,7 @@
     xmlns:local="using:WutheringWavesTool.Pages.GamePages"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:media="using:CommunityToolkit.WinUI.Media"
+    xmlns:sound="using:WutheringWavesTool.Controls.Behaviors"
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:wuc="using:DevWinUI"
     Background="Transparent"
@@ -252,6 +253,7 @@
                     CornerRadius="4"
                     Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
                     Visibility="{x:Bind ViewModel.GameLauncherBthVisibility, Mode=OneWay}">
+
                     <ani:Explicit.Animations>
                         <ani:AnimationSet x:Name="ShadowEnterAnimation">
                             <ani:BlurRadiusDropShadowAnimation To="12" />
@@ -269,6 +271,7 @@
                             Color="{ThemeResource TextFillColorPrimary}" />
                     </ui:Effects.Shadow>
                     <i:Interaction.Behaviors>
+                        <sound:ButtonSoundBehavior />
                         <i:EventTriggerBehavior EventName="PointerEntered">
                             <b:StartAnimationAction Animation="{x:Bind ShadowEnterAnimation}" />
                         </i:EventTriggerBehavior>

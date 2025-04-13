@@ -156,6 +156,9 @@
                         Style="{ThemeResource DefaultAcrylicButtonStyle}"
                         Visibility="{x:Bind ViewModel.GamerRoleListsVisibility, Mode=OneWay}">
                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE712;" />
+                        <i:Interaction.Behaviors>
+                            <sound:ButtonSoundBehavior />
+                        </i:Interaction.Behaviors>
                         <Button.Flyout>
                             <MenuFlyout Placement="Bottom">
                                 <MenuFlyoutItem Command="{x:Bind ViewModel.OpenSignWindowCommand}" Text="签到">

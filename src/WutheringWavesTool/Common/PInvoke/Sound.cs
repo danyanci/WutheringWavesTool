@@ -60,7 +60,7 @@ public static class Sound
 
     public static void PlayClick()
     {
-        string soundFile = AppDomain.CurrentDomain.BaseDirectory + "Assets\\clickSound.wav";
+        string soundFile = AppDomain.CurrentDomain.BaseDirectory + "Assets\\clickSound2.wav";
         PlaySound(
             soundFile,
             nuint.Zero,

@@ -19,6 +19,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Assets\clickSound2.wav" />
     <None Remove="Assets\RolePage\weapon.svg" />
     <None Remove="Controls\Styles\NavigationView.xaml" />
     <None Remove="Controls\Styles\StarPipsPager.xaml" />
@@ -80,6 +81,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Update="Assets\applogo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Assets\clickSound2.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="Assets\Font.ttf">
