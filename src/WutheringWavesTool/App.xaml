@@ -19,6 +19,7 @@
                 <ResourceDictionary Source="/Controls/Styles/NavigationView.xaml" />
                 <ResourceDictionary Source="/Controls/Styles/LayeredProgressBar.xaml" />
                 <ResourceDictionary Source="/Controls/Styles/StarPipsPager.xaml" />
+                <ResourceDictionary Source="/Controls/Styles/DraggableCardControl.xaml" />
                 <ResourceDictionary Source="/Controls/Styles/UI.xaml" />
             </ResourceDictionary.MergedDictionaries>
 

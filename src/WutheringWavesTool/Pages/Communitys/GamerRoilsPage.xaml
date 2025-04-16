@@ -46,20 +46,14 @@
             <ItemsRepeater ItemsSource="{x:Bind ViewModel.RoleDatas, Mode=OneWay}">
                 <ItemsRepeater.ItemTemplate>
                     <DataTemplate x:DataType="uModel:DataCenterRoilItemWrapper">
-                        <Border
+                        <ui:DraggableCardControl
                             Margin="2,2"
                             Padding="0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
-                            Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                            BorderBrush="{ThemeResource CardStrokeColorDefaultSolid}"
-                            BorderThickness="1"
+                            Command="{x:Bind ClickShowCommand}"
                             CornerRadius="5">
-                            <Border.ContextFlyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem Command="{x:Bind ClickShowCommand}" Text="打开详情" />
-                                </MenuFlyout>
-                            </Border.ContextFlyout>
+
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
@@ -120,7 +114,7 @@
                                     </StackPanel>
                                 </Border>
                             </Grid>
-                        </Border>
+                        </ui:DraggableCardControl>
                     </DataTemplate>
                 </ItemsRepeater.ItemTemplate>
                 <ItemsRepeater.Layout>

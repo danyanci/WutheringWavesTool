@@ -3,6 +3,7 @@
     x:Class="WutheringWavesTool.Pages.CommunityPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     xmlns:converter="using:WutheringWavesTool.Converter"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:i="using:Microsoft.Xaml.Interactivity"
@@ -59,11 +60,11 @@
                     <RowDefinition Height="auto" />
                     <RowDefinition />
                 </Grid.RowDefinitions>
-                <ComboBox
+                <controls:Segmented
                     Margin="4,0,0,0"
                     ItemsSource="{x:Bind ViewModel.Pages, Mode=OneWay}"
                     SelectedItem="{x:Bind ViewModel.SelectPageItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <ComboBox.ItemTemplate>
+                    <controls:Segmented.ItemTemplate>
                         <DataTemplate x:DataType="wrapper:CommunitySwitchPageWrapper">
                             <StackPanel Orientation="Horizontal">
                                 <FontIcon
@@ -73,8 +74,8 @@
                                 <TextBlock Margin="10,0,0,0" Text="{x:Bind DisplayName}" />
                             </StackPanel>
                         </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                    </controls:Segmented.ItemTemplate>
+                </controls:Segmented>
                 <Frame
                     x:Name="frame"
                     Grid.Row="1"
