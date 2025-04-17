@@ -6,17 +6,17 @@ public sealed partial class SelectWallpaperViewModel : DialogViewModelBase
 {
     public SelectWallpaperViewModel(
         [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager,
-        IWallpaperService wallpaperService,
-        IPickersService pickersService
+        IPickersService pickersService,
+        IAppContext<App> appContext
     )
         : base(dialogManager)
     {
-        WallpaperService = wallpaperService;
         PickersService = pickersService;
+        AppContext = appContext;
     }
 
-    public IWallpaperService WallpaperService { get; }
     public IPickersService PickersService { get; }
+    public IAppContext<App> AppContext { get; }
 
     [ObservableProperty]
     public partial ObservableCollection<WallpaperModel> Images { get; set; } = new();
@@ -25,7 +25,7 @@ public sealed partial class SelectWallpaperViewModel : DialogViewModelBase
     {
         try
         {
-            await foreach (var a in WallpaperService.GetFilesAsync(this.CTS.Token))
+            await foreach (var a in AppContext.WallpaperService.GetFilesAsync(this.CTS.Token))
             {
                 this.Images.Add(a);
             }
@@ -45,6 +45,6 @@ public sealed partial class SelectWallpaperViewModel : DialogViewModelBase
         var file = await PickersService.GetFileOpenPicker([".jpg", ".png"]);
         if (file == null)
             return;
-        await WallpaperService.SetWrallpaper(file.Path);
+        await AppContext.WallpaperService.SetWrallpaper(file.Path);
     }
 }

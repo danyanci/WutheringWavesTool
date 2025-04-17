@@ -4,12 +4,28 @@ using WutheringWavesTool.Helpers;
 
 namespace WutheringWavesTool.Services;
 
+public delegate void WallpaperPletteChangedDelegate(object sender, PletteArgs color);
+
 public class WallpaperService : IWallpaperService
 {
+    private WallpaperPletteChangedDelegate? wallpaperPletteChangedDelegate;
+
     public WallpaperService(ITipShow tipShow)
     {
         TipShow = tipShow;
+        this.ColorPlette = new ImageColorPaletteHelper();
     }
+
+    public event WallpaperPletteChangedDelegate WallpaperPletteChanged
+    {
+        add => wallpaperPletteChangedDelegate += value;
+        remove => wallpaperPletteChangedDelegate -= value;
+    }
+
+    /// <summary>
+    /// 切换壁纸自动取色开关
+    /// </summary>
+    public bool PletteEnable { get; set; } = true;
 
     public string BaseFolder { get; private set; }
     public Controls.ImageEx ImageHost { get; private set; }
@@ -39,6 +55,16 @@ public class WallpaperService : IWallpaperService
     public async Task<bool> SetWrallpaper(string path)
     {
         var result = await ImageIOHelper.HexImageAsync(this.BaseFolder, path);
+        if (this.PletteEnable)
+        {
+            var color = await this.ColorPlette.GetPaletteImage(await path.GetImageDataAsync());
+            var subtitle = this.ColorPlette.GetShadowColor(color);
+            var forground = this.ColorPlette.GetForegroundColor(color);
+            this.wallpaperPletteChangedDelegate?.Invoke(
+                this,
+                new PletteArgs(color, forground, subtitle)
+            );
+        }
         if (result.Item1 != null)
         {
             this.ImageHost.Source = result.Item1;
@@ -52,6 +78,8 @@ public class WallpaperService : IWallpaperService
             return false;
         }
     }
+
+    public ImageColorPaletteHelper ColorPlette { get; private set; }
 
     public async IAsyncEnumerable<WallpaperModel> GetFilesAsync(
         [EnumeratorCancellation] CancellationToken token = default

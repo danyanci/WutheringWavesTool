@@ -1,4 +1,4 @@
-namespace WutheringWavesTool.Pages.Dialogs;
+﻿namespace WutheringWavesTool.Pages.Dialogs;
 
 public sealed partial class SelectWallpaperDialog : ContentDialog, IDialog
 {
@@ -19,7 +19,7 @@ public sealed partial class SelectWallpaperDialog : ContentDialog, IDialog
 
     private void ItemsView_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
     {
-        this.ViewModel.WallpaperService.SetWrallpaper(
+        this.ViewModel.AppContext.WallpaperService.SetWrallpaper(
             (args.InvokedItem as WallpaperModel)!.FilePath
         );
     }

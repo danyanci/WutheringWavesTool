@@ -16,7 +16,6 @@ public sealed partial class ShellViewModel : ViewModelBase
             INavigationViewService homeNavigationViewService,
         ITipShow tipShow,
         IAppContext<App> appContext,
-        IWallpaperService wallpaperService,
         [FromKeyedServices(nameof(MainDialogService))] IDialogManager dialogManager,
         IViewFactorys viewFactorys,
         IWavesClient wavesClient
@@ -26,7 +25,6 @@ public sealed partial class ShellViewModel : ViewModelBase
         HomeNavigationViewService = homeNavigationViewService;
         TipShow = tipShow;
         AppContext = appContext;
-        WallpaperService = wallpaperService;
         DialogManager = dialogManager;
         ViewFactorys = viewFactorys;
         WavesClient = wavesClient;
@@ -37,7 +35,6 @@ public sealed partial class ShellViewModel : ViewModelBase
     public INavigationViewService HomeNavigationViewService { get; }
     public ITipShow TipShow { get; }
     public IAppContext<App> AppContext { get; }
-    public IWallpaperService WallpaperService { get; }
     public IDialogManager DialogManager { get; }
     public IViewFactorys ViewFactorys { get; }
     public IWavesClient WavesClient { get; }

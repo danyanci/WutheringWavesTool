@@ -1,4 +1,8 @@
-﻿namespace WutheringWavesTool.Helpers;
+﻿using System.Buffers;
+using System.Runtime.InteropServices.WindowsRuntime;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace WutheringWavesTool.Helpers;
 
 public static class ImageIOHelper
 {
@@ -120,6 +124,40 @@ public static class ImageIOHelper
             var name = sourceFolder + $"\\{System.IO.Path.GetFileName(filePath)}";
             File.Copy(filePath, name);
             return new(new(new(name)), name, fileMd5);
+        }
+    }
+
+    public static async Task<IRandomAccessStream?> GetImageDataAsync(this string filePath)
+    {
+        using (
+            FileStream fs = new FileStream(
+                filePath,
+                FileMode.Open,
+                FileAccess.Read,
+                FileShare.None,
+                4096,
+                true
+            )
+        )
+        {
+            ArrayPool<byte> pool = ArrayPool<byte>.Shared;
+            var buffer = pool.Rent((int)fs.Length);
+            try
+            {
+                await fs.ReadAsync(buffer);
+                InMemoryRandomAccessStream Stream = new InMemoryRandomAccessStream();
+                await Stream.WriteAsync(buffer.AsBuffer());
+                Stream.Seek(0);
+                return Stream;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
         }
     }
 }

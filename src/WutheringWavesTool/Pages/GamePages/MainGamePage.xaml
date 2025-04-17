@@ -249,26 +249,33 @@
                     Margin="3"
                     HorizontalAlignment="Right"
                     Background="{ThemeResource SystemFillColorSuccessBrush}"
+                    BorderThickness="0"
                     Command="{x:Bind ViewModel.UpdateGameCommand}"
                     CornerRadius="4"
                     Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}"
                     Visibility="{x:Bind ViewModel.GameLauncherBthVisibility, Mode=OneWay}">
-
+                    <Button.BorderBrush>
+                        <SolidColorBrush Color="{x:Bind ViewModel.StressShadowColor, Mode=OneWay}" />
+                    </Button.BorderBrush>
+                    <!--
+                        Background="{x:Bind ViewModel.StressBrush, Mode=OneWay}"
+                        Foreground="{x:Bind ViewModel.StressForground, Mode=OneWay}"
+                    -->
                     <ani:Explicit.Animations>
                         <ani:AnimationSet x:Name="ShadowEnterAnimation">
                             <ani:BlurRadiusDropShadowAnimation To="12" />
                         </ani:AnimationSet>
                         <ani:AnimationSet x:Name="ShadowExitAnimation">
-                            <ani:BlurRadiusDropShadowAnimation To="6" />
+                            <ani:BlurRadiusDropShadowAnimation To="0" />
                         </ani:AnimationSet>
                     </ani:Explicit.Animations>
 
                     <ui:Effects.Shadow>
                         <media:AttachedCardShadow
-                            BlurRadius="6"
-                            Opacity="0.2"
+                            BlurRadius="0"
+                            Opacity="1"
                             Offset="0"
-                            Color="{ThemeResource TextFillColorPrimary}" />
+                            Color="{x:Bind ViewModel.StressShadowColor, Mode=OneWay}" />
                     </ui:Effects.Shadow>
                     <i:Interaction.Behaviors>
                         <sound:ButtonSoundBehavior />

@@ -22,7 +22,6 @@
                 <ResourceDictionary Source="/Controls/Styles/DraggableCardControl.xaml" />
                 <ResourceDictionary Source="/Controls/Styles/UI.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
             <converter:BoolReversalConvert x:Key="BoolReversalConvert" />
             <converter:CardPoolTypeConverter x:Key="CardPoolTypeConverter" />
             <converter:RecordStarConverter x:Key="RecordStarConverter" />

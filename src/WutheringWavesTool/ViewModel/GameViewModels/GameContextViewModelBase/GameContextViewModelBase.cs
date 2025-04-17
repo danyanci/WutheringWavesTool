@@ -18,7 +18,20 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
             DialogManager = dialogManager;
             AppContext = appContext;
             GameContext.GameContextOutput += GameContext_GameContextOutput;
+            this.AppContext.WallpaperService.WallpaperPletteChanged +=
+                WallpaperService_WallpaperPletteChanged;
+            this.StressShadowColor = AppContext.StressShadowColor;
         }
+
+        private void WallpaperService_WallpaperPletteChanged(object sender, PletteArgs args)
+        {
+            if (args.Background == null || args.Forground == null || args.Shadow == null)
+                return;
+            this.StressShadowColor = args.Shadow.Value;
+        }
+
+        [ObservableProperty]
+        public partial Color StressShadowColor { get; set; }
 
         #region MyRegion
 
@@ -240,6 +253,8 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
                 if (disposing)
                 {
                     GameContext.GameContextOutput -= GameContext_GameContextOutput;
+                    this.AppContext.WallpaperService.WallpaperPletteChanged -=
+                        WallpaperService_WallpaperPletteChanged;
                     DisposeAfter();
                 }
                 disposedValue = true;

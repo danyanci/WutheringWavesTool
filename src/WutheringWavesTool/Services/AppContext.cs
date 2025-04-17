@@ -2,15 +2,18 @@
 using Microsoft.UI.Dispatching;
 using Waves.Core.Services;
 using WavesLauncher.Core.Contracts;
+using Windows.ApplicationModel.Contacts.DataProvider;
 
 namespace WutheringWavesTool.Services;
 
 public class AppContext<T> : IAppContext<T>
     where T : ClientApplication
 {
-    public AppContext(IWavesClient wavesClient)
+    public AppContext(IWavesClient wavesClient, IWallpaperService wallpaperService)
     {
         WavesClient = wavesClient;
+        WallpaperService = wallpaperService;
+        WallpaperService.WallpaperPletteChanged += WallpaperService_WallpaperPletteChanged;
     }
 
     private ContentDialog _dialog;
@@ -18,6 +21,7 @@ public class AppContext<T> : IAppContext<T>
     public T App { get; private set; }
 
     public IWavesClient WavesClient { get; }
+    public IWallpaperService WallpaperService { get; }
 
     public async Task LauncherAsync(T app)
     {
@@ -93,6 +97,15 @@ public class AppContext<T> : IAppContext<T>
             .ConfigureAwait(false);
     }
 
+    private void WallpaperService_WallpaperPletteChanged(object sender, PletteArgs color)
+    {
+        if (color.Background == null || color.Forground == null || color.Shadow == null)
+            return;
+        this.StressColor = new SolidColorBrush(color.Background.Value);
+        this.StressShadowColor = color.Shadow.Value;
+        this.StessForground = new SolidColorBrush(color.Forground.Value);
+    }
+
     async Task SafeInvokeAsync(
         DispatcherQueue dispatcher,
         Func<Task> action,
@@ -118,6 +131,9 @@ public class AppContext<T> : IAppContext<T>
 
     public ElementTheme CurrentElement { get; set; }
     public Controls.TitleBar MainTitle { get; private set; }
+    public SolidColorBrush StressColor { get; private set; } = new(Colors.DodgerBlue);
+    public Color StressShadowColor { get; private set; } = Colors.AliceBlue;
+    public SolidColorBrush StessForground { get; private set; } = new(Colors.Black);
 
     public void SetElementTheme(ElementTheme theme)
     {
