@@ -19,7 +19,7 @@ public sealed partial class SelectWallpaperDialog : ContentDialog, IDialog
 
     private void ItemsView_ItemInvoked(ItemsView sender, ItemsViewItemInvokedEventArgs args)
     {
-        this.ViewModel.AppContext.WallpaperService.SetWrallpaper(
+        this.ViewModel.AppContext.WallpaperService.SetWallpaperAsync(
             (args.InvokedItem as WallpaperModel)!.FilePath
         );
     }

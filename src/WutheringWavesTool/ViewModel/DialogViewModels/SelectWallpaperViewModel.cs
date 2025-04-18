@@ -45,6 +45,6 @@ public sealed partial class SelectWallpaperViewModel : DialogViewModelBase
         var file = await PickersService.GetFileOpenPicker([".jpg", ".png"]);
         if (file == null)
             return;
-        await AppContext.WallpaperService.SetWrallpaper(file.Path);
+        await AppContext.WallpaperService.SetWallpaperAsync(file.Path);
     }
 }

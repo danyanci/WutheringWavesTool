@@ -13,7 +13,7 @@ public class WallpaperService : IWallpaperService
     public WallpaperService(ITipShow tipShow)
     {
         TipShow = tipShow;
-        this.ColorPlette = new ImageColorPaletteHelper();
+        this.ColorPlette = new OctreeColorExtractor();
     }
 
     public event WallpaperPletteChangedDelegate WallpaperPletteChanged
@@ -42,27 +42,25 @@ public class WallpaperService : IWallpaperService
         this.ImageHost = image;
         if (!string.IsNullOrWhiteSpace(AppSettings.WallpaperPath))
         {
-            await this.SetWrallpaper(AppSettings.WallpaperPath);
+            await this.SetWallpaperAsync(AppSettings.WallpaperPath);
         }
         else
         {
-            await this.SetWrallpaper(
+            await this.SetWallpaperAsync(
                 AppDomain.CurrentDomain.BaseDirectory + "Assets/Images/changli.png"
             );
         }
     }
 
-    public async Task<bool> SetWrallpaper(string path)
+    public async Task<bool> SetWallpaperAsync(string path)
     {
         var result = await ImageIOHelper.HexImageAsync(this.BaseFolder, path);
         if (this.PletteEnable)
         {
-            var color = await this.ColorPlette.GetPaletteImage(await path.GetImageDataAsync());
-            var subtitle = this.ColorPlette.GetShadowColor(color);
-            var forground = this.ColorPlette.GetForegroundColor(color);
+            var color = await this.ColorPlette.GetThemeColorAsync(await path.GetImageDataAsync());
             this.wallpaperPletteChangedDelegate?.Invoke(
                 this,
-                new PletteArgs(color, forground, subtitle)
+                new PletteArgs(color.Item1.Value, color.Item2[0], color.Item2[1])
             );
         }
         if (result.Item1 != null)
@@ -79,7 +77,11 @@ public class WallpaperService : IWallpaperService
         }
     }
 
-    public ImageColorPaletteHelper ColorPlette { get; private set; }
+    public OctreeColorExtractor ColorPlette { get; private set; }
+
+    //public ImageColorPaletteHelper ColorPlette { get; private set; }
+
+
 
     public async IAsyncEnumerable<WallpaperModel> GetFilesAsync(
         [EnumeratorCancellation] CancellationToken token = default

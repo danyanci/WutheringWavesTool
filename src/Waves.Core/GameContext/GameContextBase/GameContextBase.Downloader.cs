@@ -62,6 +62,8 @@ public partial class GameContextBase
     }
     #endregion
 
+    Process _gameProcess = null;
+
     public async Task UpdateGameAsync()
     {
         _downloadCTS = new CancellationTokenSource();
@@ -84,6 +86,7 @@ public partial class GameContextBase
             GameLocalSettingName.GameLauncherBassProgram
         );
         Process ps = new();
+        ps.EnableRaisingEvents = true;
         ProcessStartInfo info =
             new(gameProgram)
             {
@@ -92,9 +95,13 @@ public partial class GameContextBase
                 UseShellExecute = true,
                 Verb = "runas",
             };
-        ps.StartInfo = info;
-        ps.Start();
+        this._gameProcess = ps;
+        _gameProcess.Exited += Ps_Exited;
+        _gameProcess.StartInfo = info;
+        _gameProcess.Start();
     }
+
+    private void Ps_Exited(object? sender, EventArgs e) { }
 
     #region 核心下载逻辑
     private async Task GetGameResourceAsync(string folder, GameLauncherSource source)

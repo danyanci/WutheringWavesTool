@@ -27,7 +27,7 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
         {
             if (args.Background == null || args.Forground == null || args.Shadow == null)
                 return;
-            this.StressShadowColor = args.Shadow.Value;
+            this.StressShadowColor = args.Background.Value;
         }
 
         [ObservableProperty]

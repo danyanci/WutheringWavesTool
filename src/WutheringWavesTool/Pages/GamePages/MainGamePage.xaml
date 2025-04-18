@@ -257,10 +257,6 @@
                     <Button.BorderBrush>
                         <SolidColorBrush Color="{x:Bind ViewModel.StressShadowColor, Mode=OneWay}" />
                     </Button.BorderBrush>
-                    <!--
-                        Background="{x:Bind ViewModel.StressBrush, Mode=OneWay}"
-                        Foreground="{x:Bind ViewModel.StressForground, Mode=OneWay}"
-                    -->
                     <ani:Explicit.Animations>
                         <ani:AnimationSet x:Name="ShadowEnterAnimation">
                             <ani:BlurRadiusDropShadowAnimation To="12" />
