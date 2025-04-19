@@ -467,7 +467,7 @@
                                     x:Name="ContentGrid"
                                     Margin="{ThemeResource NavigationViewContentMargin}"
                                     BorderBrush="{ThemeResource NavigationViewContentGridBorderBrush}"
-                                    BorderThickness="{ThemeResource NavigationViewContentGridBorderThickness}"
+                                    BorderThickness="0"
                                     CornerRadius="{ThemeResource NavigationViewContentGridCornerRadius}">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto" />

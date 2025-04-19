@@ -113,6 +113,10 @@
                         SelectedItem="{x:Bind ViewModel.SelectRoles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         SizeChanged="ComboBox_SizeChanged"
                         Visibility="{x:Bind ViewModel.GamerRoleListsVisibility, Mode=OneWay}">
+                        <i:Interaction.Behaviors>
+                            <sound:ControlSoundBehavior />
+                        </i:Interaction.Behaviors>
+
                         <ComboBox.ItemTemplate>
                             <DataTemplate x:DataType="wrapper:GameRoilDataWrapper">
                                 <Grid>
@@ -162,6 +166,9 @@
                         <Button.Flyout>
                             <MenuFlyout Placement="Bottom">
                                 <MenuFlyoutItem Command="{x:Bind ViewModel.OpenSignWindowCommand}" Text="签到">
+                                    <i:Interaction.Behaviors>
+                                        <sound:ControlSoundBehavior />
+                                    </i:Interaction.Behaviors>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE929;" />
                                     </MenuFlyoutItem.Icon>
@@ -171,6 +178,9 @@
                                     Command="{x:Bind ViewModel.UnLoginCommand}"
                                     Foreground="{ThemeResource SystemFillColorCriticalBrush}"
                                     Text="退出登录">
+                                    <i:Interaction.Behaviors>
+                                        <sound:ControlSoundBehavior />
+                                    </i:Interaction.Behaviors>
                                     <MenuFlyoutItem.Icon>
                                         <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xF3B1;" />
                                     </MenuFlyoutItem.Icon>
@@ -222,6 +232,11 @@
                         Target="{x:Bind ImageBlurEffect}"
                         To="15"
                         Duration="0:0:0.5" />
+                    <ani:OpacityAnimation
+                        EasingMode="EaseOut"
+                        EasingType="Linear"
+                        To="0.4"
+                        Duration="0:0:0.5" />
                 </ani:AnimationSet>
                 <ani:AnimationSet x:Name="To0" IsSequential="True">
                     <ani:BlurEffectAnimation
@@ -229,6 +244,11 @@
                         EasingType="Linear"
                         Target="{x:Bind ImageBlurEffect}"
                         To="0"
+                        Duration="0:0:0.5" />
+                    <ani:OpacityAnimation
+                        EasingMode="EaseOut"
+                        EasingType="Linear"
+                        To="1"
                         Duration="0:0:0.5" />
                 </ani:AnimationSet>
             </ani:Explicit.Animations>
@@ -241,6 +261,10 @@
                 Style="{ThemeResource MainNavigationViewStyle}">
                 <NavigationView.MenuItems>
                     <NavigationViewItem property:NavigationItemClickHelper.NavigationKey="WutheringWavesTool.ViewModel.GameViewModels.MainGameViewModel" Content="官服">
+
+                        <i:Interaction.Behaviors>
+                            <sound:NavigationViewItemSoundBehavior />
+                        </i:Interaction.Behaviors>
                         <NavigationViewItem.Icon>
                             <ImageIcon Source="ms-appx:///Assets/GameIcons/global.ico" />
                         </NavigationViewItem.Icon>
@@ -249,6 +273,10 @@
                         property:NavigationItemClickHelper.NavigationKey="WutheringWavesTool.ViewModel.CommunityViewModel"
                         Content="库街区"
                         Visibility="{x:Bind ViewModel.CommunitySelectItemVisiblity, Mode=OneWay}">
+
+                        <i:Interaction.Behaviors>
+                            <sound:NavigationViewItemSoundBehavior />
+                        </i:Interaction.Behaviors>
                         <NavigationViewItem.Icon>
                             <ImageIcon Source="ms-appx:///Assets/kLogo.png" />
                         </NavigationViewItem.Icon>
@@ -266,6 +294,10 @@
                         Control.IsTemplateFocusTarget="True"
                         CornerRadius="5"
                         Style="{ThemeResource TransparentButtonStyle}">
+
+                        <i:Interaction.Behaviors>
+                            <sound:ControlSoundBehavior />
+                        </i:Interaction.Behaviors>
                         <FontIcon
                             FontFamily="Segoe Fluent Icons"
                             FontSize="14"

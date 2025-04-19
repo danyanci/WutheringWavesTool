@@ -1,6 +1,6 @@
 ﻿namespace WutheringWavesTool.Controls.Behaviors;
 
-public class ButtonSoundBehavior : Behavior<Button>
+public class ButtonSoundBehavior : Behavior<ButtonBase>
 {
     protected override void OnAttached()
     {

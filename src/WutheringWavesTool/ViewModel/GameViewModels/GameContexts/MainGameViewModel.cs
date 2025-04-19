@@ -69,14 +69,27 @@ public sealed partial class MainGameViewModel : GameContextViewModelBase
 
     public override void DisposeAfter()
     {
-        this.Contents.Clear();
-        this.Activity.Contents.Clear();
-        this.Notice.Contents.Clear();
-        this.News.Contents.Clear();
-        this.Activity.Contents = null;
-        this.Notice.Contents = null;
-        this.News.Contents = null;
-        this.SlideShows.Clear();
-        this.SlideShows = null;
+        if (this.Contents != null)
+            this.Contents.Clear();
+        if (this.Activity != null)
+        {
+            this.Activity.Contents.Clear();
+            this.Activity.Contents = null;
+        }
+        if (this.Notice != null)
+        {
+            this.Notice.Contents.Clear();
+            this.Notice.Contents = null;
+        }
+        if (this.News != null)
+        {
+            this.News.Contents.Clear();
+            this.News.Contents = null;
+        }
+        if (this.SlideShows != null)
+        {
+            this.SlideShows.Clear();
+            this.SlideShows = null;
+        }
     }
 }

@@ -67,6 +67,9 @@
                         VerticalAlignment="Center"
                         CornerRadius="5"
                         Style="{ThemeResource TransparentButtonStyle}">
+                        <i:Interaction.Behaviors>
+                            <sound:ControlSoundBehavior />
+                        </i:Interaction.Behaviors>
                         <FontIcon
                             FontFamily="Segoe UI Emoji"
                             FontSize="15"
@@ -127,6 +130,9 @@
                         VerticalAlignment="Center"
                         CornerRadius="5"
                         Style="{ThemeResource TransparentButtonStyle}">
+                        <i:Interaction.Behaviors>
+                            <sound:ControlSoundBehavior />
+                        </i:Interaction.Behaviors>
                         <FontIcon
                             FontFamily="Segoe Fluent Icons"
                             FontSize="16"
@@ -188,6 +194,9 @@
                     Command="{x:Bind ViewModel.PauseDownloadTaskCommand}"
                     Style="{ThemeResource TransparentButtonStyle}"
                     Visibility="{x:Bind ViewModel.GameDownloadingBthVisibility, Mode=OneWay}">
+                    <i:Interaction.Behaviors>
+                        <sound:ControlSoundBehavior />
+                    </i:Interaction.Behaviors>
                     <FontIcon
                         FontFamily="Segoe Fluent Icons"
                         FontSize="15"
@@ -202,6 +211,9 @@
                     Command="{x:Bind ViewModel.CancelDownloadTaskCommand}"
                     Style="{ThemeResource TransparentButtonStyle}"
                     Visibility="{x:Bind ViewModel.GameDownloadingBthVisibility, Mode=OneWay}">
+                    <i:Interaction.Behaviors>
+                        <sound:ControlSoundBehavior />
+                    </i:Interaction.Behaviors>
                     <FontIcon
                         FontFamily="Segoe Fluent Icons"
                         FontSize="15"
@@ -218,6 +230,9 @@
                         Style="{ThemeResource TransparentButtonStyle}"
                         ToolTipService.ToolTip="选择下载路径"
                         Visibility="{x:Bind ViewModel.GameInstallBthVisibility, Mode=OneWay}">
+                        <i:Interaction.Behaviors>
+                            <sound:ControlSoundBehavior />
+                        </i:Interaction.Behaviors>
                         <FontIcon
                             FontFamily="Segoe Fluent Icons"
                             FontSize="15"
@@ -238,6 +253,9 @@
                         Style="{ThemeResource TransparentButtonStyle}"
                         ToolTipService.ToolTip="定位游戏位置"
                         Visibility="{x:Bind ViewModel.GameInputFolderBthVisibility, Mode=OneWay}">
+                        <i:Interaction.Behaviors>
+                            <sound:ControlSoundBehavior />
+                        </i:Interaction.Behaviors>
                         <FontIcon
                             FontFamily="Segoe Fluent Icons"
                             FontSize="15"
@@ -439,6 +457,9 @@
                                         FontSize="12"
                                         NavigateUri="{x:Bind JumpUrl}">
                                         <TextBlock Text="{x:Bind TContent}" TextTrimming="CharacterEllipsis" />
+                                        <i:Interaction.Behaviors>
+                                            <sound:ButtonSoundBehavior />
+                                        </i:Interaction.Behaviors>
                                     </HyperlinkButton>
                                 </DataTemplate>
                             </ItemsRepeater.ItemTemplate>
@@ -457,6 +478,7 @@
                 Style="{ThemeResource DefaultAcrylicButtonStyle}">
 
                 <i:Interaction.Behaviors>
+                    <sound:ControlSoundBehavior />
                     <i:EventTriggerBehavior EventName="Loaded">
                         <i:InvokeCommandAction Command="{x:Bind ViewModel.CardLoadedCommand}" />
                     </i:EventTriggerBehavior>
