@@ -2,6 +2,12 @@
 
 public static class KRHelper
 {
+    /// <summary>
+    /// 异或加密，key99
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="xorKey"></param>
+    /// <returns></returns>
     public static byte[]? Xor(byte[] data, byte xorKey)
     {
         if (data == null)

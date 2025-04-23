@@ -23,6 +23,7 @@ public static class Instance
             .AddTransient<GameResourceViewModel>()
             #region GameContext
             .AddTransient<MainGameViewModel>()
+            .AddTransient<GlobalGameViewModel>()
             #endregion
             #region Community
             .AddTransient<GamerSignPage>()

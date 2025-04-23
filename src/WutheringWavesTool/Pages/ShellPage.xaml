@@ -230,12 +230,7 @@
                         EasingMode="EaseOut"
                         EasingType="Linear"
                         Target="{x:Bind ImageBlurEffect}"
-                        To="15"
-                        Duration="0:0:0.5" />
-                    <ani:OpacityAnimation
-                        EasingMode="EaseOut"
-                        EasingType="Linear"
-                        To="0.4"
+                        To="20"
                         Duration="0:0:0.5" />
                 </ani:AnimationSet>
                 <ani:AnimationSet x:Name="To0" IsSequential="True">
@@ -244,11 +239,6 @@
                         EasingType="Linear"
                         Target="{x:Bind ImageBlurEffect}"
                         To="0"
-                        Duration="0:0:0.5" />
-                    <ani:OpacityAnimation
-                        EasingMode="EaseOut"
-                        EasingType="Linear"
-                        To="1"
                         Duration="0:0:0.5" />
                 </ani:AnimationSet>
             </ani:Explicit.Animations>
@@ -261,6 +251,15 @@
                 Style="{ThemeResource MainNavigationViewStyle}">
                 <NavigationView.MenuItems>
                     <NavigationViewItem property:NavigationItemClickHelper.NavigationKey="WutheringWavesTool.ViewModel.GameViewModels.MainGameViewModel" Content="官服">
+
+                        <i:Interaction.Behaviors>
+                            <sound:NavigationViewItemSoundBehavior />
+                        </i:Interaction.Behaviors>
+                        <NavigationViewItem.Icon>
+                            <ImageIcon Source="ms-appx:///Assets/GameIcons/global.ico" />
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+                    <NavigationViewItem property:NavigationItemClickHelper.NavigationKey="WutheringWavesTool.ViewModel.GameViewModels.GlobalGameViewModel" Content="国际服">
 
                         <i:Interaction.Behaviors>
                             <sound:NavigationViewItemSoundBehavior />

@@ -42,6 +42,21 @@
                     "https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10003_Y8xXrXk65DqFHEDgApn3cpK5lfczpFx5/G152/index.json",
                 Language = "zh-Hans",
             };
+
+        public static GameAPIConfig GlobalConfig =>
+            new GameAPIConfig()
+            {
+                AppId = "50004",
+                GameID = "G153",
+                AppKey = "obOHXFrFanqsaIEOmuKroCcbZkQRBC7c",
+                GameIdentity = "Aki",
+                GameExeName = "Wuthering Waves.exe",
+                ConfigUrl =
+                    "https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json",
+                LauncherConfigUrl =
+                    "https://prod-alicdn-gamestarter.kurogame.com/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json",
+                Language = "鳴潮",
+            };
     }
 
     #region 旧API

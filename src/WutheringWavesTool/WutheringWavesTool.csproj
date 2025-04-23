@@ -32,6 +32,7 @@
     <None Remove="Pages\Dialogs\SelectDownloadGameDialog.xaml" />
     <None Remove="Pages\Dialogs\SelectGameFolderDialog.xaml" />
     <None Remove="Pages\Dialogs\SelectWallpaperDialog.xaml" />
+    <None Remove="Pages\GamePages\GlobalGamePage.xaml" />
     <None Remove="Pages\GamePages\MainGamePage.xaml" />
   </ItemGroup>
 	<ItemGroup>
@@ -176,6 +177,11 @@
     <Content Update="Assets\RolePage\weapon.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\GamePages\GlobalGamePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Controls\Styles\DraggableCardControl.xaml">

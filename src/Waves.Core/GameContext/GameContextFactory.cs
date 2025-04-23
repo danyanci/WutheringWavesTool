@@ -16,12 +16,12 @@ public static class GameContextFactory
     //        IsLimitSpeed = false,
     //    };
 
-    //internal static GlobalGameContext GetGlobalGameContext() =>
-    //    new GlobalGameContext(GameApiContextConfig.Global)
-    //    {
-    //        GamerConfigPath = GameContextFactory.GameBassPath + "\\GlobalConfig",
-    //        IsLimitSpeed = false,
-    //    };
+    internal static GlobalGameContext GetGlobalGameContext() =>
+        new GlobalGameContext(GameAPIConfig.GlobalConfig)
+        {
+            GamerConfigPath = GameContextFactory.GameBassPath + "\\GlobalConfig",
+            IsLimitSpeed = false,
+        };
 
     internal static MainGameContext GetMainGameContext() =>
         new MainGameContext(GameAPIConfig.MainAPiConfig)
