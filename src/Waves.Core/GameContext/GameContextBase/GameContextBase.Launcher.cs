@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Waves.Api.Models;
+using Waves.Core.GameContext.Contexts;
 using Waves.Core.Models;
 using Waves.Core.Models.Downloader;
 
@@ -11,8 +12,17 @@ partial class GameContextBase
         CancellationToken token = default
     )
     {
-        var url =
-            $"{GameAPIConfig.BaseAddress[0]}/launcher/game/{Config.GameID}/{Config.AppId}_{Config.AppKey}/index.json?_t={DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
+        var url = "";
+        if (this.ContextName == nameof(GlobalGameContext))
+        {
+            url =
+                $"{GameAPIConfig.BaseAddress[1]}/launcher/game/{Config.GameID}/{Config.AppId}_{Config.AppKey}/index.json?_t={DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
+        }
+        else
+        {
+            url =
+                $"{GameAPIConfig.BaseAddress[0]}/launcher/game/{Config.GameID}/{Config.AppId}_{Config.AppKey}/index.json?_t={DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
+        }
         var result = await HttpClientService.GameDownloadClient.GetAsync(url);
         var jsonStr = await result.Content.ReadAsStringAsync();
         var launcherIndex = JsonSerializer.Deserialize<GameLauncherSource>(

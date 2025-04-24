@@ -11,5 +11,7 @@ namespace Waves.Core.GameContext.Contexts
     {
         internal GlobalGameContext(GameAPIConfig config)
             : base(config, nameof(GlobalGameContext)) { }
+
+        public override Type ContextType => typeof(GlobalGameContext);
     }
 }

@@ -16,7 +16,6 @@ public static class Waves
     /// <returns></returns>
     public static IServiceCollection AddGameContext(this IServiceCollection services)
     {
-        StaticConfig.EnableAot = true;
         services
             .AddTransient<IHttpClientService, HttpClientService>()
             .AddKeyedSingleton<IGameContext, MainGameContext>(
@@ -37,16 +36,15 @@ public static class Waves
                     return context;
                 }
             )
-            //.AddKeyedSingleton<IGameContext, BilibiliGameContext>(
-            //    nameof(BilibiliGameContext),
-            //    (provider, c) =>
-            //    {
-            //        var context = GameContextFactory.GetBilibiliGameContext();
-            //        context.HttpClientService = provider.GetRequiredService<IHttpClientService>();
-            //        return context;
-            //    }
-            //)
-
+            .AddKeyedSingleton<IGameContext, BiliBiliGameContext>(
+                nameof(BiliBiliGameContext),
+                (provider, c) =>
+                {
+                    var context = GameContextFactory.GetBilibiliGameContext();
+                    context.HttpClientService = provider.GetRequiredService<IHttpClientService>();
+                    return context;
+                }
+            )
             .AddTransient<IHttpClientService, HttpClientService>();
         services.AddHttpClient();
         return services;

@@ -13,26 +13,27 @@ public partial class App : ClientApplication
 
     public App()
     {
+        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        this.UnhandledException += App_UnhandledException;
         StaticConfig.EnableAot = true;
         Directory.CreateDirectory(BassFolder);
         Directory.CreateDirectory(RecordFolder);
         Directory.CreateDirectory(WrallpaperFolder);
         GameContextFactory.GameBassPath = BassFolder;
         Instance.InitService();
-
-        this.UnhandledException += App_UnhandledException;
         this.InitializeComponent();
     }
+
+    private void CurrentDomain_UnhandledException(
+        object sender,
+        System.UnhandledExceptionEventArgs e
+    ) { }
 
     private void App_UnhandledException(
         object sender,
         Microsoft.UI.Xaml.UnhandledExceptionEventArgs e
     )
     {
-        using (var fs = new StreamWriter("D:\\Test.txt"))
-        {
-            fs.WriteLine(e.Exception.Message);
-        }
         e.Handled = true;
     }
 

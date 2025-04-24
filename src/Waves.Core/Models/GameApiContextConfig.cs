@@ -5,6 +5,7 @@
         public static string[] BaseAddress =
         [
             "https://prod-cn-alicdn-gamestarter.kurogame.com",
+            "https://prod-alicdn-gamestarter.kurogame.com",
             "https://prod-volcdn-gamestarter.kurogame.com",
             "https://prod-tencentcdn-gamestarter.kurogame.com",
         ];
@@ -55,7 +56,22 @@
                     "https://prod-alicdn-gamestarter.kurogame.com/launcher/game/G153/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/index.json",
                 LauncherConfigUrl =
                     "https://prod-alicdn-gamestarter.kurogame.com/launcher/launcher/50004_obOHXFrFanqsaIEOmuKroCcbZkQRBC7c/G153/index.json",
-                Language = "鳴潮",
+                Language = "en",
+            };
+
+        public static GameAPIConfig BilibiliConfig =>
+            new GameAPIConfig()
+            {
+                AppId = "10004",
+                GameID = "G152",
+                AppKey = "j5GWFuUFlb8N31Wi2uS3ZAVHcb7ZGN7y",
+                GameIdentity = "Aki",
+                GameExeName = "Wuthering Waves.exe",
+                ConfigUrl =
+                    "https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/game/G152/10004_j5GWFuUFlb8N31Wi2uS3ZAVHcb7ZGN7y/index.json",
+                LauncherConfigUrl =
+                    "https://prod-cn-alicdn-gamestarter.kurogame.com/launcher/launcher/10004_j5GWFuUFlb8N31Wi2uS3ZAVHcb7ZGN7y/G152/index.json",
+                Language = "zh-Hans",
             };
     }
 

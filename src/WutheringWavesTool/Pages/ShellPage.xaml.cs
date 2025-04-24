@@ -11,7 +11,8 @@ public sealed partial class ShellPage : Page
     public ShellPage()
     {
         this.InitializeComponent();
-        this.ViewModel = Instance.Service.GetRequiredService<ShellViewModel>();
+        this.ViewModel =
+            Instance.GetService<ShellViewModel>() ?? throw new ArgumentException("服务注册错误");
         this.Loaded += ShellPage_Loaded;
         this.ViewModel.HomeNavigationService.Navigated += HomeNavigationService_Navigated;
         this.ViewModel.HomeNavigationService.RegisterView(this.frame);
@@ -22,11 +23,14 @@ public sealed partial class ShellPage : Page
         this.ViewModel.AppContext.SetTitleControl(this.titlebar);
     }
 
-    private async void HomeNavigationService_Navigated(object sender, NavigationEventArgs e)
+    private void HomeNavigationService_Navigated(object sender, NavigationEventArgs e)
     {
-        if (e.SourcePageType == typeof(MainGamePage))
+        if (
+            e.SourcePageType == typeof(MainGamePage)
+            || e.SourcePageType == typeof(BiliBiliGamePage)
+            || e.SourcePageType == typeof(GlobalGamePage)
+        )
         {
-            await Task.Delay(500);
             this.titlebar.UpDate();
             To0.Start(image);
         }
@@ -34,13 +38,11 @@ public sealed partial class ShellPage : Page
         {
             this.ViewModel.LoginBthVisibility = Visibility.Collapsed;
 
-            await Task.Delay(500);
             this.titlebar.UpDate();
             To8.Start(image);
         }
         else
         {
-            await Task.Delay(500);
             this.titlebar.UpDate();
             To8.Start(image);
         }

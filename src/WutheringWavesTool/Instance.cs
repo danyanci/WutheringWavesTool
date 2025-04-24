@@ -23,6 +23,7 @@ public static class Instance
             .AddTransient<GameResourceViewModel>()
             #region GameContext
             .AddTransient<MainGameViewModel>()
+            .AddTransient<BiliBiliGameViewModel>()
             .AddTransient<GlobalGameViewModel>()
             #endregion
             #region Community
@@ -101,5 +102,15 @@ public static class Instance
             #endregion
             .AddGameContext()
             .BuildServiceProvider();
+    }
+
+    public static T? GetService<T>()
+        where T : notnull
+    {
+        if (Service.GetRequiredService<T>() is not T v)
+        {
+            throw new ArgumentException("服务未注入");
+        }
+        return v;
     }
 }

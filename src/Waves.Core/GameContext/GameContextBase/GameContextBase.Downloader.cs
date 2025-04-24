@@ -322,6 +322,7 @@ public partial class GameContextBase
         {
             _downloadCTS.Dispose();
             _downloadCTS = null;
+            _isDownload = false;
         }
         #endregion
         await downloadComplate().ConfigureAwait(false);
@@ -360,7 +361,6 @@ public partial class GameContextBase
             Interlocked.Exchange(ref _totalfileSize, 0L);
             Interlocked.Exchange(ref _totalVerifiedBytes, 0L);
             Interlocked.Exchange(ref _totalDownloadedBytes, 0L);
-            _downloadCTS?.Dispose();
 
             return true;
         }
@@ -368,6 +368,11 @@ public partial class GameContextBase
         {
             Debug.WriteLine($"取消下载异常: {ex.Message}");
             return false;
+        }
+        finally
+        {
+            this._isDownload = false;
+            _downloadCTS?.Dispose();
         }
     }
     #endregion

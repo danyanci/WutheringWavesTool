@@ -9,12 +9,12 @@ public static class GameContextFactory
 {
     public static string GameBassPath { get; set; }
 
-    //internal static BilibiliGameContext GetBilibiliGameContext() =>
-    //    new BilibiliGameContext(GameApiContextConfig.BiliBili)
-    //    {
-    //        GamerConfigPath = GameContextFactory.GameBassPath + "\\BiliBiliConfig",
-    //        IsLimitSpeed = false,
-    //    };
+    internal static BiliBiliGameContext GetBilibiliGameContext() =>
+        new BiliBiliGameContext(GameAPIConfig.BilibiliConfig)
+        {
+            GamerConfigPath = GameContextFactory.GameBassPath + "\\BiliBiliConfig",
+            IsLimitSpeed = false,
+        };
 
     internal static GlobalGameContext GetGlobalGameContext() =>
         new GlobalGameContext(GameAPIConfig.GlobalConfig)

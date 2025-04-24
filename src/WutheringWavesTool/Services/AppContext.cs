@@ -28,12 +28,12 @@ public class AppContext<T> : IAppContext<T>
         await Instance
             .Service!.GetRequiredKeyedService<IGameContext>(nameof(MainGameContext))
             .InitAsync();
-        //await Instance
-        //    .Service!.GetRequiredKeyedService<IGameContext>(nameof(BilibiliGameContext))
-        //    .InitAsync();
-        //await Instance
-        //    .Service!.GetRequiredKeyedService<IGameContext>(nameof(GlobalGameContext))
-        //    .InitAsync();
+        await Instance
+            .Service!.GetRequiredKeyedService<IGameContext>(nameof(BiliBiliGameContext))
+            .InitAsync();
+        await Instance
+            .Service!.GetRequiredKeyedService<IGameContext>(nameof(GlobalGameContext))
+            .InitAsync();
         this.App = app;
         var win = new MainWindow();
         var page = Instance.Service!.GetRequiredService<ShellPage>();
