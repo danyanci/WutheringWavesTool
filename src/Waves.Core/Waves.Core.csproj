@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
 	  <PackageReference Include="SqlSugarCore" Version="5.1.4.171-preview23" />
+	  <PackageReference Include="System.Management" Version="9.0.4" />
   </ItemGroup>
 
   <ItemGroup>

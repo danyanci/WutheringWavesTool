@@ -41,4 +41,9 @@ public class GameContextStatus
     /// 更新/下载 活动
     /// </summary>
     public bool IsAction { get; internal set; }
+
+    /// <summary>
+    /// 游戏中
+    /// </summary>
+    public bool Gameing { get; internal set; }
 }

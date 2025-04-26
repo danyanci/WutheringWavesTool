@@ -124,6 +124,7 @@ public abstract partial class GameContextBase : IGameContext
             status.IsPause = this._downloadState.IsPaused;
             status.IsAction = this._downloadState.IsActive;
         }
+        status.Gameing = this._isStarting;
         return status;
     }
 }

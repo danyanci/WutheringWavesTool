@@ -73,7 +73,7 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
         public partial string BottomBarContent { get; set; }
 
         /// <summary>
-        /// 按钮类型,1为安装游戏,2为下载游戏,3为开始游戏,4为准备更新
+        /// 按钮类型,1为安装游戏,2为下载游戏,3为开始游戏,4为准备更新,5为游戏中
         /// </summary>
         private int _bthType = 0;
         private bool disposedValue;
@@ -92,7 +92,7 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
             }
             else if (!status.IsAction && status.IsGameExists && status.IsGameInstalled)
             {
-                ShowGameLauncherBth(status.IsUpdate, status.DisplayVersion);
+                ShowGameLauncherBth(status.IsUpdate, status.DisplayVersion, status.Gameing);
             }
             if (status.IsGameExists && (status.IsPause || status.IsAction))
             {
@@ -118,7 +118,7 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
             await LoadAfter();
         }
 
-        private void ShowGameLauncherBth(bool isUpdate, string version)
+        private void ShowGameLauncherBth(bool isUpdate, string version, bool gameing)
         {
             GameInputFolderBthVisibility = Visibility.Collapsed;
             GameInstallBthVisibility = Visibility.Collapsed;
@@ -136,13 +136,26 @@ namespace WutheringWavesTool.ViewModel.GameViewModels
             }
             else
             {
-                _bthType = 3;
-                this.CurrentProgressValue = 0;
-                this.MaxProgressValue = 0;
-                BottomBarContent = "游戏准备就绪";
-                LauncheContent = "进入游戏";
-                DisplayVersion = version;
-                LauncherIcon = "\uE7FC";
+                if (gameing)
+                {
+                    _bthType = 5;
+                    this.CurrentProgressValue = 0;
+                    this.MaxProgressValue = 0;
+                    BottomBarContent = "";
+                    LauncheContent = "终止游戏";
+                    DisplayVersion = version;
+                    LauncherIcon = "\uE71A";
+                }
+                else
+                {
+                    _bthType = 3;
+                    this.CurrentProgressValue = 0;
+                    this.MaxProgressValue = 0;
+                    BottomBarContent = "游戏准备就绪";
+                    LauncheContent = "进入游戏";
+                    DisplayVersion = version;
+                    LauncherIcon = "\uE7FC";
+                }
             }
         }
 

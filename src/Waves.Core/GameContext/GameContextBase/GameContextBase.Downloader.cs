@@ -62,7 +62,6 @@ public partial class GameContextBase
     }
     #endregion
 
-    Process _gameProcess = null;
 
     public async Task UpdateGameAsync()
     {
@@ -76,32 +75,6 @@ public partial class GameContextBase
         await GameLocalConfig.SaveConfigAsync(GameLocalSettingName.LocalGameUpdateing, "True");
         await GetGameResourceAsync(folder, launcher);
     }
-
-    public async Task StartGameAsync()
-    {
-        string gameProgram = await this.GameLocalConfig.GetConfigAsync(
-            GameLocalSettingName.GameLauncherBassProgram
-        );
-        string gameFolder = await this.GameLocalConfig.GetConfigAsync(
-            GameLocalSettingName.GameLauncherBassProgram
-        );
-        Process ps = new();
-        ps.EnableRaisingEvents = true;
-        ProcessStartInfo info =
-            new(gameProgram)
-            {
-                Arguments = "Client -dx12",
-                WorkingDirectory = gameFolder,
-                UseShellExecute = true,
-                Verb = "runas",
-            };
-        this._gameProcess = ps;
-        _gameProcess.Exited += Ps_Exited;
-        _gameProcess.StartInfo = info;
-        _gameProcess.Start();
-    }
-
-    private void Ps_Exited(object? sender, EventArgs e) { }
 
     #region 核心下载逻辑
     private async Task GetGameResourceAsync(string folder, GameLauncherSource source)

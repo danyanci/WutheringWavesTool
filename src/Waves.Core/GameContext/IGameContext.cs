@@ -21,6 +21,8 @@ public interface IGameContext
     Task<FileVersion> GetLocalXeSSGenerateAsync();
     public Type ContextType { get; }
 
+    public TimeSpan GetGameTime();
+
     #region Launcher
     Task<GameLauncherSource?> GetGameLauncherSourceAsync(CancellationToken token = default);
 
@@ -76,5 +78,6 @@ public interface IGameContext
 
     Task StartGameAsync();
     Task UpdateGameAsync();
+    Task StopGameAsync();
     #endregion
 }

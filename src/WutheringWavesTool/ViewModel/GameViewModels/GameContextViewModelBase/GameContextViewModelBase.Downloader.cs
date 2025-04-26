@@ -68,7 +68,7 @@ partial class GameContextViewModelBase
                 }
                 if (status.IsLauncher)
                 {
-                    ShowGameLauncherBth(status.IsUpdate, status.DisplayVersion);
+                    ShowGameLauncherBth(status.IsUpdate, status.DisplayVersion, status.Gameing);
                 }
                 if (
                     status.IsGameExists
@@ -88,19 +88,6 @@ partial class GameContextViewModelBase
                 }
             }
         });
-    }
-
-    [RelayCommand]
-    async Task UpdateGameAsync()
-    {
-        if (_bthType == 3)
-        {
-            await GameContext.StartGameAsync();
-        }
-        else if (_bthType == 4)
-        {
-            await GameContext.UpdateGameAsync();
-        }
     }
 
     [RelayCommand]
