@@ -6,15 +6,16 @@
     <RootNamespace>WutheringWavesTool</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x86;x64</Platforms>
-	  <LangVersion>preview</LangVersion>
-	  <RuntimeIdentifier Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x64</RuntimeIdentifier>
-	  <RuntimeIdentifier Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x64</RuntimeIdentifier>
+    <LangVersion>preview</LangVersion>
+    <RuntimeIdentifier Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &gt;= 8">win-x64</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="$([MSBuild]::GetTargetFrameworkVersion('$(TargetFramework)')) &lt; 8">win10-x64</RuntimeIdentifier>
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
-	  <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+	<JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
     <UseWinUI>true</UseWinUI>
-	  <PublishAot>false</PublishAot>
+	<PublishAot>false</PublishAot>
+	<WindowsPackageType>None</WindowsPackageType>
     <EnableMsixTooling>true</EnableMsixTooling>
-	  <WindowsSdkPackageVersion>10.0.26100.56</WindowsSdkPackageVersion>
+	<WindowsSdkPackageVersion>10.0.26100.56</WindowsSdkPackageVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
